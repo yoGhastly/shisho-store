@@ -5,8 +5,8 @@ export async function Carousel() {
   const products = [
     {
       handle: "",
-      title: "Vrcel",
-      priceRange: { maxVariantPrice: { amount: 10, currencyCode: "AED" } },
+      title: "",
+      priceRange: { maxVariantPrice: { amount: "10", currencyCode: "AED" } },
       featuredImage: { url: "" },
     },
   ];
@@ -45,3 +45,7 @@ export async function Carousel() {
     </div>
   );
 }
+
+
+  
+ 
