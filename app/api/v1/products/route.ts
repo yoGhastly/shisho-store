@@ -2,12 +2,14 @@
 
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+const STRIPE_SECRET_KEY =
+  "sk_test_51OfZDtKrqv6TAD3CJhDV05wPUkgg7625mrQpm2IDAN0eSfIl6JN0o0tgft2KBmIPBQfMNX2xYknXfraMxxsgLw5J009SBO2FUp";
+const stripe = new Stripe(STRIPE_SECRET_KEY);
 
 export async function GET() {
   try {
     const { data: products } = await stripe.products.list({
-      apiKey: `${process.env.STRIPE_SECRET_KEY}`,
+      apiKey: STRIPE_SECRET_KEY,
     });
     return Response.json({ products, success: true, status: 200 });
   } catch (error) {
