@@ -82,12 +82,14 @@ export default function CartModal({ cart }: { cart: any | undefined }) {
               ) : (
                 <div className="flex h-full flex-col justify-between overflow-hidden p-1">
                   <ul className="flex-grow overflow-auto py-4">
-                    {cart.lines.map((item, i) => {
+                    {cart.lines.map((item: any, i: number) => {
+                      // FIX: ^ Create strong types
                       const merchandiseSearchParams =
                         {} as MerchandiseSearchParams;
 
                       item.merchandise.selectedOptions.forEach(
-                        ({ name, value }) => {
+                        // FIX: Create strong types
+                        ({ name, value }: { name: string; value: string }) => {
                           if (value !== DEFAULT_OPTION) {
                             merchandiseSearchParams[name.toLowerCase()] = value;
                           }
