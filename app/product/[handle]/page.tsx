@@ -7,6 +7,7 @@ import { Gallery } from "@/components/product/gallery";
 import { ProductDescription } from "@/components/product/product-description";
 import Footer from "@/components/layout/footer";
 import { GridTileImage } from "@/components/grid/tile";
+import useProductStore from "@/app/lib/stores/product.store";
 
 export const runtime = "edge";
 
@@ -65,25 +66,9 @@ export default async function ProductPage({
 }: {
   params: { handle: string };
 }) {
-  const product = {
-    id: "1",
-    images: [],
-    title: "Product title",
-    description: "",
-    featuredImage: {
-      url: "",
-      width: "200",
-      height: "200",
-      altText: "Image",
-      alt: "image",
-    },
-    tags: "",
-    seo: { title: "", description: "" },
-  };
+  const { products } = useProductStore();
 
-  if (!product) return notFound();
-
-  const productJsonLd = {
+  /* const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
@@ -98,34 +83,31 @@ export default async function ProductPage({
       highPrice: product.priceRange.maxVariantPrice.amount,
       lowPrice: product.priceRange.minVariantPrice.amount
     } */
-  };
 
   return (
     <>
-      <script
+      {/* <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productJsonLd),
         }}
-      />
+      /> */}
       <div className="mx-auto max-w-screen-2xl px-4">
         <div className="flex flex-col rounded-lg border border-neutral-200 bg-white p-8 dark:border-neutral-800 dark:bg-black md:p-12 lg:flex-row lg:gap-8">
           <div className="h-full w-full basis-full lg:basis-4/6">
-            <Gallery
+            {/* <Gallery
               images={product.images.map((image: any) => ({
                 src: image.url,
                 altText: image.altText,
               }))}
-            />
+            /> */}
           </div>
 
           <div className="basis-full lg:basis-2/6">
-            <ProductDescription product={product} />
+            <ProductDescription product={products[0]} />
           </div>
         </div>
-        <Suspense>
-          <RelatedProducts id={product.id} />
-        </Suspense>
+        <Suspense>{/* <RelatedProducts id={product.id} /> */}</Suspense>
       </div>
       <Suspense>
         <Footer />
