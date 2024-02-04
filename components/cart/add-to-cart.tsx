@@ -12,7 +12,7 @@ function SubmitButton({
   selectedVariantId,
 }: {
   availableForSale: boolean;
-  selectedVariantId: string | undefined;
+  selectedVariantId?: string | undefined;
 }) {
   const { pending } = useFormStatus();
   const buttonClasses =
@@ -71,7 +71,7 @@ export function AddToCart({
 }) {
   const [message, formAction] = useFormState(addItem, null);
   const searchParams = useSearchParams();
-  const defaultVariantId = variants.length === 1 ? variants[0]?.id : undefined;
+  /* const defaultVariantId = variants.length === 1 ? variants[0]?.id : undefined;
   const variant = variants.find((variant: any) =>
     variant.selectedOptions.every(
       (option: any) =>
@@ -79,13 +79,12 @@ export function AddToCart({
     ),
   );
   const selectedVariantId = variant?.id || defaultVariantId;
-  const actionWithVariant = formAction.bind(null);
+  const actionWithVariant = formAction.bind(null); */
 
   return (
-    <form action={actionWithVariant as any}>
+    <form >
       <SubmitButton
         availableForSale={availableForSale}
-        selectedVariantId={selectedVariantId}
       />
       <p aria-live="polite" className="sr-only" role="status">
         {message}
