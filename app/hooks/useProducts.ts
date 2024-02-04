@@ -3,7 +3,7 @@ import { ProductsResponse } from "../types";
 import useProductStore from "../lib/stores/product.store";
 
 const requestConfig = {
-  url: "http://localhost:3000/api/v1/products",
+  url: "https://shishobabyclothes.ae/api/v1/products",
   method: "GET",
 };
 

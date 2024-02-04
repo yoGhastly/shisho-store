@@ -13,7 +13,7 @@ export function GridTileImage({
   active?: boolean;
   label?: {
     title: string;
-    amount: Stripe.Product["default_price"];
+    amount: string;
     currencyCode: string;
     position?: "bottom" | "center";
   };
