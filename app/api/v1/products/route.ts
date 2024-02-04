@@ -1,5 +1,6 @@
 "use server";
 
+import useProductStore from "@/app/lib/stores/product.store";
 import Stripe from "stripe";
 
 const STRIPE_SECRET_KEY =
@@ -11,6 +12,7 @@ export async function GET() {
     const { data: products } = await stripe.products.list({
       apiKey: STRIPE_SECRET_KEY,
     });
+
     return Response.json({ products, success: true, status: 200 });
   } catch (error) {
     console.error(error);

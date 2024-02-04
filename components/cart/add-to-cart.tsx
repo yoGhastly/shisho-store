@@ -66,7 +66,7 @@ export function AddToCart({
   variants,
   availableForSale,
 }: {
-  variants: any[];
+  variants?: any[];
   availableForSale: boolean;
 }) {
   const [message, formAction] = useFormState(addItem, null);

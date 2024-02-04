@@ -1,21 +1,33 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-import Link from 'next/link';
-import { HIDDEN_PRODUCT_TAG } from '@/app/lib/constants';
-import { Gallery } from '@/components/product/gallery';
-import { ProductDescription } from '@/components/product/product-description';
-import Footer from '@/components/layout/footer';
-import { GridTileImage } from '@/components/grid/tile';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import Link from "next/link";
+import { HIDDEN_PRODUCT_TAG } from "@/app/lib/constants";
+import { Gallery } from "@/components/product/gallery";
+import { ProductDescription } from "@/components/product/product-description";
+import Footer from "@/components/layout/footer";
+import { GridTileImage } from "@/components/grid/tile";
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export async function generateMetadata({
-  params
+  params,
 }: {
   params: { handle: string };
 }): Promise<Metadata> {
-  const product = { title: "Product title", description: "", featuredImage: { url: "", width: "200", height: "200", altText: "Image", alt: "image" }, tags: "", seo: { title: "", description: "" } };
+  const product = {
+    title: "Product title",
+    description: "",
+    featuredImage: {
+      url: "",
+      width: "200",
+      height: "200",
+      altText: "Image",
+      alt: "image",
+    },
+    tags: "",
+    seo: { title: "", description: "" },
+  };
 
   if (!product) return notFound();
 
@@ -30,8 +42,8 @@ export async function generateMetadata({
       follow: indexable,
       googleBot: {
         index: indexable,
-        follow: indexable
-      }
+        follow: indexable,
+      },
     },
     openGraph: url
       ? {
@@ -40,22 +52,40 @@ export async function generateMetadata({
             url,
             width,
             height,
-            alt
-          }
-        ]
+            alt,
+          },
+        ],
       }
-      : null
+      : null,
   };
 }
 
-export default async function ProductPage({ params }: { params: { handle: string } }) {
-  const product = { id: "1", images: [], title: "Product title", description: "", featuredImage: { url: "", width: "200", height: "200", altText: "Image", alt: "image" }, tags: "", seo: { title: "", description: "" } };
+export default async function ProductPage({
+  params,
+}: {
+  params: { handle: string };
+}) {
+  const product = {
+    id: "1",
+    images: [],
+    title: "Product title",
+    description: "",
+    featuredImage: {
+      url: "",
+      width: "200",
+      height: "200",
+      altText: "Image",
+      alt: "image",
+    },
+    tags: "",
+    seo: { title: "", description: "" },
+  };
 
   if (!product) return notFound();
 
   const productJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
+    "@context": "https://schema.org",
+    "@type": "Product",
     name: product.title,
     description: product.description,
     image: product.featuredImage.url,
@@ -75,7 +105,7 @@ export default async function ProductPage({ params }: { params: { handle: string
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productJsonLd)
+          __html: JSON.stringify(productJsonLd),
         }}
       />
       <div className="mx-auto max-w-screen-2xl px-4">
@@ -84,7 +114,7 @@ export default async function ProductPage({ params }: { params: { handle: string
             <Gallery
               images={product.images.map((image: any) => ({
                 src: image.url,
-                altText: image.altText
+                altText: image.altText,
               }))}
             />
           </div>
@@ -105,14 +135,25 @@ export default async function ProductPage({ params }: { params: { handle: string
 }
 
 async function RelatedProducts({ id }: { id: string }) {
-  const relatedProducts = [{
-    id: "1", handle: "", priceRange: {
-      maxVariantPrice: {
-        amount: "10", currencyCode
-          : "AED"
-      }
-    }, images: [], title: "Product title", description: "", featuredImage: { url: "", width: "200", height: "200", altText: "Image", alt: "image" }, tags: "", seo: { title: "", description: "" }
-  }];
+  const relatedProducts = [
+    {
+      id: "1",
+      handle: "",
+      priceRange: { maxVariantPrice: { amount: "10", currencyCode: "AED" } },
+      images: [],
+      title: "Product title",
+      description: "",
+      featuredImage: {
+        url: "",
+        width: "200",
+        height: "200",
+        altText: "Image",
+        alt: "image",
+      },
+      tags: "",
+      seo: { title: "", description: "" },
+    },
+  ];
 
   if (!relatedProducts.length) return null;
 
@@ -125,13 +166,16 @@ async function RelatedProducts({ id }: { id: string }) {
             key={product.handle}
             className="aspect-square w-full flex-none min-[475px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
           >
-            <Link className="relative h-full w-full" href={`/product/${product.handle}`}>
+            <Link
+              className="relative h-full w-full"
+              href={`/product/${product.handle}`}
+            >
               <GridTileImage
                 alt={product.title}
                 label={{
                   title: product.title,
                   amount: product.priceRange.maxVariantPrice.amount,
-                  currencyCode: product.priceRange.maxVariantPrice.currencyCode
+                  currencyCode: product.priceRange.maxVariantPrice.currencyCode,
                 }}
                 src={product.featuredImage?.url}
                 fill

@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import Image from "next/image";
 import Label from "../label";
+import Stripe from "stripe";
 
 export function GridTileImage({
   isInteractive = true,
@@ -12,7 +13,7 @@ export function GridTileImage({
   active?: boolean;
   label?: {
     title: string;
-    amount: string;
+    amount: Stripe.Product["default_price"];
     currencyCode: string;
     position?: "bottom" | "center";
   };

@@ -4,8 +4,12 @@ import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+interface Menu {
+  title: string;
+  path: string;
+}
 
-const FooterMenuItem = ({ item }: { item: any }) => {
+const FooterMenuItem = ({ item }: { item: Menu }) => {
   const pathname = usePathname();
   const [active, setActive] = useState(pathname === item.path);
 
@@ -30,13 +34,13 @@ const FooterMenuItem = ({ item }: { item: any }) => {
   );
 };
 
-export default function FooterMenu({ menu }: { menu: any[] }) {
+export default function FooterMenu({ menu }: { menu: Menu[] }) {
   if (!menu.length) return null;
 
   return (
     <nav>
       <ul>
-        {menu.map((item: any) => {
+        {menu.map((item) => {
           return <FooterMenuItem key={item.title} item={item} />;
         })}
       </ul>

@@ -4,6 +4,7 @@ import MobileMenu from "./mobile-menu";
 import Search from "./search";
 import OpenCart from "@/components/cart/open-cart";
 import Cart from "@/components/cart";
+import LogoSquare from "@/components/logo-square";
 const { SITE_NAME } = process.env;
 
 export default async function Navbar() {
@@ -16,9 +17,12 @@ export default async function Navbar() {
         <div className="flex w-full md:w-1/3">
           <Link
             href="/"
-            className="font-bold uppercase mr-2 flex w-full items-center justify-center md:w-auto lg:mr-6"
+            className="mr-2 flex w-full items-center justify-center md:w-auto lg:mr-6"
           >
-            {SITE_NAME}
+            <LogoSquare />
+            <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block">
+              {SITE_NAME}
+            </div>
           </Link>
           {[].length ? (
             <ul className="hidden gap-6 text-sm md:flex md:items-center">
