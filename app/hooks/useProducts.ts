@@ -1,9 +1,9 @@
 import useRequest from "./useRequest";
 import { ProductsResponse } from "../types";
 import useProductStore from "../lib/stores/product.store";
-
+//https://shishobabyclothes.ae/api/v1/products
 const requestConfig = {
-  url: "https://shishobabyclothes.ae/api/v1/products",
+  url: "http://localhost:3000/api/v1/products",
   method: "GET",
 };
 

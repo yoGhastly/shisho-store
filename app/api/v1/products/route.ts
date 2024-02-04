@@ -10,7 +10,7 @@ const stripe = new Stripe(STRIPE_SECRET_KEY);
 export async function GET() {
   try {
     const { data: products } = await stripe.products.list({
-      apiKey: STRIPE_SECRET_KEY,
+      limit: 50
     });
 
     return Response.json({ products, success: true, status: 200 });
