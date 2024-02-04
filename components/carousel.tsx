@@ -9,7 +9,7 @@ export function Carousel() {
 
   if (!products?.length) return null;
 
-  const carouselProducts = [...products.slice(3, products.lenght)];
+  const carouselProducts = [...products.slice(3, products.length)];
 
   return (
     <div className=" w-full overflow-x-auto pb-6 pt-1">
