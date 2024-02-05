@@ -5,15 +5,13 @@ import Prose from "../prose";
 import { VariantSelector } from "./variant-selector";
 
 export function ProductDescription({ product }: { product: Stripe.Product }) {
+  console.log({ isAvailable: product.active });
   return (
     <>
       <div className="mb-6 flex flex-col border-b pb-6">
         <h1 className="mb-2 text-5xl font-medium">{product.name}</h1>
         <div className="mr-auto w-auto rounded-full bg-blue-600 p-2 text-sm text-white">
-          <Price
-            amount={product.default_price as string}
-            currencyCode={`AED`}
-          />
+          <Price amount={"10"} currencyCode={`AED`} />
         </div>
       </div>
       {/* <VariantSelector options={product.options} variants={product.variants} /> */}

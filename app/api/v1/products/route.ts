@@ -1,6 +1,5 @@
 "use server";
 
-import useProductStore from "@/app/lib/stores/product.store";
 import Stripe from "stripe";
 
 const STRIPE_SECRET_KEY =
@@ -10,7 +9,7 @@ const stripe = new Stripe(STRIPE_SECRET_KEY);
 export async function GET() {
   try {
     const { data: products } = await stripe.products.list({
-      limit: 50
+      limit: 50,
     });
 
     return Response.json({ products, success: true, status: 200 });

@@ -16,10 +16,12 @@ const useProducts = () => {
     throw new Error("Could not get products");
   }
 
-  setProducts(data?.products || []);
+  if (data) {
+    setProducts(data?.products || []);
+  }
 
   return {
-    products: data?.products,
+    products: data && data.products,
   };
 };
 

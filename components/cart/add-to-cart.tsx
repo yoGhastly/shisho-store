@@ -6,14 +6,9 @@ import { useSearchParams } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
 import LoadingDots from "../loading-dots";
 import { addItem } from "./actions";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
-function SubmitButton({
-  availableForSale,
-  selectedVariantId,
-}: {
-  availableForSale: boolean;
-  selectedVariantId?: string | undefined;
-}) {
+function SubmitButton({ availableForSale }: { availableForSale: boolean }) {
   const { pending } = useFormStatus();
   const buttonClasses =
     "relative flex w-full items-center justify-center rounded-full bg-blue-600 p-4 tracking-wide text-white";
@@ -23,21 +18,6 @@ function SubmitButton({
     return (
       <button aria-disabled className={clsx(buttonClasses, disabledClasses)}>
         Out Of Stock
-      </button>
-    );
-  }
-
-  if (!selectedVariantId) {
-    return (
-      <button
-        aria-label="Please select an option"
-        aria-disabled
-        className={clsx(buttonClasses, disabledClasses)}
-      >
-        <div className="absolute left-0 ml-4">
-          <p>+</p>
-        </div>
-        Add To Cart
       </button>
     );
   }
@@ -62,30 +42,12 @@ function SubmitButton({
   );
 }
 
-export function AddToCart({
-  variants,
-  availableForSale,
-}: {
-  variants?: any[];
-  availableForSale: boolean;
-}) {
+export function AddToCart({ availableForSale }: { availableForSale: boolean }) {
   const [message, formAction] = useFormState(addItem, null);
-  const searchParams = useSearchParams();
-  /* const defaultVariantId = variants.length === 1 ? variants[0]?.id : undefined;
-  const variant = variants.find((variant: any) =>
-    variant.selectedOptions.every(
-      (option: any) =>
-        option.value === searchParams.get(option.name.toLowerCase()),
-    ),
-  );
-  const selectedVariantId = variant?.id || defaultVariantId;
-  const actionWithVariant = formAction.bind(null); */
 
   return (
-    <form >
-      <SubmitButton
-        availableForSale={availableForSale}
-      />
+    <form action={formAction}>
+      <SubmitButton availableForSale={availableForSale} />
       <p aria-live="polite" className="sr-only" role="status">
         {message}
       </p>
