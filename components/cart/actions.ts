@@ -19,7 +19,7 @@ export async function addToCart(
 ): Promise<Cart> {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/v1/carts/${cartId}`,
+      `http://shishobabyclothes.ae/api/v1/carts/${cartId}`,
       {
         method: "POST",
         headers: {
@@ -68,7 +68,7 @@ export async function addItem(prevState: any) {
 
 export async function createCart() {
   try {
-    const response = await fetch("http://localhost:3000/api/v1/carts", {
+    const response = await fetch("http://shishobabyclothes.ae/api/v1/carts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
