@@ -1,6 +1,5 @@
 "use client";
 
-// import { PlusIcon } from '@heroicons/react/24/outline';
 import clsx from "clsx";
 import { useSearchParams } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
@@ -35,7 +34,7 @@ function SubmitButton({ availableForSale }: { availableForSale: boolean }) {
       })}
     >
       <div className="absolute left-0 ml-4">
-        {pending ? <LoadingDots className="mb-3 bg-white" /> : <p>+</p>}
+        {pending ? <LoadingDots className="mb-3 bg-white" /> : <PlusIcon />}
       </div>
       Add To Cart
     </button>

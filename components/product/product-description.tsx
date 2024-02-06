@@ -1,11 +1,50 @@
+"use client";
+
 import Stripe from "stripe";
 import { AddToCart } from "../cart/add-to-cart";
 import Price from "../price";
 import Prose from "../prose";
 import { VariantSelector } from "./variant-selector";
+import { useEffect, useState } from "react";
+
+interface ProductOption {
+  id: string;
+  name: string;
+  values: string[];
+  quantity: number;
+}
+
+function parseMetadata(metadata: string): ProductOption[] {
+  const options = metadata.split(", ").map((item) => {
+    const [category, quantity] = item.split("_");
+    const [ageRange, ageQty] = category.split("-"); // Split age range and quantity
+    const values = category.split("_");
+    const formattedValues = values.map(
+      (valueQty) => valueQty.split("-")[0] + `-` + `${ageQty}`,
+    );
+    console.log({ formattedValues });
+    return {
+      id: ageRange,
+      name: "Sizes",
+      values: formattedValues,
+      quantity: parseInt(quantity),
+    };
+  });
+  return options;
+}
 
 export function ProductDescription({ product }: { product: Stripe.Product }) {
-  console.log({ isAvailable: product.active });
+  const [options, setOptions] = useState<ProductOption[]>([]);
+
+  useEffect(() => {
+    if (product.metadata && product.metadata.categoryWithQty) {
+      const parsedOptions = parseMetadata(product.metadata.categoryWithQty);
+      setOptions(parsedOptions);
+    }
+  }, [product]);
+
+  console.log("Options:", options);
+
   return (
     <>
       <div className="mb-6 flex flex-col border-b pb-6">
@@ -14,7 +53,7 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
           <Price amount={"10"} currencyCode={`AED`} />
         </div>
       </div>
-      {/* <VariantSelector options={product.metadata} /> */}
+      <VariantSelector options={options} />
 
       {product.description ? (
         <Prose
