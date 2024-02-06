@@ -1,5 +1,7 @@
 import Footer from "@/components/layout/footer";
 import Prose from "@/components/prose";
+import styles from "../../styles/Logo.module.css";
+import clsx from "clsx";
 
 export const runtime = "edge";
 
@@ -40,18 +42,21 @@ If you receive a damaged or defective item, please contact us within 2 days of r
 
 The return address for your items will be provided by our customer service team upon initiating the return process.
 `;
+
+const formattedHtml = html.replace(/^\d+\./gm, "<br/>$&");
+
 export default function Page() {
   return (
-    <>
-      <div className="flex justify-center items-center h-screen">
+    <main className="h-screen px-8">
+      <div className="flex justify-center items-center">
         <div className="max-w-2xl py-20 mx-auto">
-          <h1 className="mb-8 text-5xl font-bold">
+          <h1 className={clsx("mb-8 text-3xl md:text-5xl font-bold", styles.magic)}>
             Cancellation and Refund Policy
           </h1>
-          <Prose className="mb-8" html={html} />
+          <Prose className="mb-8" html={formattedHtml} />
         </div>
       </div>
       <Footer />
-    </>
+    </main>
   );
 }

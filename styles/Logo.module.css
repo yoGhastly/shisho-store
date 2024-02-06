@@ -1,0 +1,71 @@
+@keyframes background-pan {
+  from {
+    background-position: 0% center;
+  }
+
+  to {
+    background-position: -200% center;
+  }
+}
+
+@keyframes scale {
+  from,
+  to {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+.magic {
+  animation: background-pan 3s linear infinite;
+  background: linear-gradient(
+    270deg,
+    #ffc6ff 1.27%,
+    #a0c4ff 26.44%,
+    #9bf6ff 51.62%,
+    #a0c4ff 77.78%,
+    #ffc6ff 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.number {
+  background: linear-gradient(
+    93deg,
+    #35d9fc 15.36%,
+    #2117f6 36.25%,
+    #c351f8 68.77%,
+    #35d9fc 106.41%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.gradient {
+  background: linear-gradient(
+    96deg,
+    #695093 5.05%,
+    #bc6e88 15.98%,
+    #c8b7d7 53.08%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

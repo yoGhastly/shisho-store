@@ -5,6 +5,8 @@ import Search from "./search";
 import OpenCart from "@/components/cart/open-cart";
 import Cart from "@/components/cart";
 import LogoSquare from "@/components/logo-square";
+import styles from "../../../styles/Logo.module.css";
+
 const { SITE_NAME } = process.env;
 
 export default async function Navbar() {
@@ -20,7 +22,7 @@ export default async function Navbar() {
             className="mr-2 flex w-full items-center justify-center md:w-auto lg:mr-6"
           >
             <LogoSquare />
-            <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block">
+            <div className={`${styles.magic} ml-2 flex-none text-sm font-bold uppercase md:hidden lg:block`}>
               {SITE_NAME}
             </div>
           </Link>

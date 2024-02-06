@@ -3,6 +3,8 @@
 import { createUrl } from "@/app/lib/utils";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams } from "next/navigation";
+import styles from "../../../styles/Logo.module.css";
+import Image from "next/image";
 
 export default function Search() {
   const router = useRouter();
@@ -39,7 +41,12 @@ export default function Search() {
         className="w-full rounded-lg border bg-white px-4 py-2 text-sm text-black placeholder:text-neutral-500"
       />
       <div className="absolute right-0 top-0 mr-3 flex h-full items-center">
-        <MagnifyingGlassIcon className="h-4" />
+        <Image
+          src="/magnifying-glass.svg"
+          width={24}
+          height={24}
+          alt="Icon Search"
+        />
       </div>
     </form>
   );

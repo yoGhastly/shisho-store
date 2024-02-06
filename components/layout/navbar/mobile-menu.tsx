@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Search from "./search";
+import Image from "next/image";
 
 export default function MobileMenu({ menu }: { menu: any[] }) {
   const pathname = usePathname();
@@ -35,7 +36,12 @@ export default function MobileMenu({ menu }: { menu: any[] }) {
         aria-label="Open mobile menu"
         className="flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors md:hidden"
       >
-        <Bars3Icon className="h-4" />
+        <Image
+          src="/bars-3.svg"
+          width={24}
+          height={24}
+          alt="Menu"
+        />
       </button>
       <Transition show={isOpen}>
         <Dialog onClose={closeMobileMenu} className="relative z-50">

@@ -1,8 +1,9 @@
-import Footer from '@/components/layout/footer';
-import Prose from '@/components/prose';
+import Footer from "@/components/layout/footer";
+import Prose from "@/components/prose";
+import styles from "../../styles/Logo.module.css";
+import clsx from "clsx";
 
-
-export const runtime = 'edge';
+export const runtime = "edge";
 
 export const revalidate = 43200; // 12 hours in seconds
 
@@ -32,21 +33,22 @@ We currently only ship to addresses within United Arab Emirates.
 5. Lost or Stolen Packages:
 
 We are not responsible for lost or stolen packages. Please ensure that the shipping address provided is secure and accurate.
-`
-const regex = /(\d+\. [^\n]*ts)/g;
-const result = html.replace(regex, '\n$1');
+`;
+
+const formattedHtml = html.replace(/^\d+\./gm, '<br/>$&');
+
 export default function Page() {
-
-
   return (
-    <>
-      <div className='flex justify-center items-center h-screen'>
-        <div className='max-w-2xl py-20 mx-auto' >
-          <h1 className="mb-8 text-5xl font-bold">Shipping Policy</h1>
-          <Prose className="mb-8" html={result} />
+    <main className="h-screen px-8">
+      <div className="flex justify-center items-center">
+        <div className="max-w-2xl py-20 mx-auto">
+          <h1 className={clsx("mb-8 text-3xl md:text-5xl font-bold", styles.magic)}>
+            Shipping Policy
+          </h1>
+          <Prose className="mb-8" html={formattedHtml} />
         </div>
       </div>
       <Footer />
-    </>
+    </main>
   );
 }

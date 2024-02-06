@@ -74,7 +74,12 @@ export default function CartModal({ cart }: { cart: any | undefined }) {
 
               {!cart || cart.lines.length === 0 ? (
                 <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
-                  <ShoppingCartIcon className="h-16" />
+                  <Image
+                    src="/shopping-cart.svg"
+                    width={80}
+                    height={80}
+                    alt="Shopping Cart"
+                  />
                   <p className="mt-6 text-center text-2xl font-bold">
                     Your cart is empty.
                   </p>

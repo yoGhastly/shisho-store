@@ -1,17 +1,21 @@
-import { ShoppingCartIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
+import clsx from "clsx";
+import Image from "next/image";
 
 export default function OpenCart({
   className,
-  quantity
+  quantity,
 }: {
   className?: string;
   quantity?: number;
 }) {
   return (
     <div className="relative flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors">
-      <ShoppingCartIcon
-        className={clsx('h-4 transition-all ease-in-out hover:scale-110 ', className)}
+      <Image
+        src="/shopping-cart.svg"
+        width={20}
+        height={20}
+        alt="Shopping Cart"
+        className={clsx(className)}
       />
 
       {quantity ? (

@@ -1,5 +1,7 @@
 import Footer from "@/components/layout/footer";
 import Prose from "@/components/prose";
+import styles from "../../styles/Logo.module.css";
+import clsx from "clsx";
 
 export const runtime = "edge";
 
@@ -52,16 +54,26 @@ We comply with applicable privacy laws and regulations.
 
 For privacy-related inquiries or concerns, please contact us at shishobabyclothes@gmail.com
 `;
+
+const formattedHtml = html.replace(/^\d+\./gm, "<br/>$&");
+
 export default function Page() {
   return (
-    <>
-      <div className="flex justify-center items-center h-screen">
+    <main className="h-screen px-8">
+      <div className="flex justify-center items-center">
         <div className="max-w-2xl py-20 mx-auto">
-          <h1 className="mb-8 text-5xl font-bold">Privacy Policy</h1>
-          <Prose className="mb-8" html={html} />
+          <h1
+            className={clsx(
+              "mb-8 text-3xl md:text-5xl font-bold",
+              styles.magic,
+            )}
+          >
+            Privacy Policy
+          </h1>
+          <Prose className="mb-8" html={formattedHtml} />
         </div>
       </div>
       <Footer />
-    </>
+    </main>
   );
 }

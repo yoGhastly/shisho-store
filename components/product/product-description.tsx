@@ -10,7 +10,7 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
     <>
       <div className="mb-6 flex flex-col border-b pb-6">
         <h1 className="mb-2 text-5xl font-medium">{product.name}</h1>
-        <div className="mr-auto w-auto rounded-full bg-blue-600 p-2 text-sm text-white">
+        <div className="mr-auto w-auto rounded-full bg-[#FFC6FF] p-2 text-sm text-white">
           <Price amount={"10"} currencyCode={`AED`} />
         </div>
       </div>
