@@ -4,9 +4,10 @@ import { Dialog, Transition } from "@headlessui/react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import Search from "./search";
 import Image from "next/image";
+import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 
 export default function MobileMenu({ menu }: { menu: any[] }) {
   const pathname = usePathname();
@@ -14,6 +15,7 @@ export default function MobileMenu({ menu }: { menu: any[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const openMobileMenu = () => setIsOpen(true);
   const closeMobileMenu = () => setIsOpen(false);
+  const isSm = useMediaQuery(480);
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,8 +40,8 @@ export default function MobileMenu({ menu }: { menu: any[] }) {
       >
         <Image
           src="/bars-3.svg"
-          width={24}
-          height={24}
+          width={isSm ? 20 : 24}
+          height={isSm ? 20 : 24}
           alt="Menu"
         />
       </button>

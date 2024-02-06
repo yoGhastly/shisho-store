@@ -59,8 +59,8 @@ const formattedHtml = html.replace(/^\d+\./gm, "<br/>$&");
 
 export default function Page() {
   return (
-    <main className="h-screen px-8">
-      <div className="flex justify-center items-center">
+    <main className="h-screen">
+      <div className="flex justify-center items-center px-8">
         <div className="max-w-2xl py-20 mx-auto">
           <h1
             className={clsx(
