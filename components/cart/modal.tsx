@@ -17,7 +17,21 @@ type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
-export default function CartModal({ cart }: { cart: any | undefined }) {
+interface Cart {
+  currency: "AED";
+  lineItems: LineItem[];
+  total: number;
+  totalQuantity: number;
+  tax: number;
+}
+
+interface LineItem {
+  amount: number;
+  description: string;
+  quantity: number;
+}
+
+export default function CartModal({ cart }: { cart: Cart | undefined }) {
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
   const openCart = () => setIsOpen(true);
@@ -72,7 +86,7 @@ export default function CartModal({ cart }: { cart: any | undefined }) {
                 </button>
               </div>
 
-              {!cart || cart.lines.length === 0 ? (
+              {!cart || cart.lineItems.length === 0 ? (
                 <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
                   <ShoppingCartIcon className="h-16" />
                   <p className="mt-6 text-center text-2xl font-bold">
@@ -82,7 +96,7 @@ export default function CartModal({ cart }: { cart: any | undefined }) {
               ) : (
                 <div className="flex h-full flex-col justify-between overflow-hidden p-1">
                   <ul className="flex-grow overflow-auto py-4">
-                    {cart.lines.map((item: any, i: number) => {
+                    {/* {cart.lineItems.map((item, i) => {
                       // FIX: ^ Create strong types
                       const merchandiseSearchParams =
                         {} as MerchandiseSearchParams;
@@ -168,16 +182,16 @@ export default function CartModal({ cart }: { cart: any | undefined }) {
                           </div>
                         </li>
                       );
-                    })}
+                    })} */}
                   </ul>
                   <div className="py-4 text-sm text-neutral-500">
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1">
                       <p>Taxes</p>
-                      <Price
+                      {/* <Price
                         className="text-right text-base text-black"
                         amount={cart.cost.totalTaxAmount.amount}
                         currencyCode={cart.cost.totalTaxAmount.currencyCode}
-                      />
+                      /> */}
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
                       <p>Shipping</p>
@@ -185,16 +199,16 @@ export default function CartModal({ cart }: { cart: any | undefined }) {
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
                       <p>Total</p>
-                      <Price
+                      {/* <Price
                         className="text-right text-base text-black"
                         amount={cart.cost.totalAmount.amount}
                         currencyCode={cart.cost.totalAmount.currencyCode}
-                      />
+                      /> */}
                     </div>
                   </div>
                   <a
-                    href={cart.checkoutUrl}
-                    className="block w-full rounded-full bg-blue-600 p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
+                    // href={cart.checkoutUrl}
+                    className="block w-full rounded-full bg-[#FFC6FF] p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
                   >
                     Proceed to Checkout
                   </a>

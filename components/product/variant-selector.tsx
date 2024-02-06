@@ -5,19 +5,13 @@ import clsx from "clsx";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-type Combination = {
+interface ProductOption {
   id: string;
-  availableForSale: boolean;
-  [key: string]: string | boolean; // ie. { color: 'Red', size: 'Large', ... }
-};
+  name: string;
+  values: string[];
+}
 
-export function VariantSelector({
-  options,
-  variants,
-}: {
-  options: any[];
-  variants: any[];
-}) {
+export function VariantSelector({ options }: { options: ProductOption[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -29,27 +23,12 @@ export function VariantSelector({
     return null;
   }
 
-  const combinations: Combination[] = variants.map((variant) => ({
-    id: variant.id,
-    availableForSale: variant.availableForSale,
-    // Adds key / value pairs for each variant (ie. "color": "Black" and "size": 'M").
-    ...variant.selectedOptions.reduce(
-      (accumulator: any, option: any) => ({
-        // FIX: ^ Set a strong type
-        ...accumulator,
-        [option.name.toLowerCase()]: option.value,
-      }),
-      {},
-    ),
-  }));
-
   return options.map((option) => (
     <Suspense key={option.id}>
       <dl className="mb-8">
         <dt className="mb-4 text-sm uppercase tracking-wide">{option.name}</dt>
         <dd className="flex flex-wrap gap-3">
-          {option.values.map((value: any) => {
-            // FIX: ^ Set a strong type
+          {option.values.map((value) => {
             const optionNameLowerCase = option.name.toLowerCase();
 
             // Base option params on current params so we can preserve any other param state in the url.
@@ -79,34 +58,27 @@ export function VariantSelector({
                     option.values.includes(value),
                 ),
             );
-            const isAvailableForSale = combinations.find((combination) =>
-              filtered.every(
-                ([key, value]) =>
-                  combination[key] === value && combination.availableForSale,
-              ),
-            );
-
             // The option is active if it's in the url params.
             const isActive = searchParams.get(optionNameLowerCase) === value;
 
             return (
               <button
                 key={value}
-                aria-disabled={!isAvailableForSale}
-                disabled={!isAvailableForSale}
+                aria-disabled={false}
+                disabled={false}
                 onClick={() => {
                   router.replace(optionUrl, { scroll: false });
                 }}
-                title={`${option.name} ${value}${!isAvailableForSale ? " (Out of Stock)" : ""
+                title={`${option.name} ${value}${false ? " (Out of Stock)" : ""
                   }`}
                 className={clsx(
                   "flex min-w-[48px] items-center justify-center rounded-full border bg-neutral-100 px-2 py-1 text-sm",
                   {
-                    "cursor-default ring-2 ring-blue-600": isActive,
-                    "ring-1 ring-transparent transition duration-300 ease-in-out hover:scale-110 hover:ring-blue-600 ":
-                      !isActive && isAvailableForSale,
+                    "cursor-default ring-2 ring-[#FFC6FF]": isActive,
+                    "ring-1 ring-transparent transition duration-300 ease-in-out hover:scale-110 hover:ring-[#FFC6FF] ":
+                      !isActive && false,
                     "relative z-10 cursor-not-allowed overflow-hidden bg-neutral-100 text-neutral-500 ring-1 ring-neutral-300 before:absolute before:inset-x-0 before:-z-10 before:h-px before:-rotate-45 before:bg-neutral-300 before:transition-transform":
-                      !isAvailableForSale,
+                      false,
                   },
                 )}
               >

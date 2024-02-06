@@ -14,7 +14,7 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
           <Price amount={"10"} currencyCode={`AED`} />
         </div>
       </div>
-      {/* <VariantSelector options={product.options} variants={product.variants} /> */}
+      {/* <VariantSelector options={product.metadata} /> */}
 
       {product.description ? (
         <Prose
