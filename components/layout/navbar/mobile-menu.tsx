@@ -40,8 +40,8 @@ export default function MobileMenu({ menu }: { menu: any[] }) {
       >
         <Image
           src="/bars-3.svg"
-          width={isSm ? 20 : 24}
-          height={isSm ? 20 : 24}
+          width={isSm ? 10 : 24}
+          height={isSm ? 10 : 24}
           alt="Menu"
         />
       </button>
