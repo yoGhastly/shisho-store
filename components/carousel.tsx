@@ -6,7 +6,6 @@ import useProducts from "@/app/hooks/useProducts";
 
 export function Carousel() {
   const { products } = useProducts();
-  console.log({ products });
 
   if (!products?.length) return null;
 

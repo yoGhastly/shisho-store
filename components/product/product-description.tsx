@@ -22,7 +22,7 @@ function parseMetadata(metadata: string): ProductOption[] {
     const formattedValues = values.map(
       (valueQty) => valueQty.split("-")[0] + `-` + `${ageQty}`,
     );
-    console.log({ formattedValues });
+
     return {
       id: ageRange,
       name: "Sizes",
@@ -42,8 +42,6 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
       setOptions(parsedOptions);
     }
   }, [product]);
-
-  console.log("Options:", options);
 
   return (
     <>

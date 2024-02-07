@@ -10,6 +10,12 @@ import { ProductsResponse } from "@/app/types";
 
 export const runtime = "edge";
 
+/**
+ * Returns a  product. The product is returned sorted by id,
+ * Returns a list of products without the found product.
+ *
+ * @param id String
+ */
 const getProduct = async (id: string) => {
   // NOTE: axios does not work with edge runtime, use fetch preferably
   const res = await fetch(`https://shishobabyclothes.ae/api/v1/products`);

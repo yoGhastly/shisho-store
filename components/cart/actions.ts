@@ -5,12 +5,32 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export interface CartItem {
-  merchandiseId: string;
+  id: string;
+  name: string;
+  amount: string;
+  description: string;
+  images: string[];
   quantity: number;
 }
 
 interface Cart {
   id: string;
+  items: any[];
+  updatedAt: Date;
+}
+const colors: { [key: string]: string } = {
+  reset: "\x1b[0m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  magenta: "\x1b[35m",
+  cyan: "\x1b[36m",
+};
+
+// Function to log colored output
+function logColored(message: string, color: string): void {
+  console.log(colors[color] + message + colors.reset);
 }
 
 export async function addToCart(
@@ -19,56 +39,72 @@ export async function addToCart(
 ): Promise<Cart> {
   try {
     const response = await fetch(
-      `https://shishobabyclothes.ae/api/v1/carts/${cartId}`,
+      `http://localhost:3000/api/v1/carts/${cartId}`,
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ cartId, items }),
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to add items to cart");
-    }
+    const cart = await response.json();
 
-    // Optionally, you can parse and return the updated cart data if your API responds with it
-    const updatedCart: Cart = await response.json();
-    return updatedCart;
+    return cart;
   } catch (error) {
     console.error("Error adding items to cart:", error);
-    throw error;
+    throw error; // Throw the error for the caller to handle
   }
 }
 
 export async function addItem(prevState: any) {
-  let cartId = cookies().get("cartId")?.value;
-  let cart;
-
-  if (cartId) {
-    cart = await getCart(cartId);
-  }
-
-  if (!cartId || !cart) {
-    cart = await createCart();
-    cartId = cart.id;
-    cookies().set("cartId", cartId as string);
-  }
-
+  logColored("Add Item", "red");
   try {
+    // Step 1: Get the cartId from cookies
+    let cartId = cookies().get("cartId")?.value;
+    let cart;
+
+    // Step 2: Fetch the cart details if cartId exists
+    if (cartId) {
+      logColored("If cartId", "yellow");
+      cart = await getCart(cartId);
+    }
+
+    // Step 3: If no cartId or cart, create a new cart
+    if (!cartId || !cart) {
+      logColored("If not cartId or cart start", "green");
+      cart = await createCart();
+      cartId = cart.id;
+      cookies().set("cartId", cartId as string);
+      logColored("If not cartId or cart end", "green");
+    }
+
+    // Step 4: Add item to the cart
     await addToCart(cartId as string, [
-      { merchandiseId: cartId as string, quantity: 1 },
+      {
+        id: "",
+        name: "",
+        amount: "",
+        description: "",
+        images: [""],
+        quantity: 0,
+      },
     ]);
+
+    logColored("addToCart", "blue");
+
     revalidateTag(TAGS.cart);
-  } catch (e) {
+
+    // Step 6: Return success message
+    return "Item added to cart successfully";
+  } catch (error) {
+    // Step 6: Handle errors
+    console.error("Error adding item to cart:", error);
     return "Error adding item to cart";
   }
 }
 
 export async function createCart() {
   try {
-    const response = await fetch("https://shishobabyclothes.ae/api/v1/carts", {
+    const response = await fetch("http://localhost:3000/api/v1/carts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,6 +116,8 @@ export async function createCart() {
     }
 
     const cart = await response.json();
+
+    logColored("createCart", "cyan");
     return cart;
   } catch (error) {
     console.error("Error creating cart:", error);
@@ -135,6 +173,22 @@ export async function updateItemQuantity(
     return "Error updating item quantity";
   }
 }
-function getCart(cartId: string): any {
-  throw new Error("Function not implemented.");
+
+export async function getCart(cartId: string): Promise<Cart> {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/v1/carts/${cartId}`,
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch cart details: ${response.statusText}`);
+    }
+
+    const cart = await response.json();
+    logColored("getCart", "magenta");
+    return cart as Cart;
+  } catch (error) {
+    console.error("Error fetching cart details:", error);
+    throw error; // Throw the error for the caller to handle
+  }
 }

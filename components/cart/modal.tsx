@@ -18,42 +18,44 @@ type MerchandiseSearchParams = {
 };
 
 interface Cart {
-  currency: "AED";
-  lineItems: LineItem[];
-  total: number;
-  totalQuantity: number;
-  tax: number;
+  id: string;
+  items: LineItem[];
+  updatedAt: Date;
 }
 
 interface LineItem {
-  amount: number;
+  id: string;
+  name: string;
+  amount: string;
   description: string;
+  images: string[];
   quantity: number;
 }
 
 export default function CartModal({ cart }: { cart: Cart | undefined }) {
   const [isOpen, setIsOpen] = useState(false);
-  const quantityRef = useRef(cart?.totalQuantity);
+  const quantityRef = useRef(cart?.items.length);
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 
+
   useEffect(() => {
     // Open cart modal when quantity changes.
-    if (cart?.totalQuantity !== quantityRef.current) {
+    if (cart?.items.length !== quantityRef.current) {
       // But only if it's not already open (quantity also changes when editing items in cart).
       if (!isOpen) {
         setIsOpen(true);
       }
 
       // Always update the quantity reference
-      quantityRef.current = cart?.totalQuantity;
+      quantityRef.current = cart?.items.length;
     }
-  }, [isOpen, cart?.totalQuantity, quantityRef]);
+  }, [isOpen, cart?.items.length, quantityRef]);
 
   return (
     <>
       <button aria-label="Open cart" onClick={openCart}>
-        <OpenCart quantity={cart?.totalQuantity} />
+        <OpenCart quantity={cart?.items.length} />
       </button>
       <Transition show={isOpen}>
         <Dialog onClose={closeCart} className="relative z-50">
@@ -86,7 +88,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                 </button>
               </div>
 
-              {!cart || cart.lineItems.length === 0 ? (
+              {!cart || cart.items.length === 0 ? (
                 <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
                   <ShoppingCartIcon className="h-16" />
                   <p className="mt-6 text-center text-2xl font-bold">
@@ -96,22 +98,12 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
               ) : (
                 <div className="flex h-full flex-col justify-between overflow-hidden p-1">
                   <ul className="flex-grow overflow-auto py-4">
-                    {/* {cart.lineItems.map((item, i) => {
-                      // FIX: ^ Create strong types
+                    {cart.items.map((item, i) => {
                       const merchandiseSearchParams =
                         {} as MerchandiseSearchParams;
 
-                      item.merchandise.selectedOptions.forEach(
-                        // FIX: Create strong types
-                        ({ name, value }: { name: string; value: string }) => {
-                          if (value !== DEFAULT_OPTION) {
-                            merchandiseSearchParams[name.toLowerCase()] = value;
-                          }
-                        },
-                      );
-
                       const merchandiseUrl = createUrl(
-                        `/product/${item.merchandise.product.handle}`,
+                        `/product/${item.id}`,
                         new URLSearchParams(merchandiseSearchParams),
                       );
 
@@ -134,34 +126,22 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                                   className="h-full w-full object-cover"
                                   width={64}
                                   height={64}
-                                  alt={
-                                    item.merchandise.product.featuredImage
-                                      .altText || item.merchandise.product.title
-                                  }
-                                  src={
-                                    item.merchandise.product.featuredImage.url
-                                  }
+                                  alt={item.name}
+                                  src={item.images[0]}
                                 />
                               </div>
 
                               <div className="flex flex-1 flex-col text-base">
                                 <span className="leading-tight">
-                                  {item.merchandise.product.title}
+                                  {item.name}
                                 </span>
-                                {item.merchandise.title !== DEFAULT_OPTION ? (
-                                  <p className="text-sm text-neutral-500">
-                                    {item.merchandise.title}
-                                  </p>
-                                ) : null}
                               </div>
                             </Link>
                             <div className="flex h-16 flex-col justify-between">
                               <Price
                                 className="flex justify-end space-y-2 text-right text-sm"
-                                amount={item.cost.totalAmount.amount}
-                                currencyCode={
-                                  item.cost.totalAmount.currencyCode
-                                }
+                                amount={"10"}
+                                currencyCode={`AED`}
                               />
                               <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200">
                                 <EditItemQuantityButton
@@ -182,16 +162,16 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                           </div>
                         </li>
                       );
-                    })} */}
+                    })}
                   </ul>
                   <div className="py-4 text-sm text-neutral-500">
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1">
                       <p>Taxes</p>
-                      {/* <Price
+                      <Price
                         className="text-right text-base text-black"
-                        amount={cart.cost.totalTaxAmount.amount}
-                        currencyCode={cart.cost.totalTaxAmount.currencyCode}
-                      /> */}
+                        amount={"15"}
+                        currencyCode={`AED`}
+                      />
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
                       <p>Shipping</p>
@@ -199,15 +179,15 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
                       <p>Total</p>
-                      {/* <Price
+                      <Price
                         className="text-right text-base text-black"
-                        amount={cart.cost.totalAmount.amount}
-                        currencyCode={cart.cost.totalAmount.currencyCode}
-                      /> */}
+                        amount={"25"}
+                        currencyCode={"AED"}
+                      />
                     </div>
                   </div>
                   <a
-                    // href={cart.checkoutUrl}
+                    href="/"
                     className="block w-full rounded-full bg-[#FFC6FF] p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
                   >
                     Proceed to Checkout

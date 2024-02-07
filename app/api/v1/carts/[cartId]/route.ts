@@ -1,22 +1,35 @@
-import { CartItem, addToCart } from "@/components/cart/actions";
+import { NextApiRequest } from "next";
 
-export async function POST(
-  request: Request,
-  { params }: { params: { cartId: string; items: CartItem[] } },
-) {
-  if (request.method !== "POST") {
-    return Response.json({ error: "Method Not Allowed" });
-  }
+const colors: { [key: string]: string } = {
+  reset: "\x1b[0m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  magenta: "\x1b[35m",
+  cyan: "\x1b[36m",
+};
 
+// Function to log colored output
+function logColored(message: string, color: string): void {
+  console.log(colors[color] + message + colors.reset);
+}
+export async function POST(req: NextApiRequest) {
   try {
-    // You might want to implement the logic to add items to the cart based on the provided cartId
-    // This could involve making requests to your backend or commerce platform
-    // Replace the placeholder logic with your actual implementation
-    const updatedCart = await addToCart(params.cartId, params.items);
+    // Parse the request body to get the items to be added to the cart
+    const { cartId, items } = req.body;
 
-    Response.json(updatedCart);
+    const updatedCart = {
+      id: cartId,
+      items: items,
+      updatedAt: new Date(),
+    };
+
+    // Respond with the updated cart object
+    logColored("getCart route", "magenta")
+    return Response.json({ cart: updatedCart });
   } catch (error) {
     console.error("Error adding items to cart:", error);
-    Response.json({ error: "Internal Server Error" });
+    return Response.json({ error: "Error adding items to cart" });
   }
 }
