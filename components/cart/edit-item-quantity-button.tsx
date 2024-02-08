@@ -56,9 +56,9 @@ export function EditItemQuantityButton({
   return (
     <form action={actionWithVariant as any}>
       <SubmitButton type={type} />
-      <p aria-live="polite" className="sr-only" role="status">
+      {/* <p aria-live="polite" className="sr-only" role="status">
         {message}
-      </p>
+      </p> */}
     </form>
   );
 }
