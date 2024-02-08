@@ -37,9 +37,9 @@ export function DeleteItemButton({ item }: { item: any }) {
   return (
     <form action={actionWithVariant as any}>
       <SubmitButton />
-      <p aria-live="polite" className="sr-only" role="status">
+      {/* <p aria-live="polite" className="sr-only" role="status">
         {message}
-      </p>
+      </p> */}
     </form>
   );
 }
