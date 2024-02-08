@@ -36,13 +36,16 @@ export async function addToCart(
   items: CartItem[],
 ): Promise<Cart> {
   try {
-    const response = await fetch(`http://localhost:3000/api/v1/carts/add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `https://shishobabyclothes.ae/api/v1/carts/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items }),
       },
-      body: JSON.stringify({ items }),
-    });
+    );
 
     if (!response.ok) {
       throw new Error("Failed to add items to cart");
@@ -103,7 +106,7 @@ export async function addItem(prevState: any, formData: FormData) {
 export async function createCart(items: CartItem[]): Promise<Cart> {
   try {
     // Make a POST request to the cart creation endpoint
-    const response = await fetch("http://localhost:3000/api/v1/carts", {
+    const response = await fetch("https://shishobabyclothes.ae/api/v1/carts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -145,7 +148,7 @@ export async function updateItemQuantity(
 export async function getCart(cartId: string): Promise<Cart> {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/v1/carts/${cartId}`,
+      `https://shishobabyclothes.ae/api/v1/carts/${cartId}`,
       {
         method: "POST",
         body: JSON.stringify({ cartId }),
