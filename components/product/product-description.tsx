@@ -6,6 +6,7 @@ import Price from "../price";
 import Prose from "../prose";
 import { VariantSelector } from "./variant-selector";
 import { useEffect, useState } from "react";
+import useAddToCartProductDetailsStore from "@/app/lib/stores/addToCartStore";
 
 interface ProductOption {
   id: string;
@@ -35,6 +36,11 @@ function parseMetadata(metadata: string): ProductOption[] {
 
 export function ProductDescription({ product }: { product: Stripe.Product }) {
   const [options, setOptions] = useState<ProductOption[]>([]);
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined,
+  );
+  const { setProductDetails, addedToCartProductDetails } =
+    useAddToCartProductDetailsStore();
 
   useEffect(() => {
     if (product.metadata && product.metadata.categoryWithQty) {
@@ -43,15 +49,47 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
     }
   }, [product]);
 
+  useEffect(() => {
+    if (selectedSize) {
+      setProductDetails({
+        availableForSale: product.active,
+        product: {
+          id: product.id,
+          name: product.name,
+          size: selectedSize,
+          amount: "10",
+        },
+      });
+    }
+
+    return () => {
+      setProductDetails({
+        availableForSale: false,
+        product: {
+          id: "",
+          name: "",
+          size: "",
+          amount: "",
+        },
+      });
+    };
+  }, [
+    selectedSize,
+    setProductDetails,
+    product.active,
+    product.id,
+    product.name,
+  ]);
+
   return (
     <>
       <div className="mb-6 flex flex-col border-b pb-6">
         <h1 className="mb-2 text-5xl font-medium">{product.name}</h1>
-        <div className="mr-auto w-auto rounded-full bg-[#FFC6FF] p-2 text-sm text-white">
+        <div className="mr-auto w-auto rounded-full bg-[#A0C4FF] p-2 text-sm text-white">
           <Price amount={"10"} currencyCode={`AED`} />
         </div>
       </div>
-      <VariantSelector options={options} />
+      <VariantSelector options={options} onSelectedSize={setSelectedSize} />
 
       {product.description ? (
         <Prose
@@ -60,7 +98,10 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
         />
       ) : null}
 
-      <AddToCart availableForSale={product.active} />
+      <AddToCart
+        availableForSale={product.active}
+        product={addedToCartProductDetails.product}
+      />
     </>
   );
 }

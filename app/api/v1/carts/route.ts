@@ -1,26 +1,38 @@
+import { supabase } from "@/app/lib/subapase/client";
+import { cookies } from "next/headers";
+
 export async function POST(req: Request) {
   try {
-    const newCart = {
-      id: "some-unique-cart-id",
-      items: [
-        {
-          id: "productId",
-          name: "product name",
-          amount: "10",
-          description: "product description",
-          images: [
-            "http://localhost:3000/_next/image?url=https%3A%2F%2Ffiles.stripe.com%2Flinks%2FMDB8YWNjdF8xT2ZaRHRLcnF2NlRBRDNDfGZsX3Rlc3RfYUs2OVk2NUIwQmNVWHBxT2trRDM3SzJZ00ooN8taHF&w=1920&q=75",
-          ],
-          quantity: 10,
-        },
-      ],
-      createdAt: new Date(),
-    };
+    const { items } = await req.json();
 
-    // Respond with the newly created cart object
-    return Response.json({ cart: newCart });
+    const { data: cartData, error } = await supabase
+      .from("carts")
+      .upsert([
+        {
+          cartId: crypto.randomUUID(),
+          items: items,
+          updatedAt: new Date(),
+        },
+      ])
+      .select("*");
+
+    if (error) {
+      return Response.json({
+        message: "Error inserting cart on carts table",
+        error: error,
+      });
+    }
+
+    // Respond with a status code of 200 and the cart data
+    return Response.json({ cartData });
   } catch (error) {
-    console.error("Error creating new cart:", error);
-    return Response.json({ error: "Error creating new cart" });
+    // If an error occurs, respond with an appropriate error message and status code
+    console.error("Error creating cart:", error);
+    return Response.json({ error: "Failed to create cart" });
   }
+}
+
+export async function GET() {
+  const cookieList = cookies().getAll();
+  return Response.json({ cookieList });
 }

@@ -24,7 +24,7 @@ export default async function Cart() {
 
   if (cartId) {
     cart = await getCart(cartId as string);
+    console.log("THE CART NOW FROM CART COMPONENT", cart);
   }
-
   return <CartModal cart={cart} />;
 }

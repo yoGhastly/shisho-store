@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Dispatch, SetStateAction, Suspense } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { createUrl } from "@/app/lib/utils";
 import clsx from "clsx";
@@ -12,7 +12,13 @@ interface ProductOption {
   quantity: number;
 }
 
-export function VariantSelector({ options }: { options: ProductOption[] }) {
+export function VariantSelector({
+  options,
+  onSelectedSize,
+}: {
+  options: ProductOption[];
+  onSelectedSize: Dispatch<SetStateAction<string | undefined>>;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -23,6 +29,11 @@ export function VariantSelector({ options }: { options: ProductOption[] }) {
   if (hasNoOptionsOrJustOneOption) {
     return null;
   }
+
+  const handleSizeSelection = (optionUrl: string, size: string) => {
+    router.replace(optionUrl, { scroll: false });
+    onSelectedSize(size);
+  };
 
   return options.map((option) => (
     <Suspense key={option.id}>
@@ -54,15 +65,16 @@ export function VariantSelector({ options }: { options: ProductOption[] }) {
                   aria-disabled={false}
                   disabled={false}
                   onClick={() => {
-                    router.replace(optionUrl, { scroll: false });
+                    handleSizeSelection(optionUrl, value);
                   }}
-                  title={`${option.name} ${value}${!isAvailableForSale ? " (Out of Stock)" : ""
-                    }`}
+                  title={`${option.name} ${value}${
+                    !isAvailableForSale ? " (Out of Stock)" : ""
+                  }`}
                   className={clsx(
                     "flex min-w-[48px] items-center justify-center rounded-full border bg-neutral-100 px-2 py-1 text-sm",
                     {
-                      "cursor-default ring-2 ring-[#FFC6FF]": isActive,
-                      "ring-1 ring-transparent transition duration-300 ease-in-out hover:scale-110 hover:ring-[#FFC6FF] ":
+                      "cursor-default ring-2 ring-[#A0C4FF]": isActive,
+                      "ring-1 ring-transparent transition duration-300 ease-in-out hover:scale-110 hover:ring-[#A0C4FF]":
                         !isActive && isAvailableForSale,
                       "relative z-10 cursor-not-allowed overflow-hidden bg-neutral-100 text-neutral-500 ring-1 ring-neutral-300 before:absolute before:inset-x-0 before:-z-10 before:h-px before:-rotate-45 before:bg-neutral-300 before:transition-transform":
                         !isAvailableForSale,

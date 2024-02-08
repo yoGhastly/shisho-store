@@ -1,33 +1,21 @@
-import { NextApiRequest } from "next";
+import { supabase } from "@/app/lib/subapase/client";
 
-const colors: { [key: string]: string } = {
-  reset: "\x1b[0m",
-  red: "\x1b[31m",
-  green: "\x1b[32m",
-  yellow: "\x1b[33m",
-  blue: "\x1b[34m",
-  magenta: "\x1b[35m",
-  cyan: "\x1b[36m",
-};
-
-// Function to log colored output
-function logColored(message: string, color: string): void {
-  console.log(colors[color] + message + colors.reset);
-}
-export async function POST(req: NextApiRequest) {
+export async function POST(req: Request) {
+  const { cartId } = await req.json();
   try {
-    // Parse the request body to get the items to be added to the cart
-    const { cartId, items } = req.body;
+    const { data: cart, error } = await supabase
+      .from("carts")
+      .select("*")
+      .eq("cartId", cartId);
 
-    const updatedCart = {
-      id: cartId,
-      items: items,
-      updatedAt: new Date(),
-    };
+    if (error) {
+      return Response.json({
+        message: "Error retrieving cart from carts table",
+        error: error,
+      });
+    }
 
-    // Respond with the updated cart object
-    logColored("getCart route", "magenta")
-    return Response.json({ cart: updatedCart });
+    return Response.json({ cart });
   } catch (error) {
     console.error("Error adding items to cart:", error);
     return Response.json({ error: "Error adding items to cart" });

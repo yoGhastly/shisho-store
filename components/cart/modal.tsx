@@ -17,19 +17,17 @@ type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
-interface Cart {
-  id: string;
-  items: LineItem[];
-  updatedAt: Date;
-}
-
-interface LineItem {
+export interface CartItem {
   id: string;
   name: string;
+  size: string;
   amount: string;
-  description: string;
-  images: string[];
-  quantity: number;
+}
+
+interface Cart {
+  cartId: string;
+  items: CartItem[];
+  updatedAt: Date;
 }
 
 export default function CartModal({ cart }: { cart: Cart | undefined }) {
@@ -37,7 +35,6 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
   const quantityRef = useRef(cart?.items.length);
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
-
 
   useEffect(() => {
     // Open cart modal when quantity changes.
@@ -121,7 +118,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                               onClick={closeCart}
                               className="z-30 flex flex-row space-x-4"
                             >
-                              <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300">
+                              {/* <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300">
                                 <Image
                                   className="h-full w-full object-cover"
                                   width={64}
@@ -129,7 +126,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                                   alt={item.name}
                                   src={item.images[0]}
                                 />
-                              </div>
+                              </div> */}
 
                               <div className="flex flex-1 flex-col text-base">
                                 <span className="leading-tight">
@@ -144,19 +141,19 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                                 currencyCode={`AED`}
                               />
                               <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200">
-                                <EditItemQuantityButton
+                                {/* <EditItemQuantityButton
                                   item={item}
                                   type="minus"
-                                />
-                                <p className="w-6 text-center">
+                                /> */}
+                                {/* <p className="w-6 text-center">
                                   <span className="w-full text-sm">
                                     {item.quantity}
                                   </span>
-                                </p>
-                                <EditItemQuantityButton
+                                </p> */}
+                                {/* <EditItemQuantityButton
                                   item={item}
                                   type="plus"
-                                />
+                                /> */}
                               </div>
                             </div>
                           </div>
@@ -188,7 +185,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                   </div>
                   <a
                     href="/"
-                    className="block w-full rounded-full bg-[#FFC6FF] p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
+                    className="block w-full rounded-full bg-[#A0C4FF] p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
                   >
                     Proceed to Checkout
                   </a>

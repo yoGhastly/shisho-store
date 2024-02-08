@@ -9,7 +9,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 function SubmitButton({ availableForSale }: { availableForSale: boolean }) {
   const { pending } = useFormStatus();
   const buttonClasses =
-    "relative flex w-full items-center justify-center rounded-full bg-[#FFC6FF] p-4 tracking-wide text-white";
+    "relative flex w-full items-center justify-center rounded-full bg-[#A0C4FF] p-4 tracking-wide text-white";
   const disabledClasses = "cursor-not-allowed opacity-60 hover:opacity-60";
 
   if (!availableForSale) {
@@ -43,12 +43,32 @@ function SubmitButton({ availableForSale }: { availableForSale: boolean }) {
     </button>
   );
 }
+interface Product {
+  id: string;
+  name: string;
+  size: string;
+  amount: string;
+}
 
-export function AddToCart({ availableForSale }: { availableForSale: boolean }) {
+export function AddToCart({
+  availableForSale,
+  product: productDetails,
+}: {
+  availableForSale: boolean;
+  product: Product;
+}) {
   const [message, formAction] = useFormState(addItem, null);
+  const actionWithProduct = () => {
+    const formData = new FormData();
+    formData.append("id", productDetails.id);
+    formData.append("name", productDetails.name);
+    formData.append("size", productDetails.size);
+    formData.append("amount", productDetails.amount);
+    formAction(formData);
+  };
 
   return (
-    <form action={formAction}>
+    <form action={actionWithProduct}>
       <SubmitButton availableForSale={availableForSale} />
       <p aria-live="polite" className="sr-only" role="status">
         {message}

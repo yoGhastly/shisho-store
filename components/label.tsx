@@ -26,7 +26,7 @@ const Label = ({
           {title}
         </h3>
         <Price
-          className="flex-none rounded-full bg-[#FFC6FF] p-2 text-white"
+          className="flex-none rounded-full bg-[#A0C4FF] p-2 text-white"
           amount={amount}
           currencyCode={currencyCode}
           currencyCodeClassName="hidden @[275px]/label:inline"
