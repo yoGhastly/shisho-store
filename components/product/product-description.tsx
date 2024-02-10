@@ -60,6 +60,7 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
           size: selectedSize,
           amount: "10",
           images,
+          quantity: 1,
         },
       });
     }
@@ -73,6 +74,7 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
           size: "",
           amount: "",
           images: [],
+          quantity: 0,
         },
       });
     };

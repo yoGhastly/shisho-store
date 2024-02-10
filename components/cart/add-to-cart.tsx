@@ -60,6 +60,7 @@ export function AddToCart({
     formData.append("size", productDetails.size);
     formData.append("amount", productDetails.amount);
     formData.append("images", JSON.stringify(productDetails.images));
+    formData.append("quantity", productDetails.quantity.toString());
     formAction(formData);
   };
 

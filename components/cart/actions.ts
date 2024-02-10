@@ -1,24 +1,10 @@
 "use server";
 
 import { TAGS } from "@/app/lib/constants";
+import { supabase } from "@/app/lib/subapase/client";
 import { Cart, CartItem } from "@/types/cart";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
-
-const colors: { [key: string]: string } = {
-  reset: "\x1b[0m",
-  red: "\x1b[31m",
-  green: "\x1b[32m",
-  yellow: "\x1b[33m",
-  blue: "\x1b[34m",
-  magenta: "\x1b[35m",
-  cyan: "\x1b[36m",
-};
-
-// Function to log colored output
-function logColored(message: string, color: string): void {
-  console.log(colors[color] + message + colors.reset);
-}
 
 export async function addToCart(
   cartId: string,
@@ -49,7 +35,7 @@ export async function addToCart(
   }
 }
 
-export async function addItem(prevstate: any, formData: FormData) {
+export async function addItem(_prevState: any, formData: FormData) {
   try {
     let cartId = cookies().get("cartId")?.value;
 
@@ -57,21 +43,36 @@ export async function addItem(prevstate: any, formData: FormData) {
       const cart = await getCart(cartId);
 
       if (cart) {
-        // Append the new item to the existing items
-        cart.items.push({
+        const newItem = {
           id: formData.get("id") as string,
           name: formData.get("name") as string,
           size: formData.get("size") as string,
           amount: formData.get("amount") as string,
           images: JSON.parse(formData.get("images") as string),
-        });
+          quantity: parseInt(formData.get("quantity") as string),
+        };
+
+        // Check if the item already exists in the cart
+        const existingItemIndex = cart.items.findIndex(
+          (item: any) => item.id === newItem.id && item.size === newItem.size,
+        );
+
+        if (existingItemIndex !== -1) {
+          // Update the quantity of the existing item
+          cart.items[existingItemIndex].quantity += newItem.quantity;
+        } else {
+          // Add the new item to the cart
+          cart.items.push(newItem);
+        }
 
         // Update the cart items in supabase
         await addToCart(cartId, cart.items);
 
         revalidateTag(TAGS.cart);
 
-        return `Added 1 of product ${formData.get("id")} to the cart with id ${cartId}`;
+        return `Added ${newItem.quantity} of product ${formData.get(
+          "id",
+        )} to the cart with id ${cartId}`;
       }
     }
 
@@ -83,6 +84,7 @@ export async function addItem(prevstate: any, formData: FormData) {
         size: formData.get("size") as string,
         amount: formData.get("amount") as string,
         images: JSON.parse(formData.get("images") as string),
+        quantity: parseInt(formData.get("quantity") as string), // Extract quantity
       },
     ];
 
@@ -90,7 +92,9 @@ export async function addItem(prevstate: any, formData: FormData) {
     cookies().set("cartId", newCart.cartId);
     revalidateTag(TAGS.cart);
 
-    return `Added 1 of product ${formData.get("id")} to the new cart with id ${newCart.cartId}`;
+    return `Added ${items[0].quantity} of product ${formData.get(
+      "id",
+    )} to the new cart with id ${newCart.cartId}`;
   } catch (error) {
     console.error("Error adding item to cart:", error);
     return "Error adding item to cart";
@@ -129,16 +133,98 @@ export async function createCart(items: CartItem[]): Promise<Cart> {
   }
 }
 
-export async function removeItem(prevState: any, lineId: string) { }
+export async function removeItem(_prevState: any, itemId: string) {
+  try {
+    const cartId = cookies().get("cartId")?.value;
+
+    if (!cartId) {
+      return "No cart found";
+    }
+
+    const cart = await getCart(cartId);
+
+    if (!cart) {
+      return "Cart not found";
+    }
+
+    // Filter out the item with the specified itemId
+    cart.items = cart.items.filter((item) => item.id !== itemId);
+
+    // Update the cart in the database
+    const { error } = await supabase
+      .from("carts")
+      .update({
+        items: cart.items,
+      })
+      .eq("cartId", cartId);
+
+    if (error) {
+      return "Error removing item from cart";
+    }
+
+    // Revalidate the cache tag associated with the cart
+    revalidateTag(TAGS.cart);
+
+    return "Item removed from cart successfully";
+  } catch (error) {
+    console.error("Error removing item from cart:", error);
+    return "Error removing item from cart";
+  }
+}
 
 export async function updateItemQuantity(
-  prevState: any,
+  _prevState: any,
   payload: {
     lineId: string;
     variantId: string;
     quantity: number;
   },
-) { }
+) {
+  try {
+    const { lineId, quantity } = payload;
+    const cartId = cookies().get("cartId")?.value;
+
+    if (!cartId) {
+      throw new Error("No cart found");
+    }
+
+    const cart = await getCart(cartId);
+
+    if (!cart) {
+      throw new Error("Cart not found");
+    }
+
+    // Find the item in the cart with the specified lineId (item id)
+    const itemIndex = cart.items.findIndex((item) => item.id === lineId);
+
+    if (itemIndex === -1) {
+      throw new Error("Item not found in cart");
+    }
+
+    // Update the quantity of the item
+    cart.items[itemIndex].quantity = quantity;
+
+    // Update the cart in the database
+    const { error } = await supabase
+      .from("carts")
+      .update({
+        items: cart.items,
+      })
+      .eq("cartId", cartId);
+
+    if (error) {
+      throw new Error("Error updating item quantity in cart");
+    }
+
+    // Revalidate the cache tag associated with the cart
+    revalidateTag(TAGS.cart);
+
+    return "Item quantity updated successfully";
+  } catch (error) {
+    console.error("Error updating item quantity:", error);
+    throw error;
+  }
+}
 
 export async function getCart(cartId: string): Promise<Cart> {
   try {

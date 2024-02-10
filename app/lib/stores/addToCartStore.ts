@@ -13,6 +13,7 @@ interface ProductDetails {
     size: string;
     amount: string;
     images: string[];
+    quantity: number;
   };
 }
 
@@ -25,9 +26,10 @@ const useAddToCartProductDetailsStore = create<AddToCartProductDetailsStore>(
         name: "",
         size: "",
         amount: "",
-        images: new Array<string>(),
+        images: [],
+        quantity: 0,
       },
-    } as ProductDetails,
+    },
     setProductDetails: (details: ProductDetails) =>
       set({ addedToCartProductDetails: details }),
   }),
