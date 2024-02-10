@@ -50,14 +50,16 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
   }, [product]);
 
   useEffect(() => {
-    if (selectedSize) {
+    if (product && selectedSize) {
+      const { active, id, name, images } = product;
       setProductDetails({
-        availableForSale: product.active,
+        availableForSale: active,
         product: {
-          id: product.id,
-          name: product.name,
+          id,
+          name,
           size: selectedSize,
           amount: "10",
+          images,
         },
       });
     }
@@ -70,16 +72,11 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
           name: "",
           size: "",
           amount: "",
+          images: [],
         },
       });
     };
-  }, [
-    selectedSize,
-    setProductDetails,
-    product.active,
-    product.id,
-    product.name,
-  ]);
+  }, [product, selectedSize, setProductDetails]);
 
   return (
     <>

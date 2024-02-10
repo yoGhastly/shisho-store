@@ -1,21 +1,10 @@
 "use server";
 
 import { TAGS } from "@/app/lib/constants";
+import { Cart, CartItem } from "@/types/cart";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export interface CartItem {
-  id: string;
-  name: string;
-  size: string;
-  amount: string;
-}
-
-interface Cart {
-  cartId: string;
-  items: CartItem[];
-  updatedAt: Date;
-}
 const colors: { [key: string]: string } = {
   reset: "\x1b[0m",
   red: "\x1b[31m",
@@ -37,13 +26,13 @@ export async function addToCart(
 ): Promise<Cart> {
   try {
     const response = await fetch(
-      `https://shishobabyclothes.ae/api/v1/carts/add`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/add`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ cartId, items }),
       },
     );
 
@@ -52,6 +41,7 @@ export async function addToCart(
     }
 
     const updatedCart: Cart = await response.json();
+
     return updatedCart;
   } catch (error) {
     console.error("Error adding items to cart:", error);
@@ -59,61 +49,67 @@ export async function addToCart(
   }
 }
 
-export async function addItem(prevState: any, formData: FormData) {
-  logColored("Adding item...", "red");
+export async function addItem(prevstate: any, formData: FormData) {
   try {
     let cartId = cookies().get("cartId")?.value;
-    let cart;
 
-    // Retrieve existing cart or create a new one if it doesn't exist
     if (cartId) {
-      cart = await getCart(cartId);
+      const cart = await getCart(cartId);
+
+      if (cart) {
+        // Append the new item to the existing items
+        cart.items.push({
+          id: formData.get("id") as string,
+          name: formData.get("name") as string,
+          size: formData.get("size") as string,
+          amount: formData.get("amount") as string,
+          images: JSON.parse(formData.get("images") as string),
+        });
+
+        // Update the cart items in supabase
+        await addToCart(cartId, cart.items);
+
+        revalidateTag(TAGS.cart);
+
+        return `Added 1 of product ${formData.get("id")} to the cart with id ${cartId}`;
+      }
     }
 
-    const id = formData.get("id") as string | undefined;
-    const name = formData.get("name") as string | undefined;
-    const size = formData.get("size") as string | undefined;
-    const amount = formData.get("amount") as string | undefined;
-
-    if (!id || !name || !size || !amount) {
-      return "Missing product data in formData";
-    }
-
-    const items: CartItem[] = [
+    // If the cart doesn't exist, create a new cart with the added item
+    const items = [
       {
-        id,
-        name,
-        amount,
-        size,
+        id: formData.get("id") as string,
+        name: formData.get("name") as string,
+        size: formData.get("size") as string,
+        amount: formData.get("amount") as string,
+        images: JSON.parse(formData.get("images") as string),
       },
     ];
 
-    if (!cartId || !cart) {
-      cart = await createCart(items);
-      const cartId = cart.cartId; // Access cartId from the first element of the array
-      cookies().set("cartId", cartId); // Set the cartId cookie
-      logColored("Creating cart and set cookie cartId...", "yellow");
-    }
-
-    await addToCart(cartId as string, cart.items);
+    const newCart = await createCart(items);
+    cookies().set("cartId", newCart.cartId);
     revalidateTag(TAGS.cart);
-    return `Added 1 of product ${id} to the cart with id ${cartId}`;
+
+    return `Added 1 of product ${formData.get("id")} to the new cart with id ${newCart.cartId}`;
   } catch (error) {
+    console.error("Error adding item to cart:", error);
     return "Error adding item to cart";
   }
 }
 
 export async function createCart(items: CartItem[]): Promise<Cart> {
   try {
-    // Make a POST request to the cart creation endpoint
-    const response = await fetch("https://shishobabyclothes.ae/api/v1/carts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Pass the items as the request body
+        body: JSON.stringify({ items }),
       },
-      // Pass the items as the request body
-      body: JSON.stringify({ items }),
-    });
+    );
 
     // Check if the request was successful
     if (!response.ok) {
@@ -125,7 +121,6 @@ export async function createCart(items: CartItem[]): Promise<Cart> {
     const cartData: Cart = cartResponse.cartData[0];
 
     // Return the cart information
-    logColored("Cart got created...", "yellow");
     return cartData;
   } catch (error) {
     // Handle any errors that occur during cart creation
@@ -148,7 +143,7 @@ export async function updateItemQuantity(
 export async function getCart(cartId: string): Promise<Cart> {
   try {
     const response = await fetch(
-      `https://shishobabyclothes.ae/api/v1/carts/${cartId}`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/${cartId}`,
       {
         method: "POST",
         body: JSON.stringify({ cartId }),
@@ -161,7 +156,6 @@ export async function getCart(cartId: string): Promise<Cart> {
 
     const cartResponse = await response.json();
     const cart = cartResponse.cart[0];
-    logColored("Cart existed...", "blue");
     return cart as Cart;
   } catch (error) {
     console.error("Error fetching cart details:", error);

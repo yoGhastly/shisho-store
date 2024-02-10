@@ -9,26 +9,13 @@ import CloseCart from "./close-cart";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
 import OpenCart from "./open-cart";
-import { DEFAULT_OPTION } from "@/app/lib/constants";
 import Price from "../price";
 import { createUrl } from "@/app/lib/utils";
+import { Cart } from "@/types/cart";
 
 type MerchandiseSearchParams = {
   [key: string]: string;
 };
-
-export interface CartItem {
-  id: string;
-  name: string;
-  size: string;
-  amount: string;
-}
-
-interface Cart {
-  cartId: string;
-  items: CartItem[];
-  updatedAt: Date;
-}
 
 export default function CartModal({ cart }: { cart: Cart | undefined }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -118,7 +105,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                               onClick={closeCart}
                               className="z-30 flex flex-row space-x-4"
                             >
-                              {/* <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300">
+                              <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300">
                                 <Image
                                   className="h-full w-full object-cover"
                                   width={64}
@@ -126,7 +113,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                                   alt={item.name}
                                   src={item.images[0]}
                                 />
-                              </div> */}
+                              </div>
 
                               <div className="flex flex-1 flex-col text-base">
                                 <span className="leading-tight">

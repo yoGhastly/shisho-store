@@ -7,7 +7,13 @@ interface AddToCartProductDetailsStore {
 
 interface ProductDetails {
   availableForSale: boolean;
-  product: { id: string; name: string; size: string; amount: string };
+  product: {
+    id: string;
+    name: string;
+    size: string;
+    amount: string;
+    images: string[];
+  };
 }
 
 const useAddToCartProductDetailsStore = create<AddToCartProductDetailsStore>(
@@ -19,6 +25,7 @@ const useAddToCartProductDetailsStore = create<AddToCartProductDetailsStore>(
         name: "",
         size: "",
         amount: "",
+        images: new Array<string>(),
       },
     } as ProductDetails,
     setProductDetails: (details: ProductDetails) =>

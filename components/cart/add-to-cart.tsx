@@ -5,6 +5,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import LoadingDots from "../loading-dots";
 import { addItem } from "./actions";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { CartItem } from "@/types/cart";
 
 function SubmitButton({ availableForSale }: { availableForSale: boolean }) {
   const { pending } = useFormStatus();
@@ -43,19 +44,13 @@ function SubmitButton({ availableForSale }: { availableForSale: boolean }) {
     </button>
   );
 }
-interface Product {
-  id: string;
-  name: string;
-  size: string;
-  amount: string;
-}
 
 export function AddToCart({
   availableForSale,
   product: productDetails,
 }: {
   availableForSale: boolean;
-  product: Product;
+  product: CartItem;
 }) {
   const [message, formAction] = useFormState(addItem, null);
   const actionWithProduct = () => {
@@ -64,6 +59,7 @@ export function AddToCart({
     formData.append("name", productDetails.name);
     formData.append("size", productDetails.size);
     formData.append("amount", productDetails.amount);
+    formData.append("images", JSON.stringify(productDetails.images));
     formAction(formData);
   };
 
