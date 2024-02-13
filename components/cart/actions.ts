@@ -2,9 +2,11 @@
 
 import { TAGS } from "@/app/lib/constants";
 import { supabase } from "@/app/lib/subapase/client";
+import { TaxRatesResponse } from "@/app/types";
 import { Cart, CartItem } from "@/types/cart";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import Stripe from "stripe";
 
 export async function addToCart(
   cartId: string,
@@ -247,4 +249,39 @@ export async function getCart(cartId: string): Promise<Cart> {
     console.error("Error fetching cart details:", error);
     throw error; // Throw the error for the caller to handle
   }
+}
+
+export async function getTaxRates(): Promise<Stripe.TaxRate[] | undefined> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/tax-rates`,
+      { method: "GET" },
+    );
+    const { taxRates, success, status }: TaxRatesResponse =
+      await response.json();
+
+    if (!response.ok || !success || !taxRates || status !== 200) {
+      throw new Error("Could not get tax rates");
+    }
+
+    return taxRates;
+  } catch (error) {
+    console.error("Error trying to get `api/v1/tax-rates`", error);
+  }
+}
+
+export async function calculateTotalWithTax(cartId: string): Promise<string> {
+  let subtotal = 0;
+  const cart = await getCart(cartId);
+
+  // Calculate subtotal for each item
+  cart.items.forEach((item) => {
+    subtotal += parseFloat(item.amount);
+  });
+
+  // Add tax rate to subtotal
+  const taxRate = 0.5;
+  const totalWithTax = subtotal * (1 + taxRate);
+
+  return totalWithTax.toFixed(2);
 }

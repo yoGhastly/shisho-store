@@ -12,14 +12,28 @@ import OpenCart from "./open-cart";
 import Price from "../price";
 import { createUrl } from "@/app/lib/utils";
 import { Cart } from "@/types/cart";
+import Stripe from "stripe";
+import { useRouter } from "next/navigation";
+import { CreateCheckoutSessionResponse } from "@/app/types";
+import getStripe from "@/app/lib/stripe/client";
 
 type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
-export default function CartModal({ cart }: { cart: Cart | undefined }) {
+export default function CartModal({
+  cart,
+  taxRate,
+  total,
+}: {
+  cart: Cart | undefined;
+  taxRate: Stripe.TaxRate;
+  total: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.items.length);
+  const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
+  const router = useRouter();
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 
@@ -35,6 +49,37 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
       quantityRef.current = cart?.items.length;
     }
   }, [isOpen, cart?.items.length, quantityRef]);
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/create-checkout-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cart, taxRate, total }),
+        },
+      );
+
+      if (response.ok) {
+        const data: CreateCheckoutSessionResponse = await response.json();
+        const stripe = await getStripe();
+        if (!stripe) return;
+        await stripe.redirectToCheckout({
+          sessionId: data.json.sessionId,
+        });
+      } else {
+        console.error("Failed to create checkout session");
+      }
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   return (
     <>
@@ -153,7 +198,7 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                       <p>Taxes</p>
                       <Price
                         className="text-right text-base text-black"
-                        amount={"15"}
+                        amount={`${taxRate.percentage.toString()}%`}
                         currencyCode={`AED`}
                       />
                     </div>
@@ -165,17 +210,21 @@ export default function CartModal({ cart }: { cart: Cart | undefined }) {
                       <p>Total</p>
                       <Price
                         className="text-right text-base text-black"
-                        amount={"25"}
+                        amount={total}
                         currencyCode={"AED"}
                       />
                     </div>
                   </div>
-                  <a
-                    href="/"
-                    className="block w-full rounded-full bg-[#A0C4FF] p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
+                  <button
+                    onClick={handleCheckout}
+                    disabled={isCheckingOut} // Disable the button when checkout is in progress
+                    className={`block w-full rounded-full bg-[#A0C4FF] p-3 text-center text-sm font-medium text-white ${isCheckingOut
+                        ? "opacity-50 cursor-not-allowed"
+                        : "opacity-90 hover:opacity-100"
+                      }`}
                   >
-                    Proceed to Checkout
-                  </a>
+                    {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
+                  </button>
                 </div>
               )}
             </Dialog.Panel>

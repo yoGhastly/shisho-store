@@ -1,4 +1,4 @@
-import { stripe } from "@/app/lib/stripe";
+import { stripe } from "@/app/lib/stripe/server";
 
 export async function GET() {
   try {
