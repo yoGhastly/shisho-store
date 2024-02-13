@@ -15,7 +15,9 @@ export default async function Cart() {
 
   taxRates = await getTaxRates();
 
-  if (!taxRates) return {} as Stripe.TaxRate;
+  if (!taxRates) {
+    taxRates = {} as Stripe.TaxRate[];
+  }
 
   return (
     <CartModal cart={cart} taxRate={taxRates[0]} total={total as string} />
