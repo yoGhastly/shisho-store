@@ -7,6 +7,7 @@ import Prose from "../prose";
 import { VariantSelector } from "./variant-selector";
 import { useEffect, useState } from "react";
 import useAddToCartProductDetailsStore from "@/app/lib/stores/addToCartStore";
+import { Product } from "@/app/types";
 
 interface ProductOption {
   id: string;
@@ -34,7 +35,7 @@ function parseMetadata(metadata: string): ProductOption[] {
   return options;
 }
 
-export function ProductDescription({ product }: { product: Stripe.Product }) {
+export function ProductDescription({ product }: { product: Product }) {
   const [options, setOptions] = useState<ProductOption[]>([]);
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     undefined,
@@ -51,14 +52,14 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
 
   useEffect(() => {
     if (product && selectedSize) {
-      const { active, id, name, images } = product;
+      const { active, id, name, images, price } = product;
       setProductDetails({
         availableForSale: active,
         product: {
           id,
           name,
           size: selectedSize,
-          amount: "10",
+          amount: price,
           images,
           quantity: 1,
         },
@@ -85,7 +86,7 @@ export function ProductDescription({ product }: { product: Stripe.Product }) {
       <div className="mb-6 flex flex-col border-b pb-6">
         <h1 className="mb-2 text-5xl font-medium">{product.name}</h1>
         <div className="mr-auto w-auto rounded-full bg-[#A0C4FF] p-2 text-sm text-white">
-          <Price amount={"10"} currencyCode={`AED`} />
+          <Price amount={product.price || "10"} currencyCode={`AED`} />
         </div>
       </div>
       <VariantSelector options={options} onSelectedSize={setSelectedSize} />

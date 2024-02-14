@@ -2,10 +2,22 @@
 
 import Link from "next/link";
 import { GridTileImage } from "./grid/tile";
-import useProducts from "@/app/hooks/useProducts";
+import { ProductsResponse } from "@/app/types";
 
-export function Carousel() {
-  const { products } = useProducts();
+export const runtime = "edge";
+
+const getProducts = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
+    method: "GET",
+  });
+
+  const { products }: ProductsResponse = await res.json();
+
+  return products;
+};
+
+export async function Carousel() {
+  const products = await getProducts();
 
   if (!products?.length) return null;
 
@@ -27,7 +39,7 @@ export function Carousel() {
                 alt={product.name}
                 label={{
                   title: product.name,
-                  amount: "10", // TODO: product.default_price
+                  amount: product.price as string,
                   currencyCode: `AED`,
                 }}
                 src={product.images[0]}

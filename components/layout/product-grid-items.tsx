@@ -2,11 +2,12 @@ import Link from "next/link";
 import Grid from "../grid";
 import { GridTileImage } from "../grid/tile";
 import Stripe from "stripe";
+import { Product } from "@/app/types";
 
 export default function ProductGridItems({
   products,
 }: {
-  products: Stripe.Product[];
+  products: Product[];
 }) {
   return (
     <>
@@ -20,7 +21,7 @@ export default function ProductGridItems({
               alt={product.name}
               label={{
                 title: product.name,
-                amount: "10", //product.default_price,
+                amount: product.price || "10",
                 currencyCode: `AED`,
               }}
               src={product.images[0]}

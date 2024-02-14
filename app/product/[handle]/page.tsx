@@ -7,6 +7,8 @@ import { ProductDescription } from "@/components/product/product-description";
 import Footer from "@/components/layout/footer";
 import { GridTileImage } from "@/components/grid/tile";
 import { ProductsResponse } from "@/app/types";
+import { revalidateTag } from "next/cache";
+import { TAGS } from "@/app/lib/constants";
 
 export const runtime = "edge";
 
@@ -18,10 +20,12 @@ export const runtime = "edge";
  */
 const getProduct = async (id: string) => {
   // NOTE: axios does not work with edge runtime, use fetch preferably
-  const res = await fetch(`https://shishobabyclothes.ae/api/v1/products`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`);
   const data: ProductsResponse = await res.json();
   const foundProduct = data.products.find((p) => p.id === id);
   const relatedProducts = data.products.filter((product) => product.id !== id);
+
+  revalidateTag(TAGS.products);
 
   return {
     foundProduct,
@@ -43,15 +47,15 @@ export async function generateMetadata({
     description: product.description,
     openGraph: product.images
       ? {
-        images: [
-          {
-            url: product.images[0],
-            width: `300`,
-            height: `300`,
-            alt: `${product.name}`,
-          },
-        ],
-      }
+          images: [
+            {
+              url: product.images[0],
+              width: `300`,
+              height: `300`,
+              alt: `${product.name}`,
+            },
+          ],
+        }
       : null,
   };
 }
@@ -77,7 +81,7 @@ export default async function ProductPage({
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
       priceCurrency: `AED`,
-      highPrice: "100", // TODO: Use real product data
+      highPrice: product.price || "",
       lowPrice: "10",
     },
   };
@@ -138,7 +142,7 @@ async function RelatedProducts({ id }: { id: string }) {
                 alt={product.name}
                 label={{
                   title: product.name,
-                  amount: "10",
+                  amount: product.price,
                   currencyCode: `AED`,
                 }}
                 src={product.images[0]}

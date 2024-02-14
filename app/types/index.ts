@@ -1,9 +1,13 @@
 import Stripe from "stripe";
 
 export interface ProductsResponse {
-  products: Stripe.Product[];
+  products: Product[];
   success: boolean;
   status: number;
+}
+
+export interface Product extends Stripe.Product {
+  price: string;
 }
 
 export interface TaxRatesResponse {

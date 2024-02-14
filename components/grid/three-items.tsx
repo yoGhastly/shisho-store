@@ -1,17 +1,23 @@
-"use client";
-
 import Link from "next/link";
 import { GridTileImage } from "./tile";
-import useProductStore from "@/app/lib/stores/product.store";
-import Stripe from "stripe";
-import useProducts from "@/app/hooks/useProducts";
+import { Product, ProductsResponse } from "@/app/types";
+
+const getProducts = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
+    method: "GET",
+  });
+
+  const { products }: ProductsResponse = await res.json();
+
+  return products;
+};
 
 function ThreeItemGridItem({
   item,
   size,
   priority,
 }: {
-  item: Stripe.Product;
+  item: Product;
   size: "full" | "half";
   priority?: boolean;
 }) {
@@ -40,7 +46,7 @@ function ThreeItemGridItem({
           label={{
             position: size === "full" ? "center" : "bottom",
             title: item.name as string,
-            amount: "10", //item.default_price
+            amount: item.price || "",
             currencyCode: "AED",
           }}
         />
@@ -49,8 +55,8 @@ function ThreeItemGridItem({
   );
 }
 
-export function ThreeItemGrid() {
-  const products = useProductStore((state) => state.products);
+export async function ThreeItemGrid() {
+  const products = await getProducts();
 
   if (!products || products.length < 3) {
     return null;

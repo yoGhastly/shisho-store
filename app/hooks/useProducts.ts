@@ -1,27 +1,24 @@
 import useRequest from "./useRequest";
 import { ProductsResponse } from "../types";
-import useProductStore from "../lib/stores/product.store";
-//https://shishobabyclothes.ae/api/v1/products
-const requestConfig = {
-  url: "https://shishobabyclothes.ae/api/v1/products",
-  method: "GET",
-};
+import { revalidateTag } from "next/cache";
+import { TAGS } from "../lib/constants";
 
 const useProducts = () => {
-  const { data, error } = useRequest<ProductsResponse>(requestConfig);
-  const setProducts = useProductStore((state) => state.setProducts);
+  const { data: productsData, error: productsError } =
+    useRequest<ProductsResponse>({
+      url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`,
+      method: "GET",
+    });
 
-  if (error) {
-    console.error("Error fetching products", error);
+  revalidateTag(TAGS.products);
+
+  if (productsError) {
+    console.error("Error fetching products", productsError);
     throw new Error("Could not get products");
   }
 
-  if (data) {
-    setProducts(data?.products || []);
-  }
-
   return {
-    products: data && data.products,
+    products: productsData && productsData.products,
   };
 };
 
