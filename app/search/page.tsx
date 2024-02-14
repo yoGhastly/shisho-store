@@ -1,6 +1,6 @@
 import Grid from "@/components/grid";
 import ProductGridItems from "@/components/layout/product-grid-items";
-import Stripe from "stripe";
+import { ProductsResponse } from "../types";
 
 export const runtime = "edge";
 
@@ -28,7 +28,7 @@ export default async function SearchPage({
     method: requestConfig.method,
   });
 
-  const { products }: { products: Stripe.Product[] } = await response.json();
+  const { products }: ProductsResponse = await response.json();
 
   // Filter products only if searchValue is not an empty string
   const filteredProducts = normalizedSearchValue
