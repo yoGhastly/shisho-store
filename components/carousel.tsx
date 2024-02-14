@@ -1,8 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import { GridTileImage } from "./grid/tile";
 import { ProductsResponse } from "@/app/types";
+import { revalidateTag } from "next/cache";
+import { TAGS } from "@/app/lib/constants";
 
 export const runtime = "edge";
 
@@ -12,6 +12,7 @@ const getProducts = async () => {
   });
 
   const { products }: ProductsResponse = await res.json();
+  revalidateTag(TAGS.products);
 
   return products;
 };

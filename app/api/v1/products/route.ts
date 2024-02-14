@@ -1,3 +1,5 @@
+import { TAGS } from "@/app/lib/constants";
+import { revalidateTag } from "next/cache";
 import Stripe from "stripe";
 
 const STRIPE_SECRET_KEY =
@@ -25,6 +27,7 @@ export async function GET() {
       // Return the product with the price included
       return { ...product, price };
     });
+    revalidateTag(TAGS.products);
 
     // Send the products with prices as the response
     return Response.json({
