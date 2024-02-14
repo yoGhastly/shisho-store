@@ -4,8 +4,6 @@ import { ProductsResponse } from "@/app/types";
 import { revalidateTag } from "next/cache";
 import { TAGS } from "@/app/lib/constants";
 
-export const runtime = "edge";
-
 const getProducts = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
     method: "GET",
