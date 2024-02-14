@@ -1,3 +1,5 @@
+import { TAGS } from "@/app/lib/constants";
+import { revalidateTag } from "next/cache";
 import Stripe from "stripe";
 
 const STRIPE_SECRET_KEY =
@@ -8,11 +10,11 @@ export async function GET() {
   try {
     // Fetch the products from Stripe
     const { data: products } = await stripe.products.list({
-      limit: 1000,
+      limit: 50,
     });
 
     // Fetch the prices from Stripe
-    const { data: prices } = await stripe.prices.list({ limit: 1000 });
+    const { data: prices } = await stripe.prices.list({ limit: 50 });
 
     // Map each product to include its corresponding price
     const productsWithPrices = products.map((product) => {
@@ -20,11 +22,13 @@ export async function GET() {
       const matchedPrice = prices.find((price) => price.product === product.id);
 
       // Extract the price from the matched price object
-      const price = matchedPrice ? matchedPrice.unit_amount : null;
+      const price = matchedPrice?.unit_amount;
 
       // Return the product with the price included
       return { ...product, price };
     });
+
+    revalidateTag("products");
 
     // Send the products with prices as the response
     return Response.json({

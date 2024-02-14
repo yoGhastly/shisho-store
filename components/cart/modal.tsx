@@ -169,7 +169,7 @@ export default function CartModal({
                             <div className="flex h-16 flex-col justify-between">
                               <Price
                                 className="flex justify-end space-y-2 text-right text-sm"
-                                amount={"10"}
+                                amount={item.amount}
                                 currencyCode={`AED`}
                               />
                               <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200">

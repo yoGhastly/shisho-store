@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { GridTileImage } from "./tile";
 import { Product, ProductsResponse } from "@/app/types";
-import { TAGS } from "@/app/lib/constants";
-import { revalidateTag } from "next/cache";
 
 const getProducts = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
     method: "GET",
+    next: {
+      tags: ["products"],
+    },
   });
 
   const { products }: ProductsResponse = await res.json();
-  revalidateTag(TAGS.products);
 
   return products;
 };

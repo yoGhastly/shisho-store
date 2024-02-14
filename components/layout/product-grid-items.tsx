@@ -21,7 +21,7 @@ export default function ProductGridItems({
               alt={product.name}
               label={{
                 title: product.name,
-                amount: product.price || "10",
+                amount: product.price,
                 currencyCode: `AED`,
               }}
               src={product.images[0]}

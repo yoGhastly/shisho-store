@@ -20,7 +20,12 @@ export const runtime = "edge";
  */
 const getProduct = async (id: string) => {
   // NOTE: axios does not work with edge runtime, use fetch preferably
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
+    method: "GET",
+    next: {
+      tags: ["products"],
+    },
+  });
   const data: ProductsResponse = await res.json();
   const foundProduct = data.products.find((p) => p.id === id);
   const relatedProducts = data.products.filter((product) => product.id !== id);
@@ -47,15 +52,15 @@ export async function generateMetadata({
     description: product.description,
     openGraph: product.images
       ? {
-          images: [
-            {
-              url: product.images[0],
-              width: `300`,
-              height: `300`,
-              alt: `${product.name}`,
-            },
-          ],
-        }
+        images: [
+          {
+            url: product.images[0],
+            width: `300`,
+            height: `300`,
+            alt: `${product.name}`,
+          },
+        ],
+      }
       : null,
   };
 }
