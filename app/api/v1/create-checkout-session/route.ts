@@ -58,6 +58,17 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}?cancel=true`,
       customer: customer.id,
+      shipping_address_collection: {
+        allowed_countries: ["AE"],
+      },
+      phone_number_collection: {
+        enabled: true,
+      },
+      shipping_options: [
+        {
+          shipping_rate: "shr_1OgYgKKrqv6TAD3CWcQgGj2z",
+        },
+      ],
     });
 
     // Return the session ID and client secret to the client

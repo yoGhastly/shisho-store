@@ -33,7 +33,6 @@ export default function CartModal({
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.items.length);
   const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
-  const router = useRouter();
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 

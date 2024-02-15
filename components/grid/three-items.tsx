@@ -1,19 +1,9 @@
 import Link from "next/link";
 import { GridTileImage } from "./tile";
-import { Product, ProductsResponse } from "@/app/types";
+import { Product } from "@/app/types";
+import { getProducts } from "@/app/lib/product";
 
-const getProducts = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
-    method: "GET",
-    next: {
-      tags: ["products"],
-    },
-  });
-
-  const { products }: ProductsResponse = await res.json();
-
-  return products;
-};
+export const runtime = "edge";
 
 function ThreeItemGridItem({
   item,
@@ -61,9 +51,7 @@ function ThreeItemGridItem({
 export async function ThreeItemGrid() {
   const products = await getProducts();
 
-  if (!products || products.length < 3) {
-    return null;
-  }
+  if (!products[0] || !products[1] || !products[2]) return null;
 
   const [firstProduct, secondProduct, thirdProduct] = products;
 

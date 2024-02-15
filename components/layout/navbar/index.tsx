@@ -6,7 +6,7 @@ import OpenCart from "@/components/cart/open-cart";
 import Cart from "@/components/cart";
 import LogoSquare from "@/components/logo-square";
 import styles from "../../../styles/Logo.module.css";
-import Stripe from "stripe";
+import { Product } from "@/app/types";
 
 const { SITE_NAME, NEXT_PUBLIC_API_BASE_URL } = process.env;
 
@@ -18,9 +18,10 @@ const requestConfig = {
 export default async function Navbar() {
   const response = await fetch(requestConfig.url, {
     method: requestConfig.method,
+    cache: "no-store",
   });
 
-  const menu: Stripe.Product[] = await response.json();
+  const menu: Product[] = await response.json();
 
   if (!menu) return null;
 

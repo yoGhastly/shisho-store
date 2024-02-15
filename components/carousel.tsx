@@ -1,19 +1,6 @@
 import Link from "next/link";
 import { GridTileImage } from "./grid/tile";
-import { ProductsResponse } from "@/app/types";
-
-const getProducts = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
-    method: "GET",
-    next: {
-      tags: ["products"],
-    },
-  });
-
-  const { products }: ProductsResponse = await res.json();
-
-  return products;
-};
+import { getProducts } from "@/app/lib/product";
 
 export async function Carousel() {
   const products = await getProducts();

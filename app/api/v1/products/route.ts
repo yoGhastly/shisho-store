@@ -8,20 +8,16 @@ const stripe = new Stripe(STRIPE_SECRET_KEY);
 
 export async function GET() {
   try {
-    // Fetch the products from Stripe
     const { data: products } = await stripe.products.list({
       limit: 50,
     });
 
-    // Fetch the prices from Stripe
     const { data: prices } = await stripe.prices.list({ limit: 50 });
 
     // Map each product to include its corresponding price
     const productsWithPrices = products.map((product) => {
-      // Find the price object that matches the product
       const matchedPrice = prices.find((price) => price.product === product.id);
 
-      // Extract the price from the matched price object
       const price = matchedPrice?.unit_amount;
 
       // Return the product with the price included
@@ -38,7 +34,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error(error);
-    // Send an error response if there's an error retrieving products or prices
     return Response.json({
       error: "Error retrieving products",
       products: [],
