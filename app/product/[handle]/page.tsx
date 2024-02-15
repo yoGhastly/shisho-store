@@ -7,8 +7,6 @@ import { ProductDescription } from "@/components/product/product-description";
 import Footer from "@/components/layout/footer";
 import { GridTileImage } from "@/components/grid/tile";
 import { ProductsResponse } from "@/app/types";
-import { revalidateTag } from "next/cache";
-import { TAGS } from "@/app/lib/constants";
 
 export const runtime = "edge";
 
@@ -22,15 +20,11 @@ const getProduct = async (id: string) => {
   // NOTE: axios does not work with edge runtime, use fetch preferably
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
     method: "GET",
-    next: {
-      tags: ["products"],
-    },
+    cache: "no-store",
   });
   const data: ProductsResponse = await res.json();
   const foundProduct = data.products.find((p) => p.id === id);
   const relatedProducts = data.products.filter((product) => product.id !== id);
-
-  revalidateTag(TAGS.products);
 
   return {
     foundProduct,
