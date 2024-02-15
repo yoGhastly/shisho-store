@@ -3,10 +3,6 @@ import Prose from "@/components/prose";
 import styles from "../../styles/Logo.module.css";
 import clsx from "clsx";
 
-export const runtime = "edge";
-
-export const revalidate = 43200; // 12 hours in seconds
-
 const html = `
 Shisho Baby Clothes is committed to protecting the privacy and security of your personal information. This Privacy Policy describes how we collect, use, and share personal information when you visit our website, use our services, or interact with us. By accessing or using our services, you agree to the terms of this Privacy Policy.
 

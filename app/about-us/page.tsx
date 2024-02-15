@@ -3,10 +3,6 @@ import Prose from "@/components/prose";
 import styles from "../../styles/Logo.module.css";
 import clsx from "clsx";
 
-export const runtime = "edge";
-
-export const revalidate = 43200; // 12 hours in seconds
-
 const html = `
 Welcome to Shisho Baby Clothes - Adorable Fashion for Little Ones!
 

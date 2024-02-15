@@ -3,10 +3,6 @@ import Prose from "@/components/prose";
 import styles from "../../styles/Logo.module.css";
 import clsx from "clsx";
 
-export const runtime = "edge";
-
-export const revalidate = 43200; // 12 hours in seconds
-
 const html = `
 1. Processing Time:
 
@@ -35,14 +31,19 @@ We currently only ship to addresses within United Arab Emirates.
 We are not responsible for lost or stolen packages. Please ensure that the shipping address provided is secure and accurate.
 `;
 
-const formattedHtml = html.replace(/^\d+\./gm, '<br/>$&');
+const formattedHtml = html.replace(/^\d+\./gm, "<br/>$&");
 
 export default function Page() {
   return (
     <main className="h-screen">
       <div className="flex justify-center items-center px-8">
         <div className="max-w-2xl py-20 mx-auto">
-          <h1 className={clsx("mb-8 text-3xl md:text-5xl font-bold", styles.magic)}>
+          <h1
+            className={clsx(
+              "mb-8 text-3xl md:text-5xl font-bold",
+              styles.magic,
+            )}
+          >
             Shipping Policy
           </h1>
           <Prose className="mb-8" html={formattedHtml} />

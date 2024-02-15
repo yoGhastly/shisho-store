@@ -7,6 +7,7 @@ import { ProductDescription } from "@/components/product/product-description";
 import Footer from "@/components/layout/footer";
 import { GridTileImage } from "@/components/grid/tile";
 import { ProductsResponse } from "@/app/types";
+import { unstable_noStore } from "next/cache";
 
 export const runtime = "edge";
 
@@ -18,9 +19,9 @@ export const runtime = "edge";
  */
 const getProduct = async (id: string) => {
   // NOTE: axios does not work with edge runtime, use fetch preferably
+  unstable_noStore();
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
     method: "GET",
-    cache: "no-store",
   });
   const data: ProductsResponse = await res.json();
   const foundProduct = data.products.find((p) => p.id === id);
@@ -46,15 +47,15 @@ export async function generateMetadata({
     description: product.description,
     openGraph: product.images
       ? {
-        images: [
-          {
-            url: product.images[0],
-            width: `300`,
-            height: `300`,
-            alt: `${product.name}`,
-          },
-        ],
-      }
+          images: [
+            {
+              url: product.images[0],
+              width: `300`,
+              height: `300`,
+              alt: `${product.name}`,
+            },
+          ],
+        }
       : null,
   };
 }
