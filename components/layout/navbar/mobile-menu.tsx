@@ -6,9 +6,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Search from "./search";
-import Stripe from "stripe";
+import { Product } from "@/app/types";
 
-export default function MobileMenu({ menu }: { menu: Stripe.Product[] }) {
+export default function MobileMenu({ menu }: { menu: Product[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
@@ -74,20 +74,15 @@ export default function MobileMenu({ menu }: { menu: Stripe.Product[] }) {
                   <Search />
                 </div>
                 {menu.length ? (
-                  <ul className="flex w-full flex-col">
-                    {menu.map((item) => (
-                      <li
-                        className="py-2 text-xl text-black transition-colors hover:text-neutral-500"
-                        key={item.name}
+                  <ul className="hidden gap-6 text-sm md:flex md:items-center">
+                    <li>
+                      <Link
+                        href={`/search`}
+                        className="text-neutral-500 underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
                       >
-                        <Link
-                          href={`/product/${item.id}`}
-                          onClick={closeMobileMenu}
-                        >
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
+                        All
+                      </Link>
+                    </li>
                   </ul>
                 ) : null}
               </div>

@@ -2,47 +2,14 @@ import Link from "next/link";
 import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
 import Search from "./search";
+import { getProducts } from "@/app/lib/product";
+import LogoSquare from "@/components/logo-square";
 import OpenCart from "@/components/cart/open-cart";
 import Cart from "@/components/cart";
-import LogoSquare from "@/components/logo-square";
-import styles from "../../../styles/Logo.module.css";
-import { Product } from "@/app/types";
-import { stripe } from "@/app/lib/stripe/server";
-
-const { SITE_NAME, NEXT_PUBLIC_API_BASE_URL } = process.env;
-
-const requestConfig = {
-  url: `${NEXT_PUBLIC_API_BASE_URL}/products`,
-  method: "GET",
-};
+const { SITE_NAME } = process.env;
 
 export default async function Navbar() {
-  const response = await fetch(requestConfig.url, {
-    method: requestConfig.method,
-  });
-
-  const products: Product[] = await response.json();
-
-  const { data: prices } = await stripe.prices.list({ limit: 50 });
-
-  const productsWithPrices = products.map((product) => {
-    const matchedPrice = prices.find((price) => price.product === product.id);
-
-    const price = matchedPrice?.unit_amount;
-
-    if (!price) return { ...product, price: "10" };
-
-    // Return the product with the price included
-    return { ...product, price: price.toString() };
-  });
-
-  const menu = productsWithPrices;
-
-  if (!menu) return null;
-
-  if (!response.ok) {
-    throw new Error("Could not retrieve products from Navbar component");
-  }
+  const menu = await getProducts();
 
   return (
     <nav className="relative flex items-center justify-between p-4 lg:px-6">
@@ -56,24 +23,20 @@ export default async function Navbar() {
             className="mr-2 flex w-full items-center justify-center md:w-auto lg:mr-6"
           >
             <LogoSquare />
-            <div
-              className={`${styles.magic} ml-2 flex-none text-sm font-bold uppercase md:hidden lg:block`}
-            >
+            <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block">
               {SITE_NAME}
             </div>
           </Link>
           {menu.length ? (
             <ul className="hidden gap-6 text-sm md:flex md:items-center">
-              {menu.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={`/product/${item.id}`}
-                    className="text-neutral-500 underline-offset-4 hover:text-black hover:underline"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link
+                  href={`/search`}
+                  className="text-neutral-500 underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
+                >
+                  All
+                </Link>
+              </li>
             </ul>
           ) : null}
         </div>
