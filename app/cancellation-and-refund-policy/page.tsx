@@ -3,6 +3,8 @@ import Prose from "@/components/prose";
 import styles from "../../styles/Logo.module.css";
 import clsx from "clsx";
 
+export const runtime = "edge";
+
 const html = `
 1. Cancellation and Exchanges:
 
