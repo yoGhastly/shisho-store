@@ -7,7 +7,6 @@ import Cart from "@/components/cart";
 import LogoSquare from "@/components/logo-square";
 import styles from "../../../styles/Logo.module.css";
 import { Product } from "@/app/types";
-import { unstable_noStore } from "next/cache";
 
 const { SITE_NAME, NEXT_PUBLIC_API_BASE_URL } = process.env;
 
@@ -17,7 +16,6 @@ const requestConfig = {
 };
 
 export default async function Navbar() {
-  unstable_noStore();
   const response = await fetch(requestConfig.url, {
     method: requestConfig.method,
   });

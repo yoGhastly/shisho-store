@@ -3,6 +3,8 @@ import { GridTileImage } from "./tile";
 import { Product } from "@/app/types";
 import { getProducts } from "@/app/lib/product";
 
+export const runtime = "edge";
+
 function ThreeItemGridItem({
   item,
   size,

@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import Footer from "@/components/layout/footer";
 import PaymentStatusModal from "@/components/payment/modal-payment-listener";
 
-// export const runtime = "edge";
+export const runtime = "edge";
 
 export const metadata = {
   description:

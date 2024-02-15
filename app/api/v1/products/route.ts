@@ -10,20 +10,8 @@ export async function GET() {
       limit: 50,
     });
 
-    const { data: prices } = await stripe.prices.list({ limit: 50 });
-
-    // Map each product to include its corresponding price
-    const productsWithPrices = products.map((product) => {
-      const matchedPrice = prices.find((price) => price.product === product.id);
-
-      const price = matchedPrice?.unit_amount;
-
-      // Return the product with the price included
-      return { ...product, price };
-    });
-
     return Response.json({
-      products: prices && productsWithPrices,
+      products: products,
       success: true,
       status: 200,
     });
