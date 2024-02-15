@@ -7,6 +7,7 @@ import Cart from "@/components/cart";
 import LogoSquare from "@/components/logo-square";
 import styles from "../../../styles/Logo.module.css";
 import { Product } from "@/app/types";
+import { stripe } from "@/app/lib/stripe/server";
 
 const { SITE_NAME, NEXT_PUBLIC_API_BASE_URL } = process.env;
 
@@ -20,7 +21,22 @@ export default async function Navbar() {
     method: requestConfig.method,
   });
 
-  const menu: Product[] = await response.json();
+  const products: Product[] = await response.json();
+
+  const { data: prices } = await stripe.prices.list({ limit: 50 });
+
+  const productsWithPrices = products.map((product) => {
+    const matchedPrice = prices.find((price) => price.product === product.id);
+
+    const price = matchedPrice?.unit_amount;
+
+    if (!price) return { ...product, price: "10" };
+
+    // Return the product with the price included
+    return { ...product, price: price.toString() };
+  });
+
+  const menu = productsWithPrices;
 
   if (!menu) return null;
 
