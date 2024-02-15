@@ -22,9 +22,8 @@ export async function GET() {
       return { ...product, price };
     });
 
-    // Send the products with prices as the response
     return Response.json({
-      products: productsWithPrices,
+      products: prices && productsWithPrices,
       success: true,
       status: 200,
     });
