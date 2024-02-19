@@ -58,6 +58,13 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}?success=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}?cancel=true`,
       customer: customer.id,
+      customer_update: {
+        shipping: "auto",
+      },
+      // TODO: Enable Stripe Tax on account
+      /* automatic_tax: {
+        enabled: true,
+      }, */
       shipping_address_collection: {
         allowed_countries: ["AE"],
       },

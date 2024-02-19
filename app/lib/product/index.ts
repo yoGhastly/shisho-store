@@ -17,10 +17,13 @@ export async function getProducts() {
 
     const price = matchedPrice?.unit_amount;
 
-    if (!price) return { ...product, price: "10" };
+    if (!price) return { ...product, price: "10.00" };
+
+    // Convert price to dollars and format with two decimal places
+    const formattedPrice = (price / 100).toFixed(2);
 
     // Return the product with the price included
-    return { ...product, price: price.toString() };
+    return { ...product, price: formattedPrice };
   });
 
   return productsWithPrices;
