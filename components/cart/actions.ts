@@ -274,9 +274,9 @@ export async function calculateTotalWithTax(cartId: string): Promise<string> {
   let subtotal = 0;
   const cart = await getCart(cartId);
 
-  // Calculate subtotal for each item
+  // Calculate subtotal for each item, considering the quantity
   cart.items.forEach((item) => {
-    subtotal += parseFloat(item.amount);
+    subtotal += parseFloat(item.amount) * item.quantity;
   });
 
   // Add tax rate to subtotal

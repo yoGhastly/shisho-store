@@ -33,11 +33,14 @@ We currently only ship to addresses within United Arab Emirates.
 We are not responsible for lost or stolen packages. Please ensure that the shipping address provided is secure and accurate.
 `;
 
-const formattedHtml = html.replace(/^\d+\./gm, "<br/>$&");
+const formattedHtml = html.replace(
+  /^(\d+)\.(.*)/gm,
+  "<br/><br/><strong>$1.$2</strong>",
+);
 
 export default function Page() {
   return (
-    <main className="h-screen">
+    <>
       <div className="flex justify-center items-center px-8">
         <div className="max-w-2xl py-20 mx-auto">
           <h1
@@ -52,6 +55,6 @@ export default function Page() {
         </div>
       </div>
       <Footer />
-    </main>
+    </>
   );
 }

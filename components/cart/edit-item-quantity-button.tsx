@@ -1,6 +1,6 @@
 "use client";
 
-// import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { useFormState, useFormStatus } from "react-dom";
 import { updateItemQuantity } from "./actions";
@@ -31,9 +31,9 @@ function SubmitButton({ type }: { type: "plus" | "minus" }) {
       {pending ? (
         <LoadingDots className="bg-black" />
       ) : type === "plus" ? (
-        <p>+</p>
+        <PlusIcon className="h-4" />
       ) : (
-        <p>-</p>
+        <MinusIcon className="h-4" />
       )}
     </button>
   );

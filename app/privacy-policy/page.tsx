@@ -53,12 +53,15 @@ We comply with applicable privacy laws and regulations.
 For privacy-related inquiries or concerns, please contact us at shishobabyclothes@gmail.com
 `;
 
-const formattedHtml = html.replace(/^\d+\./gm, "<br/>$&");
+const formattedHtml = html.replace(
+  /^\d+\.(.*)/gm,
+  "<br/><br/><strong>$&</strong>",
+);
 
 export default function Page() {
   return (
-    <main className="h-screen">
-      <div className="flex justify-center items-center px-8">
+    <>
+      <div className="flex justify-center items-center px-8 h-auto">
         <div className="max-w-2xl py-20 mx-auto">
           <h1
             className={clsx(
@@ -72,6 +75,6 @@ export default function Page() {
         </div>
       </div>
       <Footer />
-    </main>
+    </>
   );
 }

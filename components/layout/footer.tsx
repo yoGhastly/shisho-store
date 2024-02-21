@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Suspense } from "react";
 import FooterMenu from "./footer-menu";
 import LogoSquare from "../logo-square";
-import styles from "../../styles/Logo.module.css";
 
 const { COMPANY_NAME, SITE_NAME } = process.env;
 
@@ -18,7 +17,18 @@ export default async function Footer() {
         <div>
           <Link className="flex items-center gap-2 text-black md:pt-1" href="/">
             <LogoSquare size="sm" />
-            <span className={`${styles.magic} uppercase`}>{SITE_NAME}</span>
+            <span
+              className={`uppercase`}
+              style={{
+                background:
+                  "linear-gradient(270deg, #ffc6ff 1.27%, #a0c4ff 26.44%, #9bf6ff 51.62%, #a0c4ff 77.78%, #ffc6ff 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              {SITE_NAME}
+            </span>
           </Link>
         </div>
         <Suspense

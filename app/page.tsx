@@ -7,8 +7,8 @@ import PaymentStatusModal from "@/components/payment/modal-payment-listener";
 export const runtime = "edge";
 
 export const metadata = {
-  description:
-    "High-performance ecommerce store built with Next.js, Vercel, and Shopify.",
+  title: "Home | Shisho Baby Clothes",
+  description: "High-performance ecommerce store built by Xervsware",
   openGraph: {
     type: "website",
   },

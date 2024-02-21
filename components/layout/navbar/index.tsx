@@ -6,6 +6,8 @@ import { getProducts } from "@/app/lib/product";
 import LogoSquare from "@/components/logo-square";
 import OpenCart from "@/components/cart/open-cart";
 import Cart from "@/components/cart";
+import "../../../styles/Logo.module.css";
+
 const { SITE_NAME } = process.env;
 
 export default async function Navbar() {
@@ -23,7 +25,16 @@ export default async function Navbar() {
             className="mr-2 flex w-full items-center justify-center md:w-auto lg:mr-6"
           >
             <LogoSquare />
-            <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block">
+            <div
+              className={`magic ml-2 flex-none text-sm font-bold uppercase md:hidden lg:block`}
+              style={{
+                background:
+                  "linear-gradient(270deg, #ffc6ff 1.27%, #a0c4ff 26.44%, #9bf6ff 51.62%, #a0c4ff 77.78%, #ffc6ff 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
               {SITE_NAME}
             </div>
           </Link>
