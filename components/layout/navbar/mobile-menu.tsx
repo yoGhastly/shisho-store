@@ -73,17 +73,13 @@ export default function MobileMenu({ menu }: { menu: Product[] }) {
                 <div className="mb-4 w-full">
                   <Search />
                 </div>
-                {menu.length ? (
-                  <ul className="hidden gap-6 text-sm md:flex md:items-center">
-                    <li>
-                      <Link
-                        href={`/search`}
-                        className="text-neutral-500 underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
-                      >
-                        All
-                      </Link>
-                    </li>
-                  </ul>
+                {menu.length > 0 ? (
+                  <Link
+                    href={`/search`}
+                    className="underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
+                  >
+                    All
+                  </Link>
                 ) : null}
               </div>
             </Dialog.Panel>
