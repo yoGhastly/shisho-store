@@ -1,5 +1,6 @@
 import { stripe } from "@/app/lib/stripe/server";
 import { Cart } from "@/types/cart";
+import { StripeCustomCheckoutShippingOption } from "@stripe/stripe-js";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -16,7 +17,31 @@ export async function POST(req: NextRequest) {
 
     const totalAmount = parseFloat(total);
 
-    console.log("BODY", { cart, taxRate, totalAmount });
+    const { data: shippingRates } = await stripe.shippingRates.list();
+
+    const shippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[] =
+      shippingRates.map((rate) => {
+        return {
+          shipping_rate_data: {
+            type: rate.type,
+            fixed_amount: {
+              amount: rate?.fixed_amount?.amount || 0,
+              currency: rate?.fixed_amount?.currency || "USD",
+            },
+            display_name: rate.display_name || "", // Provide a default value for display_name
+            delivery_estimate: {
+              minimum: {
+                unit: "week",
+                value: 2,
+              },
+              maximum: {
+                unit: "week",
+                value: 3,
+              },
+            },
+          },
+        };
+      });
 
     // Calculate the total amount in cents
     const totalAmountInCents = Math.ceil(totalAmount * 100);
@@ -71,11 +96,7 @@ export async function POST(req: NextRequest) {
       phone_number_collection: {
         enabled: true,
       },
-      shipping_options: [
-        {
-          shipping_rate: "shr_1OgYgKKrqv6TAD3CWcQgGj2z",
-        },
-      ],
+      shipping_options: shippingOptions,
     });
 
     // Return the session ID and client secret to the client
