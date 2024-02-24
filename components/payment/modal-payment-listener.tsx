@@ -9,8 +9,7 @@ export default function PaymentStatusModal() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const statusParam =
-      searchParams.has("cancel") || searchParams.has("success");
+    const statusParam = searchParams.has("success");
     if (statusParam) {
       setIsOpen(true);
     }
@@ -21,7 +20,6 @@ export default function PaymentStatusModal() {
 
     // Remove the cancel or success parameter from the URL
     const params = new URLSearchParams(window.location.search);
-    params.delete("cancel");
     params.delete("success");
 
     window.history.replaceState(
@@ -63,15 +61,12 @@ export default function PaymentStatusModal() {
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    {searchParams.has("success")
-                      ? "Payment Successful"
-                      : "Payment Cancelled"}
+                    {searchParams.has("success") && "Payment Successful"}
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      {searchParams.has("success")
-                        ? "Your payment has been successfully submitted. We’ve sent you an email with all of the details of your order."
-                        : "Your payment has been cancelled."}
+                      {searchParams.has("success") &&
+                        "Your payment has been successfully submitted. We’ve sent you an email with all of the details of your order."}
                     </p>
                   </div>
 

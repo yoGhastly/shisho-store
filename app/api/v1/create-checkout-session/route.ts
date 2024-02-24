@@ -1,6 +1,5 @@
 import { stripe } from "@/app/lib/stripe/server";
 import { Cart } from "@/types/cart";
-import { StripeCustomCheckoutShippingOption } from "@stripe/stripe-js";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -18,6 +17,10 @@ export async function POST(req: NextRequest) {
     const totalAmount = parseFloat(total);
 
     const { data: shippingRates } = await stripe.shippingRates.list();
+
+    const isFreeDelivery =
+      parseInt(total) >=
+      parseInt(process.env.NEXT_PUBLIC_FREE_DELIVERY_CONSTANT || "250");
 
     const shippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[] =
       shippingRates.map((rate) => {
@@ -86,6 +89,7 @@ export async function POST(req: NextRequest) {
       customer_update: {
         shipping: "auto",
       },
+      allow_promotion_codes: true,
       // TODO: Enable Stripe Tax on account
       /* automatic_tax: {
         enabled: true,
@@ -96,7 +100,7 @@ export async function POST(req: NextRequest) {
       phone_number_collection: {
         enabled: true,
       },
-      shipping_options: shippingOptions,
+      shipping_options: isFreeDelivery ? undefined : shippingOptions,
     });
 
     // Return the session ID and client secret to the client
