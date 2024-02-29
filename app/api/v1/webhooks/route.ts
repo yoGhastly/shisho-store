@@ -25,9 +25,8 @@ export async function POST(request: NextRequest) {
   switch (event.type) {
     case "payment_intent.succeeded":
       const paymentIntentSucceeded = event.data.object;
-      // Assuming you have a Supabase table named "payment_intents", you can insert the payment intent data like this:
+      cookies().set("pi_id", paymentIntentSucceeded.id);
       try {
-        cookies().set("pi_id", paymentIntentSucceeded.id);
         const { data, error } = await supabase
           .from("orders")
           .insert([paymentIntentSucceeded]);
