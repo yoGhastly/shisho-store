@@ -1,3 +1,4 @@
+import { supabase } from "@/app/lib/subapase/client";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -64,12 +65,19 @@ export async function POST(request: NextRequest) {
       return Response.json({ paymentIntentRequiresAction });
     case "payment_intent.succeeded":
       const paymentIntentSucceeded = event.data.object;
-      // Then define and call a function to handle the event payment_intent.succeeded
-      console.log(paymentIntentSucceeded);
-      return Response.json({ paymentIntentSucceeded });
+      const { data, error } = await supabase
+        .from("orders")
+        .insert(paymentIntentSucceeded);
+      if (error) {
+        return Response.json({
+          error,
+          message: "Could not insert on orders table",
+        });
+      }
+      return Response.json({ data });
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
 
-  Response.json("Webhook stripe");
+  return Response.json("Webhook stripe");
 }
