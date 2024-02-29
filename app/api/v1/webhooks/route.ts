@@ -1,16 +1,16 @@
-import { stripe } from "@/app/lib/stripe/server";
 import { NextRequest } from "next/server";
+import Stripe from "stripe";
 
 const endpointSecret =
   "whsec_db9f281bd897cbceebb017138e4f3072697f99e2993f3dead4ebb0660c100df1";
 
-export default async function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const sig = request.headers.get("stripe-signature");
   let event;
   const body = await request.json();
 
   try {
-    event = stripe.webhooks.constructEvent(
+    event = Stripe.webhooks.constructEvent(
       body,
       sig as string | Buffer,
       endpointSecret,
