@@ -28,18 +28,18 @@ export async function POST(req: NextRequest) {
           shipping_rate_data: {
             type: rate.type,
             fixed_amount: {
-              amount: rate?.fixed_amount?.amount || 0,
-              currency: rate?.fixed_amount?.currency || "USD",
+              amount: isFreeDelivery ? 0 : rate?.fixed_amount?.amount || 0,
+              currency: rate?.fixed_amount?.currency || "AED",
             },
-            display_name: rate.display_name || "", // Provide a default value for display_name
+            display_name: rate.display_name || "",
             delivery_estimate: {
               minimum: {
                 unit: "week",
-                value: 2,
+                value: 1,
               },
               maximum: {
                 unit: "week",
-                value: 3,
+                value: 2,
               },
             },
           },
@@ -71,6 +71,16 @@ export async function POST(req: NextRequest) {
         quantity: item.quantity,
       }));
 
+    let lastItemAddedId = null;
+
+    if (cart.items.length > 0) {
+      lastItemAddedId = cart.items[cart.items.length - 1].id;
+    }
+
+    const cancelUrl = lastItemAddedId
+      ? `${process.env.NEXT_PUBLIC_SITE_URL}/product/${encodeURIComponent(lastItemAddedId)}?cancel=true`
+      : `${process.env.NEXT_PUBLIC_SITE_URL}/search?cancel=true`;
+
     // Create a PaymentIntent with the total amount
     const intent = await stripe.paymentIntents.create({
       customer: customer.id,
@@ -78,13 +88,23 @@ export async function POST(req: NextRequest) {
       currency: "aed",
     });
 
+    let paymentIntentId: string | null = null;
+
+    if (intent.client_secret) {
+      paymentIntentId = intent.id;
+    }
+
+    const successUrl = lastItemAddedId
+      ? `${process.env.NEXT_PUBLIC_SITE_URL}/order/${encodeURIComponent(paymentIntentId || "")}?cancel=true`
+      : `${process.env.NEXT_PUBLIC_SITE_URL}/search?cancel=true`;
+
     // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}?cancel=true`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       customer: customer.id,
       customer_update: {
         shipping: "auto",
@@ -100,7 +120,7 @@ export async function POST(req: NextRequest) {
       phone_number_collection: {
         enabled: true,
       },
-      shipping_options: isFreeDelivery ? undefined : shippingOptions,
+      shipping_options: shippingOptions,
     });
 
     // Return the session ID and client secret to the client
