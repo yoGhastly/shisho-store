@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       const paymentIntentSucceeded = event.data.object;
       const { data, error } = await supabase
         .from("orders")
-        .insert(paymentIntentSucceeded);
+        .insert([{ paymentIntentSucceeded }]);
       if (error) {
         return Response.json({
           error,
