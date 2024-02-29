@@ -1,4 +1,5 @@
 import { supabase } from "@/app/lib/subapase/client";
+import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -26,6 +27,7 @@ export async function POST(request: NextRequest) {
       const paymentIntentSucceeded = event.data.object;
       // Assuming you have a Supabase table named "payment_intents", you can insert the payment intent data like this:
       try {
+        cookies().set("pi_id", paymentIntentSucceeded.id);
         const { data, error } = await supabase
           .from("orders")
           .insert([paymentIntentSucceeded]);
