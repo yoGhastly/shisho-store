@@ -23,3 +23,21 @@ export interface CreateCheckoutSessionResponse {
     clientSecret: string;
   };
 }
+
+export interface Order {
+  id: string;
+  items: {
+    id: string;
+    name: string;
+    qty: number;
+    amount: number;
+  }[];
+  customer: {
+    email: string;
+    name: string;
+    phone: string;
+  };
+  shipping: {
+    city: string;
+  };
+}
