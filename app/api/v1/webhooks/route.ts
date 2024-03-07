@@ -1,6 +1,6 @@
 import { stripe } from "@/app/lib/stripe/server";
 import { Order } from "@/app/types";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
 import { EmailTemplate } from "@/components/email-template";
@@ -16,19 +16,25 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    console.log("HIT EVENT");
     event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
-
-    switch (event.type) {
-      case "checkout.session.completed":
-        console.log("checkout completed");
-        break;
-      default:
-        console.log(`Unhandled event type ${event.type}`);
-    }
   } catch (err) {
-    return Response.json({ message: `Webhook Error: ${err}`, status: 400 });
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    // On error, log and return the error message.
+    if (err! instanceof Error) console.log(err);
+    console.log(`❌ Error message: ${errorMessage}`);
+
+    return NextResponse.json(
+      {
+        error: {
+          message: `Webhook Error: ${errorMessage}`,
+        },
+      },
+      { status: 400 },
+    );
   }
+
+  // Successfully constructed event.
+  console.log("✅ Success:", event.id);
 
   return new Response(null, { status: 200 });
 }
