@@ -7,8 +7,13 @@ const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
 export async function POST(request: NextRequest) {
   const sig = request.headers.get("stripe-signature") || "";
   const rawBody = await request.text();
-  const body = await request.json();
-  cookies().set("evt_type", body.type);
+  try {
+    const body = JSON.parse(rawBody);
+    cookies().set("evt_type", body.type);
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+    // Handle the error accordingly
+  }
 
   let event: Stripe.Event;
 
