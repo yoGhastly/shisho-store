@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -6,6 +7,8 @@ const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
 export async function POST(request: NextRequest) {
   const sig = request.headers.get("stripe-signature") || "";
   const rawBody = await request.text();
+  const body = await request.json();
+  cookies().set("evt_type", body.type);
 
   let event: Stripe.Event;
 
@@ -18,6 +21,7 @@ export async function POST(request: NextRequest) {
   // Handle the checkout.session.completed event
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
+    cookies().set("ch_id", session.id);
     console.log("SESSION: ", session);
   }
 
