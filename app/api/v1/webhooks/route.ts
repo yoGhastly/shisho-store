@@ -7,6 +7,7 @@ const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
 export async function POST(request: NextRequest) {
   const sig = request.headers.get("stripe-signature") || "";
   const body = await request.json();
+  console.log("BODY", body);
 
   let event: Stripe.Event;
 
