@@ -1,37 +1,30 @@
-import { cookies } from "next/headers";
+import { stripe } from "@/app/lib/stripe/server";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
 
 export async function POST(request: NextRequest) {
+  console.log("hit webhook");
   const sig = request.headers.get("stripe-signature") || "";
   const rawBody = await request.text();
-  try {
-    const body = JSON.parse(rawBody);
-    cookies().set("evt_type", body.type);
-  } catch (error) {
-    console.error("Error parsing JSON:", error);
-    // Handle the error accordingly
-  }
 
   let event: Stripe.Event;
 
   try {
-    event = Stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
   } catch (err) {
     return Response.json({ message: `Webhook Error: ${err}`, status: 400 });
   }
 
-  // Handle the checkout.session.completed event
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    cookies().set("ch_id", session.id);
-    console.log("SESSION: ", session);
+  switch (event.type) {
+    case "checkout.session.completed":
+      const checkoutSessionCompleted = event.data.object;
+      console.log({ checkoutSessionCompleted });
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
   }
 
-  return Response.json({
-    message: `Unhandled event type ${event.type}`,
-    status: 400,
-  });
+  return new Response(null, { status: 200 });
 }
