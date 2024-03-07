@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
@@ -13,6 +14,10 @@ export async function POST(request: NextRequest) {
     event = Stripe.webhooks.constructEvent(body, sig, endpointSecret);
   } catch (err) {
     return Response.json({ message: `Webhook Error: ${err}`, status: 400 });
+  }
+
+  if (body.type === "checkout.session.completed") {
+    cookies().set("event", body.type);
   }
 
   if (event.type === "checkout.session.completed") {
