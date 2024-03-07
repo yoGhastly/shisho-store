@@ -5,18 +5,18 @@ import Stripe from "stripe";
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
 
 export async function POST(request: NextRequest) {
-  const sig = request.headers.get("stripe-signature");
-  let event;
-  const body = await request.json();
+  console.log("Endpoint hit");
+  const rawBody = await request.text();
+  console.log("RAW BODY:", rawBody);
+  const sig = request.headers.get("stripe-signature") || "";
+  console.log("SIGNATURE", sig);
+
+  let event: Stripe.Event;
 
   try {
-    event = Stripe.webhooks.constructEvent(
-      body,
-      sig as string | Buffer,
-      endpointSecret,
-    );
+    event = Stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
   } catch (err) {
-    return new Response(`Webhook Error: ${err}`, { status: 400 });
+    return Response.json({ message: `Webhook Error: ${err}`, status: 400 });
   }
 
   // Handle the event
@@ -25,8 +25,11 @@ export async function POST(request: NextRequest) {
     console.log(paymentIntentSucceeded);
 
     await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/send`);
-    return new Response("Payment succeeded", { status: 200 });
+    return Response.json({ message: "Payment succeeded", status: 200 });
   }
 
-  return new Response(`Unhandled event type ${event.type}`, { status: 400 });
+  return Response.json({
+    message: `Unhandled event type ${event.type}`,
+    status: 400,
+  });
 }
