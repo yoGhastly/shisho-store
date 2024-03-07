@@ -18,10 +18,11 @@ export async function POST(request: NextRequest) {
   try {
     console.log("HIT EVENT");
     event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
-    console.log("EVENT", event);
   } catch (err) {
     return Response.json({ message: `Webhook Error: ${err}`, status: 400 });
   }
+
+  console.log(`event ${event.type}`);
 
   switch (event.type) {
     case "checkout.session.completed":
