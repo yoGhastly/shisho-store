@@ -10,7 +10,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
-    const rawBody = await request.text();
     const sig = request.headers.get("stripe-signature") || "";
 
     console.log(`sig ${sig}`);
@@ -18,6 +17,7 @@ export async function POST(request: NextRequest) {
     let event: Stripe.Event;
 
     try {
+      const rawBody = await request.text();
       event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
