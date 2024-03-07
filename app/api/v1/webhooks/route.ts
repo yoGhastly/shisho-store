@@ -18,44 +18,16 @@ export async function POST(request: NextRequest) {
   try {
     console.log("HIT EVENT");
     event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
+
+    switch (event.type) {
+      case "checkout.session.completed":
+        console.log("checkout completed");
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
   } catch (err) {
     return Response.json({ message: `Webhook Error: ${err}`, status: 400 });
-  }
-
-  console.log(`event ${event.type}`);
-
-  switch (event.type) {
-    case "checkout.session.completed":
-      const checkoutSessionCompleted = event.data.object;
-
-      const order: Order = {
-        id: "399448884",
-        items: [{ id: "00933", name: "test", qty: 1, amount: 1000 }],
-        customer: {
-          email: "diego.espinosagrc@uanl.edu.mx",
-          name: "Jose Diego Espinosa Garcia",
-          phone: "0504500393",
-        },
-        shipping: {
-          city: "AED",
-        },
-      };
-
-      try {
-        const data = await resend.emails.send({
-          from: "Acme <onboarding@resend.dev>",
-          to: [order.customer.email],
-          subject: `Confirmation Order #${order.id}`,
-          react: EmailTemplate({ order }),
-          text: `Confirmation Order #${order.id}`,
-        });
-
-        return Response.json(data);
-      } catch (error) {
-        return Response.json({ error });
-      }
-    default:
-      console.log(`Unhandled event type ${event.type}`);
   }
 
   return new Response(null, { status: 200 });
