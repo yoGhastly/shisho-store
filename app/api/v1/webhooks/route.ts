@@ -5,16 +5,13 @@ import Stripe from "stripe";
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
 
 export async function POST(request: NextRequest) {
-  console.log("Endpoint hit");
-  const rawBody = await request.text();
-  console.log("RAW BODY:", rawBody);
   const sig = request.headers.get("stripe-signature") || "";
-  console.log("SIGNATURE", sig);
+  const body = await request.json();
 
   let event: Stripe.Event;
 
   try {
-    event = Stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
+    event = Stripe.webhooks.constructEvent(body, sig, endpointSecret);
   } catch (err) {
     return Response.json({ message: `Webhook Error: ${err}`, status: 400 });
   }
