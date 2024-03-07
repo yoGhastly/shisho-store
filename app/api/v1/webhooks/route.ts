@@ -10,7 +10,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   console.log("hit webhook");
-  const sig = request.headers.get("stripe-signature") || "";
+  const sig = request.headers.get("stripe-signature")!;
   const rawBody = await request.text();
 
   let event: Stripe.Event;
