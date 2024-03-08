@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const endpointSecret = process.env.whsec_iwhXRGDPaOAfGFaCCMolP3IItvymeFSf || "";
+const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
