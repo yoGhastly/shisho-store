@@ -1,23 +1,19 @@
 import { stripe } from "@/app/lib/stripe/server";
-import { Order } from "@/app/types";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { Resend } from "resend";
-import { EmailTemplate } from "@/components/email-template";
 
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
     const sig = request.headers.get("stripe-signature") || "";
-
+    const rawBody = await request.text();
+    console.log("body", rawBody);
     console.log(`sig ${sig}`);
 
     let event: Stripe.Event;
 
     try {
-      const rawBody = await request.text();
       event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
@@ -48,7 +44,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Return a response to acknowledge receipt of the event.
-    return NextResponse.json({ received: true });
+    return new Response("Received", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
   } catch {
     return NextResponse.json(
       {
