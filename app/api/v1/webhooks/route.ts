@@ -54,7 +54,7 @@ export async function POST(req: Request) {
             } catch (error: any) {
               console.error("Error sending email:", error);
               throw new Error(
-                `Failed to send email confirmation: ${error.message}`,
+                `Failed to send email confirmation: ${error.name}`,
               );
             }
             console.log("email sent for order ✅", newOrder.id);
