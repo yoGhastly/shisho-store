@@ -38,7 +38,7 @@ export async function POST(req: Request) {
           // send email confirmation
           await axios.post(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/send`,
-            newOrder,
+            JSON.stringify(newOrder),
           );
           console.log("email sent for order ✅", order.id);
           console.log("checkout completed ✅", order);
