@@ -2,16 +2,12 @@ import { EmailTemplate } from "@/components/email-template";
 import { Order } from "@/app/types";
 import { Resend } from "resend";
 
+const resend = new Resend(process.env.RESEND_API_KEY || "");
+
 export class EmailRepository {
-  private resend: Resend;
-
-  constructor(apiKey: string) {
-    this.resend = new Resend(apiKey);
-  }
-
   async sendOrderConfirmation(order: Order): Promise<void> {
     try {
-      /* const { data, error } = await this.resend.emails.send({
+      const { data, error } = await resend.emails.send({
         from: "Acme <onboarding@resend.dev>",
         to: [order.customerEmail],
         subject: `Confirmation Order #${order.id}`,
@@ -21,8 +17,8 @@ export class EmailRepository {
 
       if (error) {
         console.error(`Resend error: ${error.message}`);
-      } */
-      console.log("Email sent successfully:", order);
+      }
+      console.log("Email sent successfully 📩", data?.id);
     } catch (error: any) {
       console.error("Error sending email:", error);
       throw new Error(`Failed to send email confirmation: ${error.message}`);

@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature") as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  const emailRepository = new EmailRepository(process.env.RESEND_API_KEY || "");
+  const emailRepository = new EmailRepository();
   let event: Stripe.Event;
 
   try {
