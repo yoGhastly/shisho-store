@@ -1,7 +1,13 @@
+import { OrderRegistrar } from "@/app/domain/RegisterOrder";
 import { stripe } from "@/app/lib/stripe/server";
+import { SupabaseOrderRepository } from "@/app/order/create-order";
+import { mapCheckoutSessionToOrder } from "@/app/order/map-checkout-session-to-order";
+import axios from "axios";
 import Stripe from "stripe";
 
 const relevantEvents = new Set(["checkout.session.completed"]);
+
+const orderRegister = new OrderRegistrar(new SupabaseOrderRepository());
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -25,8 +31,12 @@ export async function POST(req: Request) {
       switch (event.type) {
         case "checkout.session.completed":
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
-          console.log({ checkoutSession })
-          console.log("checkout completed ✅");
+          const order = mapCheckoutSessionToOrder(checkoutSession);
+          // create the order
+          await orderRegister.register(order);
+          // send email confirmation
+          axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/send`, order);
+          console.log("checkout completed ✅", order);
           break;
         default:
           throw new Error("Unhandled relevant event!");

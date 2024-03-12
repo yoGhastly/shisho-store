@@ -26,18 +26,17 @@ export interface CreateCheckoutSessionResponse {
 
 export interface Order {
   id: string;
-  items: {
-    id: string;
-    name: string;
-    qty: number;
-    amount: number;
-  }[];
-  customer: {
-    email: string;
-    name: string;
-    phone: string;
-  };
-  shipping: {
+  amountTotal: number;
+  currency: string;
+  customerEmail: string;
+  customerName: string;
+  customerPhone: string;
+  shippingAddress: {
     city: string;
+    country: string;
+    line1: string;
+    line2: string;
+    postalCode: string;
+    state: string;
   };
 }
