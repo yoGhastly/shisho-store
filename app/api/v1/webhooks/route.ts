@@ -48,7 +48,7 @@ export async function POST(req: Request) {
               });
 
               if (error) {
-                console.error(`Resend error: ${error.message}`);
+                console.error(`Resend error: ${error.name}`);
               }
               console.log("Email sent successfully 📩", data?.id);
             } catch (error: any) {
