@@ -1,4 +1,3 @@
-"use client";
 import { Order } from "@/app/types";
 import * as React from "react";
 
