@@ -3,14 +3,21 @@ import { supabase } from "../lib/subapase/client";
 import { Order } from "../types";
 
 export class SupabaseOrderRepository implements OrderRepository {
-  async create(order: Order): Promise<void> {
+  async create(order: Order): Promise<Order | null> {
     try {
       // Insert the order into the "orders" table
-      const { error } = await supabase.from("orders").insert(order);
+      const { data, error } = await supabase.from("orders").insert(order);
 
       if (error) {
         throw error;
       }
+
+      if (!data) {
+        return null; // could not create order
+      }
+      const newOrder = data as Order;
+
+      return newOrder;
     } catch (error: any) {
       throw new Error(`Failed to create order: ${error.message}`);
     }

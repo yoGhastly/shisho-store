@@ -1,10 +1,10 @@
 import { OrderRepository } from "../infrastructure/OrderRepository";
 import { Order } from "../types";
 
-export class OrderRegistrar {
+export class CreateOrder {
   constructor(private readonly repository: OrderRepository) { }
 
-  async register(order: Order): Promise<void> {
-    await this.repository.create(order);
+  async create(order: Order): Promise<Order | null> {
+    return await this.repository.create(order);
   }
 }

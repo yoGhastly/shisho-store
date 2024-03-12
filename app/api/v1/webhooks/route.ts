@@ -1,4 +1,4 @@
-import { OrderRegistrar } from "@/app/domain/RegisterOrder";
+import { CreateOrder } from "@/app/domain/CreateOrder";
 import { stripe } from "@/app/lib/stripe/server";
 import { SupabaseOrderRepository } from "@/app/order/create-order";
 import { mapCheckoutSessionToOrder } from "@/app/order/map-checkout-session-to-order";
@@ -7,7 +7,7 @@ import Stripe from "stripe";
 
 const relevantEvents = new Set(["checkout.session.completed"]);
 
-const orderRegister = new OrderRegistrar(new SupabaseOrderRepository());
+const orderRepository = new CreateOrder(new SupabaseOrderRepository());
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -33,12 +33,14 @@ export async function POST(req: Request) {
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
           const order = mapCheckoutSessionToOrder(checkoutSession);
           // create the order
-          await orderRegister.register(order);
+          const newOrder = await orderRepository.create(order);
+          console.log("order created ✅", order.id);
           // send email confirmation
           await axios.post(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/send`,
-            order,
+            newOrder,
           );
+          console.log("email sent for order ✅", order.id);
           console.log("checkout completed ✅", order);
           break;
         default:
