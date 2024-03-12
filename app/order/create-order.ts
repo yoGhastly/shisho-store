@@ -6,14 +6,18 @@ export class SupabaseOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order | null> {
     try {
       // Insert the order into the "orders" table
-      const { data, error } = await supabase.from("orders").insert(order);
+      const { data, error } = await supabase
+        .from("orders")
+        .insert(order)
+        .select("*")
+        .single();
 
       if (error) {
         throw error;
       }
 
       if (!data) {
-        throw new Error(`Order could not be created ${order.id}`);
+        throw new Error(`Order not found in orders table ${order.id}`);
       }
       const newOrder = data as Order;
       console.log({ newOrder });
