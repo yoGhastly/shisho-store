@@ -7,7 +7,6 @@ export class EmailRepository {
 
   constructor(apiKey: string) {
     this.resend = new Resend(apiKey);
-    console.log(apiKey);
   }
 
   async sendOrderConfirmation(order: Order): Promise<void> {
