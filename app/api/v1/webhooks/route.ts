@@ -35,7 +35,10 @@ export async function POST(req: Request) {
           // create the order
           await orderRegister.register(order);
           // send email confirmation
-          axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/send`, order);
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/send`,
+            order,
+          );
           console.log("checkout completed ✅", order);
           break;
         default:
