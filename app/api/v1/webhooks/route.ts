@@ -3,19 +3,17 @@ import { EmailRepository } from "@/app/infrastructure/EmailRepository";
 import { stripe } from "@/app/lib/stripe/server";
 import { SupabaseOrderRepository } from "@/app/order/create-order";
 import { mapCheckoutSessionToOrder } from "@/app/order/map-checkout-session-to-order";
-import axios from "axios";
 import Stripe from "stripe";
 
 const relevantEvents = new Set(["checkout.session.completed"]);
 
 const orderRepository = new CreateOrder(new SupabaseOrderRepository());
-const emailRepository = new EmailRepository(process.env.RESEND_API_KEY || "");
 
 export async function POST(req: Request) {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature") as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  console.log({ webhookSecret });
+  const emailRepository = new EmailRepository(process.env.RESEND_API_KEY || "");
   let event: Stripe.Event;
 
   try {
