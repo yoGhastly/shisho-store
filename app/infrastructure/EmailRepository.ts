@@ -11,17 +11,21 @@ export class EmailRepository {
 
   async sendOrderConfirmation(order: Order): Promise<void> {
     try {
-      const data = await this.resend.emails.send({
+      const { data, error } = await this.resend.emails.send({
         from: "Acme <onboarding@resend.dev>",
         to: [order.customerEmail],
         subject: `Confirmation Order #${order.id}`,
         react: EmailTemplate({ order }),
         text: `Confirmation Order #${order.id}`,
       });
+
+      if (error) {
+        console.error(`Resend error: ${error.message}`);
+      }
       console.log("Email sent successfully:", data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending email:", error);
-      throw error; // You might want to handle this error differently based on your application's requirements
+      throw new Error(`Failed to send email confirmation: ${error.message}`);
     }
   }
 }
