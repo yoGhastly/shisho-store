@@ -13,9 +13,10 @@ export class SupabaseOrderRepository implements OrderRepository {
       }
 
       if (!data) {
-        return null; // could not create order
+        throw new Error(`Order could not be created ${order.id}`);
       }
       const newOrder = data as Order;
+      console.log({ newOrder });
 
       return newOrder;
     } catch (error: any) {

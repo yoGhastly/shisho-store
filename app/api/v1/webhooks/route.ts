@@ -38,7 +38,7 @@ export async function POST(req: Request) {
           // send email confirmation
           if (newOrder) {
             await emailRepository.sendOrderConfirmation(order);
-            console.log("email sent for order ✅", order.id);
+            console.log("email sent for order ✅", newOrder.id);
           }
           console.log("checkout completed ✅", order);
           break;
