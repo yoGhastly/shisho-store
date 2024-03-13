@@ -41,8 +41,15 @@ export async function POST(req: Request) {
         case "checkout.session.completed":
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
           const order = mapCheckoutSessionToOrder(checkoutSession);
+          const lineItems = await stripe.checkout.sessions.listLineItems(
+            order.id,
+          );
           // create the order
-          const newOrder = await orderRepository.create(order);
+          const orderWithLineItems = {
+            ...order,
+            lineItems,
+          };
+          const newOrder = await orderRepository.create(orderWithLineItems);
           console.log("order created ✅", order.id);
           // send email confirmation
           if (newOrder) {
