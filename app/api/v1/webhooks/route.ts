@@ -40,7 +40,7 @@ export async function POST(req: Request) {
           if (newOrder) {
             try {
               const { data, error } = await resend.emails.send({
-                from: "Acme <onboarding@resend.dev>",
+                from: "info@xervsware.com",
                 to: [newOrder.customerEmail],
                 subject: `Confirmation Order #${newOrder.id}`,
                 react: EmailTemplate({ order: newOrder }),
