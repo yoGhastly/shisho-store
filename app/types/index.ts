@@ -27,6 +27,7 @@ export interface CreateCheckoutSessionResponse {
 export interface Order {
   id: string;
   amountTotal: number;
+  lineItems: Stripe.ApiList<Stripe.LineItem> | undefined;
   currency: string;
   customerEmail: string;
   customerName: string;

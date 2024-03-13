@@ -4,8 +4,14 @@ import { Order } from "../types";
 export function mapCheckoutSessionToOrder(
   session: Stripe.Checkout.Session,
 ): Order {
-  const { id, amount_total, currency, customer_details, shipping_details } =
-    session;
+  const {
+    id,
+    amount_total,
+    currency,
+    customer_details,
+    shipping_details,
+    line_items,
+  } = session;
 
   return {
     id: id ?? "",
@@ -14,6 +20,7 @@ export function mapCheckoutSessionToOrder(
     customerEmail: customer_details?.email ?? "",
     customerName: customer_details?.name ?? "",
     customerPhone: customer_details?.phone ?? "",
+    lineItems: line_items,
     shippingAddress: {
       city: shipping_details?.address?.city ?? "",
       country: shipping_details?.address?.country ?? "",
