@@ -15,6 +15,7 @@ const orderRepository = new CreateOrder(new SupabaseOrderRepository());
 
 export async function POST(req: Request) {
   const body = await req.text();
+  console.log({ body });
   const sig = req.headers.get("stripe-signature") as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const resend = new Resend(process.env.RESEND_API_KEY);
