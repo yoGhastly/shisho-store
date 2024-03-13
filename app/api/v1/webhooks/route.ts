@@ -6,7 +6,10 @@ import { EmailTemplate } from "@/components/email-template";
 import { Resend } from "resend";
 import Stripe from "stripe";
 
-const relevantEvents = new Set(["checkout.session.completed"]);
+const relevantEvents = new Set([
+  "checkout.session.completed",
+  "payment_intent.created",
+]);
 
 const orderRepository = new CreateOrder(new SupabaseOrderRepository());
 
@@ -30,6 +33,10 @@ export async function POST(req: Request) {
   if (relevantEvents.has(event.type)) {
     try {
       switch (event.type) {
+        case "payment_intent.created":
+          const paymentIntentCreated = event.data.object;
+          console.log({ paymentIntentCreated });
+          break;
         case "checkout.session.completed":
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
           const order = mapCheckoutSessionToOrder(checkoutSession);
