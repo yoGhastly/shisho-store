@@ -53,6 +53,7 @@ import {
   Section,
   Hr,
   Link,
+  Button,
 } from "@react-email/components";
 import * as React from "react";
 
@@ -74,10 +75,10 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             <Row>
               <Column>
                 <Img
-                  src={`/logo_2.svg`}
+                  src={`https://nzpyistmyfgivlnfmcwx.supabase.co/storage/v1/object/sign/shisho/logo_2.svg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzaGlzaG8vbG9nb18yLnN2ZyIsImlhdCI6MTcxMDYzMjA0OCwiZXhwIjoxODY4MzEyMDQ4fQ.EtqvcFk5kH8G70CTwmeeSPsaeOiuJcheUJi6uKH-cFY&t=2024-03-16T23%3A33%3A44.372Z`}
                   width="42"
                   height="42"
-                  alt="Apple Logo"
+                  alt="Shisho Baby Clothes Logo"
                 />
               </Column>
 
@@ -96,7 +97,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                       <Link
                         style={{
                           ...informationTableValue,
-                          color: "#15c",
+                          color: "#17c",
                           textDecoration: "underline",
                         }}
                       >
@@ -162,17 +163,17 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                   <Text style={productTitle}>{item.description}</Text>
                   <Text style={productDescription}>{item.description}</Text>
                   <Link
-                    href="https://userpub.itunes.apple.com/WebObjects/MZUserPublishing.woa/wa/addUserReview?cc=us&amp;id=1497977514&amp;o=i&amp;type=Subscription%20Renewal"
+                    href={`${process.env.NEXT_PUBLIC_SITE_URL}`}
                     style={productLink}
-                    data-saferedirecturl="https://www.google.com/url?q=https://userpub.itunes.apple.com/WebObjects/MZUserPublishing.woa/wa/addUserReview?cc%3Dus%26id%3D1497977514%26o%3Di%26type%3DSubscription%2520Renewal&amp;source=gmail&amp;ust=1673963081204000&amp;usg=AOvVaw2DFCLKMo1snS-Swk5H26Z1"
+                    data-saferedirecturl={`${process.env.NEXT_PUBLIC_SITE_URL}`}
                   >
                     Write a Review
                   </Link>
                   <span style={divisor}>|</span>
                   <Link
-                    href="https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/reportAProblem?a=1497977514&amp;cc=us&amp;d=683263808&amp;o=i&amp;p=29065684906671&amp;pli=29092219632071&amp;s=1"
+                    href={`${process.env.NEXT_PUBLIC_SITE_URL}`}
                     style={productLink}
-                    data-saferedirecturl="https://www.google.com/url?q=https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/reportAProblem?a%3D1497977514%26cc%3Dus%26d%3D683263808%26o%3Di%26p%3D29065684906671%26pli%3D29092219632071%26s%3D1&amp;source=gmail&amp;ust=1673963081204000&amp;usg=AOvVaw3y47L06B2LTrL6qsmaW2Hq"
+                    data-saferedirecturl={`${process.env.NEXT_PUBLIC_SITE_URL}`}
                   >
                     Report a Problem
                   </Link>
@@ -199,6 +200,25 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             </Row>
           </Section>
           <Hr style={productPriceLineBottom} />
+          <Section className="my-8">
+            <Row>
+              <Column align="center" style={ctaTitle}>
+                <Button
+                  href={`${process.env.NEXT_PUBLIC_SITE_URL}/orders/${order.id}`}
+                  style={{
+                    fontSize: "14px",
+                    backgroundColor: "#16c",
+                    color: "#fff",
+                    lineHeight: 1.5,
+                    borderRadius: "0.5em",
+                    padding: "12px 24px",
+                  }}
+                >
+                  See order
+                </Button>
+              </Column>
+            </Row>
+          </Section>
           <Section>
             <Row>
               <Column align="center" style={block}>
@@ -215,7 +235,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               </Column>
             </Row>
           </Section>
-          <Section>
+          <Section style={{ marginTop: "20px" }}>
             <Row>
               <Column align="center" style={walletWrapper}>
                 <Link
@@ -252,10 +272,10 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             <Row>
               <Column align="center" style={footerIcon}>
                 <Img
-                  src={`/logo_2.svg`}
+                  src={`https://nzpyistmyfgivlnfmcwx.supabase.co/storage/v1/object/sign/shisho/logo_2.svg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJzaGlzaG8vbG9nb18yLnN2ZyIsImlhdCI6MTcxMDYzMjA0OCwiZXhwIjoxODY4MzEyMDQ4fQ.EtqvcFk5kH8G70CTwmeeSPsaeOiuJcheUJi6uKH-cFY&t=2024-03-16T23%3A33%3A44.372Z`}
                   width="26"
                   height="26"
-                  alt="Shisho Baby Clothes"
+                  alt="Shisho Baby Clothes Logo"
                 />
               </Column>
             </Row>
