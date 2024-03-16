@@ -10,7 +10,7 @@ import { CartItem } from "@/types/cart";
 function SubmitButton({ availableForSale }: { availableForSale: boolean }) {
   const { pending } = useFormStatus();
   const buttonClasses =
-    "relative flex w-full items-center justify-center rounded-full bg-[#A0C4FF] p-4 tracking-wide text-white";
+    "relative flex w-full items-center justify-center rounded-full bg-[#A0C0eF] drop-shadow-sm p-4 tracking-wide text-white";
   const disabledClasses = "cursor-not-allowed opacity-60 hover:opacity-60";
 
   if (!availableForSale) {
