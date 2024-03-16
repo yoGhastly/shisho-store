@@ -35,10 +35,10 @@ export async function POST(req: Request) {
       switch (event.type) {
         case "checkout.session.completed":
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
-          const mappedOrder = mapCheckoutSessionToOrder(checkoutSession);
           const lineItems = await stripe.checkout.sessions.listLineItems(
-            mappedOrder.id,
+            checkoutSession.id,
           );
+          const mappedOrder = mapCheckoutSessionToOrder(checkoutSession);
           let orderId;
 
           if (checkoutSession.metadata) {
