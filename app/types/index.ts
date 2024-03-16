@@ -23,9 +23,9 @@ export interface CreateCheckoutSessionResponse {
     clientSecret: string;
   };
 }
-
 export interface Order {
   id: string;
+  created_at?: Date;
   amountTotal: number;
   lineItems: Stripe.ApiList<Stripe.LineItem> | undefined;
   currency: string;
