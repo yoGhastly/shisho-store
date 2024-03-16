@@ -6,10 +6,7 @@ import { EmailTemplate } from "@/components/email-template";
 import { Resend } from "resend";
 import Stripe from "stripe";
 
-const relevantEvents = new Set([
-  "checkout.session.completed",
-  "payment_intent.created",
-]);
+const relevantEvents = new Set(["checkout.session.completed"]);
 
 const orderRepository = new CreateOrder(new SupabaseOrderRepository());
 
