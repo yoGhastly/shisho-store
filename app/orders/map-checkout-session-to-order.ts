@@ -5,7 +5,7 @@ export function mapCheckoutSessionToOrder(
   session: Stripe.Checkout.Session,
 ): Order {
   const {
-    id,
+    metadata,
     amount_total,
     currency,
     customer_details,
@@ -14,7 +14,7 @@ export function mapCheckoutSessionToOrder(
   } = session;
 
   return {
-    id: id ?? "",
+    id: metadata?.orderId ?? "",
     amountTotal: amount_total ?? 0,
     currency: currency ?? "",
     customerEmail: customer_details?.email ?? "",

@@ -1,9 +1,14 @@
 import { stripe } from "@/app/lib/stripe/server";
 import { Cart } from "@/types/cart";
 import { NextRequest } from "next/server";
+import { randomUUID } from "crypto";
 import Stripe from "stripe";
 
 const MINIMUM_AMOUNT_FILS = 200;
+
+function generateOrderHandle(): string {
+  return randomUUID();
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -94,9 +99,9 @@ export async function POST(req: NextRequest) {
       paymentIntentId = intent.id;
     }
 
-    const successUrl = lastItemAddedId
-      ? `${process.env.NEXT_PUBLIC_SITE_URL}/order/${encodeURIComponent(paymentIntentId || "")}?cancel=true`
-      : `${process.env.NEXT_PUBLIC_SITE_URL}/search?cancel=true`;
+    const orderUniqueIdentifier = generateOrderHandle();
+
+    const successUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/orders/${orderUniqueIdentifier}`;
 
     // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
@@ -108,6 +113,9 @@ export async function POST(req: NextRequest) {
       customer: customer.id,
       customer_update: {
         shipping: "auto",
+      },
+      metadata: {
+        orderId: orderUniqueIdentifier
       },
       allow_promotion_codes: true,
       // TODO: Enable Stripe Tax on account

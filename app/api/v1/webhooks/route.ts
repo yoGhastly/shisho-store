@@ -1,7 +1,7 @@
 import { CreateOrder } from "@/app/domain/CreateOrder";
 import { stripe } from "@/app/lib/stripe/server";
-import { SupabaseOrderRepository } from "@/app/order/create-order";
-import { mapCheckoutSessionToOrder } from "@/app/order/map-checkout-session-to-order";
+import { SupabaseOrderRepository } from "@/app/orders/create-order";
+import { mapCheckoutSessionToOrder } from "@/app/orders/map-checkout-session-to-order";
 import { EmailTemplate } from "@/components/email-template";
 import { Resend } from "resend";
 import Stripe from "stripe";
@@ -15,7 +15,6 @@ const orderRepository = new CreateOrder(new SupabaseOrderRepository());
 
 export async function POST(req: Request) {
   const body = await req.text();
-  console.log({ body });
   const sig = req.headers.get("stripe-signature") as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -34,32 +33,33 @@ export async function POST(req: Request) {
   if (relevantEvents.has(event.type)) {
     try {
       switch (event.type) {
-        case "payment_intent.created":
-          const paymentIntentCreated = event.data.object;
-          console.log({ paymentIntentCreated });
-          break;
         case "checkout.session.completed":
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
-          const order = mapCheckoutSessionToOrder(checkoutSession);
+          const mappedOrder = mapCheckoutSessionToOrder(checkoutSession);
           const lineItems = await stripe.checkout.sessions.listLineItems(
-            order.id,
+            mappedOrder.id,
           );
+          let orderId;
+
+          if (checkoutSession.metadata) {
+            orderId = checkoutSession.metadata.orderId;
+          }
           // create the order
           const orderWithLineItems = {
-            ...order,
+            ...mappedOrder,
             lineItems,
           };
-          const newOrder = await orderRepository.create(orderWithLineItems);
-          console.log("order created ✅", order.id);
+          const order = await orderRepository.create(orderWithLineItems);
+          console.log("order created ✅", mappedOrder.id);
           // send email confirmation
-          if (newOrder) {
+          if (order) {
             try {
               const { data, error } = await resend.emails.send({
-                from: "info@xervsware.com",
-                to: [newOrder.customerEmail],
-                subject: `Confirmation Order #${newOrder.id}`,
-                react: EmailTemplate({ order: newOrder }),
-                text: `Confirmation Order #${newOrder.id}`,
+                from: "Shisho Baby Clothes <info@xervsware.com>",
+                to: [order.customerEmail],
+                subject: `Order Confirmation.`,
+                react: EmailTemplate({ order: order }),
+                text: `Order Confirmation.`,
               });
 
               if (error) {
@@ -72,9 +72,9 @@ export async function POST(req: Request) {
                 `Failed to send email confirmation: ${error.name}`,
               );
             }
-            console.log("email sent for order ✅", newOrder.id);
+            console.log("email sent for order ✅", order.id);
           }
-          console.log("checkout completed ✅", order);
+          console.log("checkout completed ✅", mappedOrder);
           break;
         default:
           throw new Error("Unhandled relevant event!");

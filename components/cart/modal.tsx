@@ -194,9 +194,9 @@ export default function CartModal({
                   <div className="py-4 text-sm text-neutral-500">
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1">
                       <p>Taxes</p>
-                      <p
-                        className="text-right text-base text-black"
-                      >{taxRate.percentage.toString()}%</p>
+                      <p className="text-right text-base text-black">
+                        {taxRate.percentage.toString()}%
+                      </p>
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
                       <p>Shipping</p>
@@ -214,10 +214,11 @@ export default function CartModal({
                   <button
                     onClick={handleCheckout}
                     disabled={isCheckingOut} // Disable the button when checkout is in progress
-                    className={`block w-full rounded-full bg-[#A0C4FF] p-3 text-center text-sm font-medium text-white ${isCheckingOut
-                      ? "opacity-50 cursor-not-allowed"
-                      : "opacity-90 hover:opacity-100"
-                      }`}
+                    className={`block w-full rounded-full bg-[#A0C4FF] p-3 text-center text-sm font-medium text-white ${
+                      isCheckingOut
+                        ? "opacity-50 cursor-not-allowed"
+                        : "opacity-90 hover:opacity-100"
+                    }`}
                   >
                     {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
                   </button>
