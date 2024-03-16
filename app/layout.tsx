@@ -1,6 +1,7 @@
 import { ReactNode, Suspense } from "react";
 import "./globals.css";
 import Navbar from "@/components/layout/navbar";
+import { Providers } from "./providers";
 
 const { SITE_NAME } = process.env;
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
@@ -25,12 +26,14 @@ export default async function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className="font-sans">
+    <html lang="en" className="font-sans light">
       <body className="bg-neutral-50 text-black selection:bg-teal-300">
-        <Navbar />
-        <Suspense>
-          <main>{children}</main>
-        </Suspense>
+        <Providers>
+          <Navbar />
+          <Suspense>
+            <main>{children}</main>
+          </Suspense>
+        </Providers>
       </body>
     </html>
   );
