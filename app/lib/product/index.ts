@@ -6,6 +6,7 @@ export async function getProducts() {
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
     method: "GET",
+    cache: "reload",
   });
 
   const { products }: ProductsResponse = await res.json();
