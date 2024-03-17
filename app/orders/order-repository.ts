@@ -28,7 +28,7 @@ export class SupabaseOrderRepository implements OrderRepository {
     }
   }
 
-  async search(orderId: Pick<Order, "id">): Promise<Order | null> {
+  async search(orderId: string): Promise<Order | undefined> {
     try {
       const { data, error } = await supabase
         .from("orders")
@@ -41,7 +41,7 @@ export class SupabaseOrderRepository implements OrderRepository {
       }
 
       if (!data) {
-        return null; // Order not found
+        throw new Error(`Order not found`);
       }
 
       const order = data as Order;

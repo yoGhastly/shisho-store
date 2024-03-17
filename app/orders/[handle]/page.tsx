@@ -1,33 +1,13 @@
-import { supabase } from "@/app/lib/subapase/client";
 import { Order } from "@/app/types";
 import React, { Suspense } from "react";
 import { BreadCrumb } from "../breadcrumb";
 import { StatusChip } from "../chip-status";
 import { GlobeEuropeAfricaIcon } from "@heroicons/react/24/outline";
 import { Table } from "@/components/table";
-import {
-  Table as NextUITable,
-  TableHeader,
-  TableColumn,
-} from "@nextui-org/react";
+import { SupabaseOrderRepository } from "../order-repository";
+import { Skeleton } from "@/components/skeleton";
 
-async function getOrderDetails({
-  orderId,
-}: {
-  orderId: string;
-}): Promise<Order> {
-  const { data: order, error } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("id", orderId)
-    .single();
-
-  if (error) {
-    throw new Error(`Order ${orderId} not found`);
-  }
-
-  return order;
-}
+const orderRepository = new SupabaseOrderRepository();
 
 export default async function Order({
   params,
@@ -39,7 +19,7 @@ export default async function Order({
   let formattedTime = "Unknown";
 
   if (params.handle) {
-    order = await getOrderDetails({ orderId: params.handle });
+    order = await orderRepository.search(params.handle);
     if (order && order.created_at) {
       const dateTime = new Date(order.created_at);
       formattedDate = dateTime.toLocaleDateString("en-US", {
@@ -54,20 +34,18 @@ export default async function Order({
     }
   }
 
-  if (!order) return null;
-
   return (
     <div className="min-h-screen flex flex-col p-5 gap-10 bg-[#F9F9F9]">
-      <Suspense fallback={<p>Loading...</p>}>
-        <BreadCrumb currentValue={order.id} />
-      </Suspense>
+      <Skeleton loaded={order?.id ? true : false}>
+        <BreadCrumb currentValue={order?.id} />
+      </Skeleton>
 
       <section className="flex flex-col justify-center w-full max-w-6xl gap-5 mx-auto">
-        <Suspense fallback={<p>Loading...</p>}>
-          <h1 className="font-bold whitespace-nowrap overflow-hidden text-ellipsis w-60 md:w-full text-xl md:text-2xl">
-            Order ID: {order.id}
+        <Skeleton loaded={order?.id ? true : false}>
+          <h1 className="font-bold text-xl md:text-2xl">
+            Order ID: {order?.id}
           </h1>
-        </Suspense>
+        </Skeleton>
         <StatusChip status="In progress" />
 
         <div className="flex flex-col gap-5">
@@ -75,22 +53,24 @@ export default async function Order({
             <h2 className="font-bold text-xl">Order Details</h2>
 
             <div className="flex flex-col gap-8 overflow-x-auto md:overflow-auto">
-              <Table
-                labelList={[
-                  "Order date",
-                  "Location",
-                  "Billed To",
-                  "Courier",
-                  "Estimate Delivery Time",
-                ]}
-                bodyRows={[
-                  formattedDate,
-                  `${order.shippingAddress.line1}, ${order.shippingAddress.line2}`,
-                  order.customerName,
-                  "ARAMEX",
-                  `1-2 weeks`,
-                ]}
-              />
+              <Skeleton loaded={order ? true : false}>
+                <Table
+                  labelList={[
+                    "Order date",
+                    "Location",
+                    "Billed To",
+                    "Courier",
+                    "Estimate Delivery Time",
+                  ]}
+                  bodyRows={[
+                    formattedDate,
+                    `${order?.shippingAddress.line1}, ${order?.shippingAddress.line2}`,
+                    `${order?.customerName}`,
+                    "ARAMEX",
+                    `1-2 weeks`,
+                  ]}
+                />
+              </Skeleton>
             </div>
           </div>
 
@@ -109,12 +89,16 @@ export default async function Order({
               <Suspense fallback={<p>Loading...</p>}>
                 <div className="flex justify-between items-center p-2">
                   <div className="flex flex-col gap-1">
-                    <p className="font-semibold text-sm">{formattedDate}</p>
+                    <Skeleton loaded={formattedDate ? true : false}>
+                      <p className="font-semibold text-sm">{formattedDate}</p>
+                    </Skeleton>
                     <p className="text-xs">Order placed</p>
                   </div>
-                  <p className="font-semibold text-xs md:text-sm">
-                    {formattedTime}
-                  </p>
+                  <Skeleton loaded={formattedTime ? true : false}>
+                    <p className="font-semibold text-xs md:text-sm">
+                      {formattedTime}
+                    </p>
+                  </Skeleton>
                 </div>
               </Suspense>
             </div>

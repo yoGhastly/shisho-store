@@ -54,7 +54,16 @@ const config: Config = {
         },
       );
     }),
-    nextui(),
+    nextui({
+      themes: {
+        light: {
+          colors: {
+            primary: "#A0C0eF",
+            secondary: "#E9EBEF",
+          },
+        },
+      },
+    }),
   ],
 };
 export default config;
