@@ -4,8 +4,13 @@ import React from "react";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import clsx from "clsx";
 
+interface Value {
+  label: string;
+  url: string;
+}
+
 interface Props {
-  values: string[];
+  values: Value[];
 }
 
 export function BreadCrumb({ values }: Props) {
@@ -22,16 +27,16 @@ export function BreadCrumb({ values }: Props) {
         }}
       >
         {values.map((v, idx) => (
-          <BreadcrumbItem key={`${v}-${idx}`}>
+          <BreadcrumbItem key={`${v}-${idx}`} href={v.url}>
             <p
               className={clsx(
                 {
-                  "w-40": v.length > 15,
+                  "w-40": v.label.length > 15,
                 },
                 "whitespace-nowrap text-ellipsis overflow-hidden md:w-full",
               )}
             >
-              {v}
+              {v.label}
             </p>
           </BreadcrumbItem>
         ))}

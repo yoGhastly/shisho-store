@@ -214,11 +214,10 @@ export default function CartModal({
                   <button
                     onClick={handleCheckout}
                     disabled={isCheckingOut} // Disable the button when checkout is in progress
-                    className={`block w-full rounded-full bg-[#A0C4FF] p-3 text-center text-sm font-medium text-white ${
-                      isCheckingOut
+                    className={`block w-full rounded-full bg-primary p-3 text-center text-sm font-medium text-white ${isCheckingOut
                         ? "opacity-50 cursor-not-allowed"
                         : "opacity-90 hover:opacity-100"
-                    }`}
+                      }`}
                   >
                     {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
                   </button>

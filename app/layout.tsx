@@ -1,5 +1,6 @@
 import { ReactNode, Suspense } from "react";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "@/components/layout/navbar";
 import { Providers } from "./providers";
 
@@ -26,15 +27,17 @@ export default async function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className="font-sans light">
-      <body className="bg-neutral-50 text-black selection:bg-teal-300">
-        <Providers>
-          <Navbar />
-          <Suspense>
-            <main>{children}</main>
-          </Suspense>
-        </Providers>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className="font-sans light">
+        <body className="bg-neutral-50 text-black selection:bg-teal-300">
+          <Providers>
+            <Navbar />
+            <Suspense>
+              <main>{children}</main>
+            </Suspense>
+          </Providers>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

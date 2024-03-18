@@ -1,8 +1,9 @@
 import { CreateOrder } from "@/app/domain/CreateOrder";
 import { stripe } from "@/app/lib/stripe/server";
-import { SupabaseOrderRepository } from "@/app/orders/create-order";
 import { mapCheckoutSessionToOrder } from "@/app/orders/map-checkout-session-to-order";
+import { SupabaseOrderRepository } from "@/app/orders/order-repository";
 import { EmailTemplate } from "@/components/email-template";
+import { cookies } from "next/headers";
 import { Resend } from "resend";
 import Stripe from "stripe";
 
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
             lineItems,
           };
           const order = await orderRepository.create(orderWithLineItems);
+          cookies().set("att_e", order?.customerEmail as string);
           console.log("order created ✅", mappedOrder.id);
           // send email confirmation
           if (order) {
@@ -55,7 +57,7 @@ export async function POST(req: Request) {
                 from: "Shisho Baby Clothes <info@xervsware.com>",
                 to: [order.customerEmail],
                 subject: `Order Confirmation.`,
-                react: EmailTemplate({ order: order }),
+                react: EmailTemplate({ order }),
                 text: `Order Confirmation.`,
               });
 

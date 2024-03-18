@@ -93,12 +93,6 @@ export async function POST(req: NextRequest) {
       currency: "aed",
     });
 
-    let paymentIntentId: string | null = null;
-
-    if (intent.client_secret) {
-      paymentIntentId = intent.id;
-    }
-
     const orderUniqueIdentifier = generateOrderHandle();
 
     const successUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/orders/${orderUniqueIdentifier}`;
@@ -115,7 +109,7 @@ export async function POST(req: NextRequest) {
         shipping: "auto",
       },
       metadata: {
-        orderId: orderUniqueIdentifier
+        orderId: orderUniqueIdentifier,
       },
       allow_promotion_codes: true,
       // TODO: Enable Stripe Tax on account

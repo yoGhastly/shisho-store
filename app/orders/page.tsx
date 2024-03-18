@@ -1,22 +1,21 @@
-import { Button, Link } from "@nextui-org/react";
 import React from "react";
-import { StatusChip } from "./chip-status";
-import { Avatar } from "@/components/avatar";
-import { PhotoIcon } from "@heroicons/react/24/outline";
 import Footer from "@/components/layout/footer";
 import { AccountDetails } from "@/components/account/acount-details";
 import { AddressBook } from "@/components/account/address-book";
 import { ReturnItem } from "@/components/account/return-item";
 import { OrderItem } from "@/components/account/order-item";
 import { BreadCrumb } from "./breadcrumb";
+import { cookies } from "next/headers";
 
 export default function Orders() {
+  console.log(cookies().get("att_e"));
+
   return (
     <React.Fragment>
       <section className="flex flex-col h-screen md:gap-8 justify-center items-center">
         <header className="flex self-start w-full px-10 max-w-6xl mx-auto mt-10">
           <div>
-            <BreadCrumb values={["Your Account"]} />
+            <BreadCrumb values={[{ label: "Your Account", url: "/orders" }]} />
           </div>
         </header>
 
