@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { OrderRepository } from "../infrastructure/OrderRepository";
 import { supabase } from "../lib/subapase/client";
 import { Order } from "../types";
+import { OrderSearchCriteria } from "../infrastructure/criteria/OrderSearchCriteria";
 
 export class SupabaseOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order | null> {
@@ -54,6 +55,23 @@ export class SupabaseOrderRepository implements OrderRepository {
       throw new Error(
         `Failed to search for order ${orderId}: ${error.message}`,
       );
+    }
+  }
+  async searchBy(criteria: OrderSearchCriteria): Promise<Order[]> {
+    try {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*")
+        .match(criteria);
+
+      if (error) {
+        throw error;
+      }
+
+      return (data as Order[]) || [];
+    } catch (error) {
+      console.error("Error searching orders:", error);
+      return [];
     }
   }
 }
