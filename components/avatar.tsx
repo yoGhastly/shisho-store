@@ -7,13 +7,15 @@ export function Avatar({ name }: { name: string }) {
   return (
     <NextUIAvatar
       name={name}
+      as="a"
+      href="/account"
       tw="text-white"
       size={isSm ? "md" : "lg"}
       color="secondary"
       getInitials={(name) => {
         const words = name.split(" ");
         const initials = words.map((word) => word.charAt(0)).join("");
-        return initials.toUpperCase();
+        return initials.slice(0, 2).toUpperCase();
       }}
     />
   );
