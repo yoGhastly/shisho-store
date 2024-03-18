@@ -1,5 +1,5 @@
 import { OrderSearch } from "@/app/domain/SearchOrder";
-import { SupabaseOrderRepository } from "@/app/orders/create-order";
+import { SupabaseOrderRepository } from "@/app/orders/order-repository";
 import { Order } from "@/app/types";
 import { NextRequest } from "next/server";
 
