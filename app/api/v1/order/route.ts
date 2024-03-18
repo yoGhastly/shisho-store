@@ -1,12 +1,11 @@
 import { OrderSearch } from "@/app/domain/SearchOrder";
 import { SupabaseOrderRepository } from "@/app/orders/order-repository";
-import { Order } from "@/app/types";
 import { NextRequest } from "next/server";
 
 const searchOrder = new OrderSearch(new SupabaseOrderRepository());
 
 export async function POST(request: NextRequest) {
-  const { orderId }: { orderId: Pick<Order, "id"> } = await request.json();
+  const { orderId }: { orderId: string } = await request.json();
   try {
     await searchOrder.search(orderId);
     return Response.json({
