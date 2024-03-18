@@ -7,10 +7,13 @@ import LogoSquare from "@/components/logo-square";
 import OpenCart from "@/components/cart/open-cart";
 import Cart from "@/components/cart";
 import "../../../styles/Logo.module.css";
+import { UserAccount } from "@/components/account/account-button";
+import { currentUser } from "@clerk/nextjs";
 
 const { SITE_NAME } = process.env;
 
 export default async function Navbar() {
+  const user = await currentUser();
   const menu = await getProducts();
 
   return (
@@ -55,6 +58,9 @@ export default async function Navbar() {
           <Search />
         </div>
         <div className="flex justify-end md:w-1/3">
+          <Suspense fallback={null}>
+            <UserAccount isLoggedIn={user ? true : false} />
+          </Suspense>
           <Suspense fallback={<OpenCart />}>
             <Cart />
           </Suspense>
