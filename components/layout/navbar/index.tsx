@@ -57,10 +57,12 @@ export default async function Navbar() {
         <div className="hidden justify-center md:flex md:w-1/3">
           <Search />
         </div>
-        <div className="flex justify-end md:w-1/3">
-          <Suspense fallback={null}>
-            <UserAccount isLoggedIn={user ? true : false} />
-          </Suspense>
+        <div className="flex gap-2.5 justify-end md:w-1/3">
+          {
+            user && (
+              <UserAccount isLoggedIn={user ? true : false} />
+            )
+          }
           <Suspense fallback={<OpenCart />}>
             <Cart />
           </Suspense>
