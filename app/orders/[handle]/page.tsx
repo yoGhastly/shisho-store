@@ -8,8 +8,7 @@ import { SupabaseOrderRepository } from "../order-repository";
 import { Skeleton } from "@/components/skeleton";
 import Footer from "@/components/layout/footer";
 
-export const runtime = "edge";
-const orderRepository = new SupabaseOrderRepository();
+const repository = new SupabaseOrderRepository();
 
 export default async function Order({
   params,
@@ -21,7 +20,7 @@ export default async function Order({
   let formattedTime = "Unknown";
 
   if (params.handle) {
-    order = await orderRepository.search(params.handle);
+    order = await repository.search(params.handle);
     if (order && order.created_at) {
       const dateTime = new Date(order.created_at);
       formattedDate = dateTime.toLocaleDateString("en-US", {
