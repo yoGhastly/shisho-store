@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
 
     const orderUniqueIdentifier = generateOrderHandle();
 
-    const successUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/orders/${orderUniqueIdentifier}`;
+    const successUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/sign-in`;
 
     // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
