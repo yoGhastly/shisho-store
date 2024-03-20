@@ -1,18 +1,18 @@
-import { StatusChip } from "@/app/orders/chip-status";
-import { Order } from "@/app/types";
-import clsx from "clsx";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import { StatusChip } from '@/app/orders/chip-status';
+import { Order } from '@/app/types';
+import clsx from 'clsx';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
 export function OrderItem({ order }: { order: Order }) {
-  let formattedDate = "Unknown";
+  let formattedDate = 'Unknown';
   if (order && order.created_at) {
     const dateTime = new Date(order.created_at);
-    formattedDate = dateTime.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+    formattedDate = dateTime.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
   }
   return (
@@ -45,9 +45,9 @@ export function OrderItem({ order }: { order: Order }) {
           <Link
             href={`/orders/${order.id}`}
             className={clsx(
-              "absolute top-1/2 w-fit drop-shadow-sm left-1/2 transform -translate-x-1/2 -translate-y-1/2",
-              "bg-gray-700/20 group-hover:bg-gray-700/40 transition delay-75 backdrop-blur-sm rounded-full py-1.5 px-5 w-full text-white text-center", // Added text-center
-              "text-nowrap font-semibold",
+              'absolute top-1/2 w-fit drop-shadow-sm left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+              'bg-gray-700/20 group-hover:bg-gray-700/40 transition delay-75 backdrop-blur-sm rounded-full py-1.5 px-5 text-white text-center',
+              'text-nowrap font-semibold',
             )}
           >
             View Order
