@@ -23,11 +23,16 @@ export interface CreateCheckoutSessionResponse {
     clientSecret: string;
   };
 }
+
+interface LineItem extends Stripe.LineItem {
+  url: string | null;
+}
+
 export interface Order {
   id: string;
   created_at?: Date;
   amountTotal: number;
-  lineItems: Stripe.ApiList<Stripe.LineItem> | undefined;
+  lineItems: LineItem[];
   currency: string;
   customerEmail: string;
   customerName: string;
