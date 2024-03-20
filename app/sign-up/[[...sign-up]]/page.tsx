@@ -5,7 +5,7 @@ import React from "react";
 
 export default function Page() {
   return (
-    <div className="h-screen flex justify-center items-center gap-8 p-5">
+    <div className="h-screen flex flex-col md:flex-row justify-center items-center gap-8 p-5">
       <section
         className={clsx(
           "w-full h-full flex justify-center items-center bg-secondary/[0.2]",
@@ -13,10 +13,10 @@ export default function Page() {
       >
         <div className="flex flex-col max-w-lg gap-3">
           <h1 className="font-semibold text-center text-3xl">
-            Sign In to view your orders.
+            Sign Up to view your orders.
           </h1>
           <p className="text-center text-[#4D5768]">
-            Sign in to access your order history, track your shipments, and
+            Sign up to access your order history, track your shipments, and
             manage your account details. Once signed in, you can view all your
             past orders and easily reorder your favorite items.
           </p>
