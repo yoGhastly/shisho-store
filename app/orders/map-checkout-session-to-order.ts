@@ -1,16 +1,17 @@
 import Stripe from "stripe";
-import { Order } from "../types";
+import { Order, LineItem } from "../types";
 
 export function mapCheckoutSessionToOrder(
   session: Stripe.Checkout.Session,
+  lineItems: LineItem[],
 ): Order {
   const {
     metadata,
+    shipping_cost,
     amount_total,
     currency,
     customer_details,
     shipping_details,
-    line_items,
   } = session;
 
   return {
@@ -20,7 +21,8 @@ export function mapCheckoutSessionToOrder(
     customerEmail: customer_details?.email ?? "",
     customerName: customer_details?.name ?? "",
     customerPhone: customer_details?.phone ?? "",
-    lineItems: line_items,
+    shippingCost: shipping_cost ?? null,
+    lineItems,
     shippingAddress: {
       city: shipping_details?.address?.city ?? "",
       country: shipping_details?.address?.country ?? "",

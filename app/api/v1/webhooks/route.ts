@@ -36,8 +36,8 @@ export async function POST(req: Request) {
 
   try {
     const checkoutSession = event.data.object as Stripe.Checkout.Session;
-    const mappedOrder = mapCheckoutSessionToOrder(checkoutSession);
     const lineItems = await fetchLineItems(checkoutSession);
+    const mappedOrder = mapCheckoutSessionToOrder(checkoutSession, lineItems);
 
     const orderWithLineItems = {
       ...mappedOrder,
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     };
 
     const order = await repository.create(orderWithLineItems);
-    console.log("order created ✅", mappedOrder.id);
+    console.log("order created ✅", order?.id);
 
     await sendEmailConfirmation(resend, order as Order);
 

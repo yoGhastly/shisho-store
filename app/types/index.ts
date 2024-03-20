@@ -24,7 +24,7 @@ export interface CreateCheckoutSessionResponse {
   };
 }
 
-interface LineItem extends Stripe.LineItem {
+export interface LineItem extends Stripe.LineItem {
   url: string | null;
 }
 
@@ -37,6 +37,7 @@ export interface Order {
   customerEmail: string;
   customerName: string;
   customerPhone: string;
+  shippingCost: Stripe.Checkout.Session.ShippingCost | null;
   shippingAddress: {
     city: string;
     country: string;
