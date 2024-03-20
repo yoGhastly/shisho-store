@@ -50,14 +50,14 @@ export default async function Orders() {
   return (
     <React.Fragment>
       <section className="flex flex-col h-screen md:gap-5 justify-center items-center">
-        <header className="flex self-start w-full px-10 max-w-6xl mx-auto mt-5 md:mt-24">
+        <header className="flex self-start w-full p-5 max-w-6xl mx-auto mt-10 md:mt-24">
           <div>
             <BreadCrumb values={[{ label: "Your Account", url: "/orders" }]} />
           </div>
         </header>
 
-        <article className="flex flex-col md:flex-row gap-5 w-full h-full p-5 max-w-6xl mx-auto">
-          <aside className="h-full rounded-sm basis-1/3 p-5 flex flex-col gap-10">
+        <article className="flex flex-col md:flex-row gap-5 w-full p-5 h-full max-w-6xl mx-auto">
+          <aside className="h-full rounded-sm basis-1/3 flex flex-col gap-10">
             <Skeleton loaded={details ? true : false}>
               <AccountDetails details={details as Details} />
             </Skeleton>
@@ -71,11 +71,7 @@ export default async function Orders() {
           <section className="rounded-sm h-full basis-full p-5 flex flex-col gap-5">
             <h2 className="uppercase font-bold text-2xl">Your Orders</h2>
             {orders.length > 0 ? (
-              orders.map((order) => (
-                <Skeleton loaded={orders ? true : false} key={order.id}>
-                  <OrderItem order={order} />
-                </Skeleton>
-              ))
+              orders.map((order) => <OrderItem order={order} key={order.id} />)
             ) : (
               <section className="flex flex-col justify-center items-center gap-8 my-auto">
                 <ShoppingBagIcon className="h-10" />
