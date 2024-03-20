@@ -1,13 +1,13 @@
 import { authMiddleware } from "@clerk/nextjs";
 
-const protectedRoutes = ["/orders", "/account"];
+const protectedRoutes = ["/orders", "/account", "/orders/:handle"];
 
 export default authMiddleware({
   // NOTE: allows to hit all routes except orders page
   publicRoutes: (req) =>
     !protectedRoutes.some((route) => req.url.startsWith(route)),
   // NOTE: match for dynamic routes with regex
-  ignoredRoutes: ["/orders/(.*)"],
+  // ignoredRoutes: ["/orders/(.*)"],
 });
 
 export const config = {
