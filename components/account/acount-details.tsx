@@ -19,9 +19,9 @@ export function AccountDetails({ details }: Props) {
 
   return (
     <div className="flex gap-5">
-      <Avatar name={details.name} />
+      <Avatar name={details.name ?? "Guest"} />
       <div className="flex flex-col gap-1.5">
-        <p className="uppercase font-bold text-xl">{details.name}</p>
+        <p className="uppercase font-bold text-xl">{details.name ?? "Guest"}</p>
         <p>{details.emailAddress}</p>
         <button
           onClick={() => signOut(() => router.push("/"))}
