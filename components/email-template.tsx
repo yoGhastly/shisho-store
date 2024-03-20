@@ -16,6 +16,7 @@ import {
   informationTableValue,
   main,
   productDescription,
+  productIcon,
   productLink,
   productPrice,
   productPriceLarge,
@@ -34,11 +35,7 @@ import {
   walletLinkText,
   walletWrapper,
 } from "@/styles/order-email-styles";
-import {
-  PhotoIcon,
-  ShoppingBagIcon,
-  WalletIcon,
-} from "@heroicons/react/16/solid";
+import { ShoppingBagIcon, WalletIcon } from "@heroicons/react/16/solid";
 import {
   Tailwind,
   Text,
@@ -154,10 +151,17 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             <Text style={productsTitle}>Products</Text>
           </Section>
           <Section>
-            {order.lineItems?.data.map((item, idx) => (
+            {order.lineItems.map((item, idx) => (
               <Row key={`${item.id}-${idx}`}>
                 <Column style={{ width: "64px" }}>
-                  <PhotoIcon className="h-7" />
+                  <Img
+                    src={`${item.url}`}
+                    alt={`Product ${item.description}`}
+                    aria-label={`${item.description}`}
+                    width="64"
+                    height="64"
+                    style={productIcon}
+                  />
                 </Column>
                 <Column style={{ paddingLeft: "22px" }}>
                   <Text style={productTitle}>{item.description}</Text>
