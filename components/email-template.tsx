@@ -200,7 +200,11 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
 
                   <Column style={productPriceWrapper} align="right">
                     <Text style={productPrice}>
-                      ${item.price?.unit_amount_decimal}
+                      $
+                      {(
+                        parseInt(item.price?.unit_amount_decimal as string) /
+                        100
+                      ).toFixed(2)}
                     </Text>
                   </Column>
                 </Row>
@@ -210,7 +214,9 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               <Row>
                 <Column style={productPriceWrapper} align="right">
                   <Text style={productPrice}>
-                    {order.shippingCost?.amount_total}
+                    {(
+                      (order.shippingCost?.amount_total as number) / 100
+                    ).toFixed(2)}
                   </Text>
                 </Column>
               </Row>
@@ -223,7 +229,9 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                 </Column>
                 <Column style={productPriceVerticalLine}></Column>
                 <Column style={productPriceLargeWrapper}>
-                  <Text style={productPriceLarge}>${order.amountTotal}</Text>
+                  <Text style={productPriceLarge}>
+                    ${(order.amountTotal / 100).toFixed(2)}
+                  </Text>
                 </Column>
               </Row>
             </Section>
