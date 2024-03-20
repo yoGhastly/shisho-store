@@ -7,6 +7,7 @@ import { Table } from "@/components/table";
 import { SupabaseOrderRepository } from "../order-repository";
 import { Skeleton } from "@/components/skeleton";
 import Footer from "@/components/layout/footer";
+import Image from "next/image";
 
 const repository = new SupabaseOrderRepository();
 
@@ -113,6 +114,50 @@ export default async function Order({
                 <GlobeEuropeAfricaIcon className="h-10 mx-auto my-auto" />
               </div>
             </section>
+
+            <div className="w-full h-full rounded-lg flex flex-col gap-5 bg-white p-5 drop-shadow-sm">
+              <div className="flex justify-between items-center bg-[#F9FAFB] p-2.5">
+                <span className="text-[#979DAB] text-xs md:text-sm hidden md:block">
+                  Products
+                </span>
+                <span className="text-[#979dab]">
+                  Shipping Cost{" "}
+                  {(
+                    (order?.shippingCost?.amount_total as number) / 100
+                  ).toFixed(2)}{" "}
+                  for {order?.shippingAddress.state}
+                </span>
+                <span className="font-semibold">
+                  Total {((order?.amountTotal as number) / 100).toFixed(2)}
+                </span>
+              </div>
+              <div className="flex flex-col gap-8 overflow-x-auto md:overflow-auto">
+                {order?.lineItems.map((item) => (
+                  <section className="flex items-center" key={item.id}>
+                    <div className="flex gap-3">
+                      <figure className="relative w-24 h-24">
+                        <Image
+                          src={`${item.url}`}
+                          alt={`${item.description}`}
+                          aria-label={`${item.description}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </figure>
+                      <div className="flex flex-col gap-1.5">
+                        <p>{item.description}</p>
+                        <p>
+                          {(item.amount_total / 100).toFixed(2)}{" "}
+                          <span className="uppercase">
+                            {item.price?.currency}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </section>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
       </div>
