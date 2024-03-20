@@ -60,24 +60,22 @@ export default async function Order({
               <h2 className="font-bold text-xl">Order Details</h2>
 
               <div className="flex flex-col gap-8 overflow-x-auto md:overflow-auto">
-                <Skeleton loaded={order ? true : false}>
-                  <Table
-                    labelList={[
-                      "Order date",
-                      "Location",
-                      "Billed To",
-                      "Courier",
-                      "Estimate Delivery Time",
-                    ]}
-                    bodyRows={[
-                      formattedDate,
-                      `${order?.shippingAddress.line1}, ${order?.shippingAddress.line2}`,
-                      `${order?.customerName}`,
-                      "ARAMEX",
-                      `1-2 weeks`,
-                    ]}
-                  />
-                </Skeleton>
+                <Table
+                  labelList={[
+                    "Order date",
+                    "Location",
+                    "Billed To",
+                    "Courier",
+                    "Estimate Delivery Time",
+                  ]}
+                  bodyRows={[
+                    formattedDate,
+                    `${order?.shippingAddress.line1}, ${order?.shippingAddress.line2}`,
+                    `${order?.customerName}`,
+                    "ARAMEX",
+                    `1-2 weeks`,
+                  ]}
+                />
               </div>
             </div>
 
