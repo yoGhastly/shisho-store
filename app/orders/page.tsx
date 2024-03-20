@@ -12,6 +12,7 @@ import { Order } from "../types";
 import { Skeleton } from "@/components/skeleton";
 import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { Button } from "@nextui-org/react";
+import Footer from "@/components/layout/footer";
 
 type Details = {
   emailAddress: string;
@@ -22,7 +23,15 @@ const orderRepository = new SupabaseOrderRepository();
 
 export default async function Orders() {
   const user = await currentUser();
-  let details: Details | undefined;
+
+  const criteria: OrderSearchCriteria = {
+    customerEmail: user?.emailAddresses.map((a) => a.emailAddress),
+  };
+
+  let details = {
+    name: "Guest",
+    emailAddress: criteria.customerName,
+  };
   let address = {} as Pick<Order, "shippingAddress"> &
     Pick<Order, "customerName">;
 
@@ -30,16 +39,13 @@ export default async function Orders() {
     redirectToSignIn({ returnBackUrl: "/orders" });
   }
 
-  const criteria: OrderSearchCriteria = {
-    customerEmail: user?.emailAddresses.map((a) => a.emailAddress),
-  };
   const orders = await orderRepository.searchBy(criteria);
 
-  if (orders) {
-    const { customerName, customerEmail, shippingAddress } = orders[0];
+  if (orders.length > 0) {
+    const { customerName, shippingAddress } = orders[0];
     details = {
-      name: customerName,
-      emailAddress: customerEmail,
+      name: customerName ?? null,
+      emailAddress: criteria.customerEmail,
     };
     address = {
       customerName,
@@ -90,6 +96,7 @@ export default async function Orders() {
           </section>
         </article>
       </section>
+      <Footer />
     </React.Fragment>
   );
 }
