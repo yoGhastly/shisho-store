@@ -7,19 +7,18 @@ import LogoSquare from "@/components/logo-square";
 import OpenCart from "@/components/cart/open-cart";
 import Cart from "@/components/cart";
 import "../../../styles/Logo.module.css";
-import { UserAccount } from "@/components/account/account-button";
 import { currentUser } from "@clerk/nextjs";
 
 const { SITE_NAME } = process.env;
 
 export default async function Navbar() {
-  const user = await currentUser();
   const menu = await getProducts();
+  const user = await currentUser();
 
   return (
     <nav className="relative flex items-center justify-between p-4 lg:px-6">
       <div className="block flex-none md:hidden">
-        <MobileMenu menu={menu} />
+        <MobileMenu menu={menu} isLoggedIn={user ? true : false} />
       </div>
       <div className="flex w-full items-center">
         <div className="flex w-full md:w-1/3">
@@ -51,6 +50,11 @@ export default async function Navbar() {
                   All
                 </Link>
               </li>
+              <li>
+                <Link href={user ? "/account" : "sign-in"}>
+                  {user ? "My Account" : "Sign In"}
+                </Link>
+              </li>
             </ul>
           ) : null}
         </div>
@@ -58,11 +62,6 @@ export default async function Navbar() {
           <Search />
         </div>
         <div className="flex gap-2.5 justify-end md:w-1/3">
-          {
-            user && (
-              <UserAccount isLoggedIn={user ? true : false} />
-            )
-          }
           <Suspense fallback={<OpenCart />}>
             <Cart />
           </Suspense>

@@ -3,12 +3,18 @@
 import { Dialog, Transition } from "@headlessui/react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, Suspense, useEffect, useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Search from "./search";
 import { Product } from "@/app/types";
 
-export default function MobileMenu({ menu }: { menu: Product[] }) {
+export default function MobileMenu({
+  menu,
+  isLoggedIn,
+}: {
+  menu: Product[];
+  isLoggedIn: boolean;
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
@@ -74,12 +80,20 @@ export default function MobileMenu({ menu }: { menu: Product[] }) {
                   <Search />
                 </div>
                 {menu.length > 0 ? (
-                  <Link
-                    href={`/search`}
-                    className="underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
-                  >
-                    All
-                  </Link>
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      href={`/search`}
+                      className="underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
+                    >
+                      All
+                    </Link>
+                    <Link
+                      href={isLoggedIn ? "/account" : "sign-in"}
+                      className="underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
+                    >
+                      {isLoggedIn ? "My Account" : "Sign In"}
+                    </Link>
+                  </div>
                 ) : null}
               </div>
             </Dialog.Panel>
