@@ -71,7 +71,7 @@ async function fetchLineItems(checkoutSession: Stripe.Checkout.Session) {
       const product = await stripe.products.retrieve(
         item.price?.product as string,
       );
-      return { ...item, url: product.url };
+      return { ...item, url: product.images[0] };
     }),
   );
 }
