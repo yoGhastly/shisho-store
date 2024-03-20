@@ -51,7 +51,10 @@ export default async function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link href={user ? "/account" : "sign-in"}>
+                <Link
+                  href={user ? "/account" : "/sign-in"}
+                  className="text-neutral-500 underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
+                >
                   {user ? "My Account" : "Sign In"}
                 </Link>
               </li>
