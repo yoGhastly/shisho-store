@@ -8,7 +8,7 @@ import Stripe from "stripe";
 
 const repository = new SupabaseOrderRepository();
 
-export async function handleCheckoutCompleted(req: Request) {
+export async function POST(req: Request) {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature") as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
