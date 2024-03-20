@@ -25,6 +25,7 @@ export default async function Footer() {
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
+                fontWeight: 700,
               }}
             >
               {SITE_NAME}
