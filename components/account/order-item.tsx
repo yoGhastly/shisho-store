@@ -15,12 +15,14 @@ export function OrderItem({ order }: { order: Order }) {
     });
   }
   return (
-    <div className="flex flex-col md:flex-row bg-white/40 rounded-sm p-5 gap-5 border border-secondary">
-      <div className="basis-3/4 flex flex-col gap-3">
-        <p className="whitespace-nowrap text-ellipsis overflow-hidden w-48 font-semibold">
+    <div className="flex flex-col h-full w-full md:flex-row bg-white/40 rounded-sm p-5 gap-5 border border-secondary">
+      <div className="basis-3/4 w-full h-full flex flex-col gap-3">
+        <p className="whitespace-nowrap text-black text-ellipsis overflow-hidden w-48 font-semibold">
           Order {order.id}
         </p>
-        {order.created_at && <p className="">Ordered on {formattedDate}</p>}
+        {order?.created_at && (
+          <p className="text-[#4D5768]">Ordered on {formattedDate}</p>
+        )}
         <StatusChip status="In progress" />
       </div>
       <div className="basis-full flex gap-5 justify-between md:justify-end items-center">
