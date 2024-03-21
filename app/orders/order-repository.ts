@@ -23,7 +23,6 @@ export class SupabaseOrderRepository implements OrderRepository {
         throw new Error(`Order not found in orders table ${order.id}`);
       }
       const newOrder = data as Order;
-      cookies().set('attached_email', newOrder.customerEmail);
 
       return newOrder;
     } catch (error: any) {
@@ -36,7 +35,7 @@ export class SupabaseOrderRepository implements OrderRepository {
     const { data, error } = await supabase
       .from('orders')
       .select('*')
-      .order('created_at', { ascending: false }); // Change order direction to descending
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw new Error(`No orders found on all() method.`);
@@ -76,7 +75,8 @@ export class SupabaseOrderRepository implements OrderRepository {
       const { data, error } = await supabase
         .from('orders')
         .select('*')
-        .match(criteria);
+        .match(criteria)
+        .order('created_at', { ascending: false });
 
       if (error) {
         throw error;
