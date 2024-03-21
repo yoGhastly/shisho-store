@@ -46,14 +46,12 @@ export default async function Page({
     email: emails?.at(0) as string,
   });
 
-  if (searchParams) {
-    const statusParam = searchParams.status;
-    const criteria: OrderSearchCriteria = {
-      status: statusParam,
-    };
+  const statusParam = searchParams.status;
+  const criteria: OrderSearchCriteria = {
+    status: statusParam ?? 'In progress',
+  };
 
-    orders = await repository.searchBy(criteria);
-  }
+  orders = await repository.searchBy(criteria);
 
   if (!isAdmin) return <Fallback />;
 
