@@ -1,18 +1,18 @@
-import { cookies } from "next/headers";
-import { OrderRepository } from "../infrastructure/OrderRepository";
-import { supabase } from "../lib/subapase/client";
-import { Order } from "../types";
-import { OrderSearchCriteria } from "../infrastructure/criteria/OrderSearchCriteria";
+import { cookies } from 'next/headers';
+import { OrderRepository } from '../infrastructure/OrderRepository';
+import { supabase } from '../lib/subapase/client';
+import { Order } from '../types';
+import { OrderSearchCriteria } from '../infrastructure/criteria/OrderSearchCriteria';
 
 export class SupabaseOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order | null> {
-    "use server";
+    'use server';
     try {
       // Insert the order into the "orders" table
       const { data, error } = await supabase
-        .from("orders")
+        .from('orders')
         .insert(order)
-        .select("*")
+        .select('*')
         .single();
 
       if (error) {
@@ -23,7 +23,7 @@ export class SupabaseOrderRepository implements OrderRepository {
         throw new Error(`Order not found in orders table ${order.id}`);
       }
       const newOrder = data as Order;
-      cookies().set("attached_email", newOrder.customerEmail);
+      cookies().set('attached_email', newOrder.customerEmail);
 
       return newOrder;
     } catch (error: any) {
@@ -31,13 +31,27 @@ export class SupabaseOrderRepository implements OrderRepository {
     }
   }
 
+  async all(): Promise<Order[]> {
+    'use server';
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false }); // Change order direction to descending
+
+    if (error) {
+      throw new Error(`No orders found on all() method.`);
+    }
+
+    return (data as Order[]) || [];
+  }
+
   async search(orderId: string): Promise<Order | undefined> {
-    "use server";
+    'use server';
     try {
       const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("id", orderId)
+        .from('orders')
+        .select('*')
+        .eq('id', orderId)
         .single();
 
       if (error) {
@@ -60,8 +74,8 @@ export class SupabaseOrderRepository implements OrderRepository {
   async searchBy(criteria: OrderSearchCriteria): Promise<Order[]> {
     try {
       const { data, error } = await supabase
-        .from("orders")
-        .select("*")
+        .from('orders')
+        .select('*')
         .match(criteria);
 
       if (error) {
@@ -70,7 +84,7 @@ export class SupabaseOrderRepository implements OrderRepository {
 
       return (data as Order[]) || [];
     } catch (error) {
-      console.error("Error searching orders:", error);
+      console.error('Error searching orders:', error);
       return [];
     }
   }

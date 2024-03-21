@@ -1,4 +1,5 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
+import { Status } from '../orders/chip-status';
 
 export interface ProductsResponse {
   products: Product[];
@@ -32,6 +33,7 @@ export interface Order {
   id: string;
   created_at?: Date;
   amountTotal: number;
+  status: Status;
   lineItems: LineItem[];
   currency: string;
   customerEmail: string;
