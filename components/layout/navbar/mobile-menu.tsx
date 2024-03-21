@@ -98,7 +98,7 @@ export default function MobileMenu({
                     {
                       isAdmin && (
                         <Link
-                          href={`/search`}
+                          href={`/admin`}
                           className="underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
                         >
                           Admin
