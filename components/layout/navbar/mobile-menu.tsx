@@ -3,7 +3,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Fragment, Suspense, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Search from "./search";
 import { Product } from "@/app/types";
@@ -11,9 +11,11 @@ import { Product } from "@/app/types";
 export default function MobileMenu({
   menu,
   isLoggedIn,
+  isAdmin = false,
 }: {
   menu: Product[];
   isLoggedIn: boolean;
+  isAdmin: boolean;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -93,6 +95,16 @@ export default function MobileMenu({
                     >
                       {isLoggedIn ? "My Account" : "Sign In"}
                     </Link>
+                    {
+                      isAdmin && (
+                        <Link
+                          href={`/search`}
+                          className="underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
+                        >
+                          Admin
+                        </Link>
+                      )
+                    }
                   </div>
                 ) : null}
               </div>
