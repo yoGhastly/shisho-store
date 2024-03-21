@@ -10,7 +10,8 @@ export const checkAdminStatus = async ({ email }: { email: string }) => {
       .single();
 
     if (error) {
-      throw new Error(`Email ${email} is not an admin user`);
+      console.error(`Email ${email} is not an admin user`);
+      return { isAdmin: false };
     }
 
     return {
