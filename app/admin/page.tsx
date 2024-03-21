@@ -6,10 +6,10 @@ import { BreadCrumb } from '../orders/breadcrumb';
 import { AccountDetails } from '@/components/account/acount-details';
 import { Skeleton } from '@/components/skeleton';
 import { SupabaseOrderRepository } from '../orders/order-repository';
-import { OrderItem } from '@/components/admin/order-item';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { StatusOrderRadioGroup } from '@/components/radio-group';
 import { OrderSearchCriteria } from '../infrastructure/criteria/OrderSearchCriteria';
+import { Status } from '../orders/chip-status';
+import { Orders } from '@/components/admin/orders';
 
 function Fallback() {
   return (
@@ -30,7 +30,7 @@ const repository = new SupabaseOrderRepository();
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { status: string | undefined };
+  searchParams: { status: Status };
 }) {
   const user = await currentUser();
   let orders;
@@ -62,7 +62,6 @@ export default async function Page({
           <BreadCrumb values={[{ label: 'Admin', url: '/admin' }]} />
         </div>
       </header>
-
       <article className="flex flex-col md:flex-row gap-5 w-full p-5 h-full max-w-6xl mx-auto">
         <aside className="h-full rounded-sm basis-1/3 flex flex-col gap-10">
           <Skeleton loaded={adminDetails ? true : false}>
@@ -75,23 +74,11 @@ export default async function Page({
         <section className="rounded-sm h-full basis-full p-5 flex flex-col gap-5">
           <h2 className="uppercase font-bold text-2xl">Orders</h2>
           <StatusOrderRadioGroup />
-
           <Suspense fallback={<p>loading...</p>}>
-            {orders.length > 0 ? (
-              orders.map((order) => (
-                <OrderItem order={order} key={order.id} />
-              ))
-            ) : (
-              <section className="flex flex-col justify-center items-center gap-8 my-auto">
-                <MagnifyingGlassIcon className="h-6" />
-                <div className="flex flex-col gap-3 text-center">
-                  <p className="font-semibold">
-                    No orders found. with status &lsquo;
-                    {searchParams.status}&lsquo;
-                  </p>
-                </div>
-              </section>
-            )}
+            <Orders
+              orders={orders}
+              selectedStatus={searchParams.status}
+            />
           </Suspense>
         </section>
       </article>
