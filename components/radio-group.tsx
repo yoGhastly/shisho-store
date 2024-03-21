@@ -34,6 +34,7 @@ export function StatusOrderRadioGroup() {
       <RadioGroup
         label="Select Order Status"
         orientation="horizontal"
+        defaultValue='In progress'
         onValueChange={setSelected}
       >
         <Radio value="In progress" color="success">
