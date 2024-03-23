@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers';
 import { OrderRepository } from '../infrastructure/OrderRepository';
 import { supabase } from '../lib/subapase/client';
 import { Order } from '../types';

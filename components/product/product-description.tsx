@@ -1,13 +1,12 @@
-"use client";
+'use client';
 
-import Stripe from "stripe";
-import { AddToCart } from "../cart/add-to-cart";
-import Price from "../price";
-import Prose from "../prose";
-import { VariantSelector } from "./variant-selector";
-import { useEffect, useState } from "react";
-import useAddToCartProductDetailsStore from "@/app/lib/stores/addToCartStore";
-import { Product } from "@/app/types";
+import { AddToCart } from '../cart/add-to-cart';
+import Price from '../price';
+import Prose from '../prose';
+import { VariantSelector } from './variant-selector';
+import { useEffect, useState } from 'react';
+import useAddToCartProductDetailsStore from '@/app/lib/stores/addToCartStore';
+import { Product } from '@/app/types';
 
 interface ProductOption {
   id: string;
@@ -17,17 +16,17 @@ interface ProductOption {
 }
 
 function parseMetadata(metadata: string): ProductOption[] {
-  const options = metadata.split(", ").map((item) => {
-    const [category, quantity] = item.split("_");
-    const [ageRange, ageQty] = category.split("-"); // Split age range and quantity
-    const values = category.split("_");
+  const options = metadata.split(', ').map((item) => {
+    const [category, quantity] = item.split('_');
+    const [ageRange, ageQty] = category.split('-'); // Split age range and quantity
+    const values = category.split('_');
     const formattedValues = values.map(
-      (valueQty) => valueQty.split("-")[0] + `-` + `${ageQty}`,
+      (valueQty) => valueQty.split('-')[0] + `-` + `${ageQty}`,
     );
 
     return {
       id: ageRange,
-      name: "Sizes",
+      name: 'Sizes',
       values: formattedValues,
       quantity: parseInt(quantity),
     };
@@ -45,7 +44,9 @@ export function ProductDescription({ product }: { product: Product }) {
 
   useEffect(() => {
     if (product.metadata && product.metadata.categoryWithQty) {
-      const parsedOptions = parseMetadata(product.metadata.categoryWithQty);
+      const parsedOptions = parseMetadata(
+        product.metadata.categoryWithQty,
+      );
       setOptions(parsedOptions);
     }
   }, [product]);
@@ -70,10 +71,10 @@ export function ProductDescription({ product }: { product: Product }) {
       setProductDetails({
         availableForSale: false,
         product: {
-          id: "",
-          name: "",
-          size: "",
-          amount: "",
+          id: '',
+          name: '',
+          size: '',
+          amount: '',
           images: [],
           quantity: 0,
         },
@@ -86,10 +87,16 @@ export function ProductDescription({ product }: { product: Product }) {
       <div className="mb-6 flex flex-col border-b pb-6">
         <h1 className="mb-2 text-5xl font-medium">{product.name}</h1>
         <div className="mr-auto w-auto rounded-full bg-[#A0C4FF] p-2 text-sm text-white">
-          <Price amount={product.price.toString()} currencyCode={`AED`} />
+          <Price
+            amount={product.price.toString()}
+            currencyCode={`AED`}
+          />
         </div>
       </div>
-      <VariantSelector options={options} onSelectedSize={setSelectedSize} />
+      <VariantSelector
+        options={options}
+        onSelectedSize={setSelectedSize}
+      />
 
       {product.description ? (
         <Prose
