@@ -1,8 +1,8 @@
-import { stripe } from "@/app/lib/stripe/server";
-import { Cart } from "@/types/cart";
-import { NextRequest } from "next/server";
-import { randomUUID } from "crypto";
-import Stripe from "stripe";
+import { stripe } from '@/app/lib/stripe/server';
+import { Cart } from '@/types/cart';
+import { NextRequest } from 'next/server';
+import { randomUUID } from 'crypto';
+import Stripe from 'stripe';
 
 const MINIMUM_AMOUNT_FILS = 200;
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     const isFreeDelivery =
       parseInt(total) >=
-      parseInt(process.env.NEXT_PUBLIC_FREE_DELIVERY_CONSTANT || "250");
+      parseInt(process.env.NEXT_PUBLIC_FREE_DELIVERY_CONSTANT || '250');
 
     const shippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[] =
       shippingRates.map((rate) => {
@@ -33,17 +33,19 @@ export async function POST(req: NextRequest) {
           shipping_rate_data: {
             type: rate.type,
             fixed_amount: {
-              amount: isFreeDelivery ? 0 : rate?.fixed_amount?.amount || 0,
-              currency: rate?.fixed_amount?.currency || "AED",
+              amount: isFreeDelivery
+                ? 0
+                : rate?.fixed_amount?.amount || 0,
+              currency: rate?.fixed_amount?.currency || 'AED',
             },
-            display_name: rate.display_name || "",
+            display_name: rate.display_name || '',
             delivery_estimate: {
               minimum: {
-                unit: "week",
+                unit: 'week',
                 value: 1,
               },
               maximum: {
-                unit: "week",
+                unit: 'week',
                 value: 2,
               },
             },
@@ -56,7 +58,9 @@ export async function POST(req: NextRequest) {
 
     // Check if the total amount meets the minimum requirement
     if (totalAmountInCents < MINIMUM_AMOUNT_FILS) {
-      throw new Error("Total amount does not meet the minimum requirement");
+      throw new Error(
+        'Total amount does not meet the minimum requirement',
+      );
     }
 
     // Create a new customer in Stripe
@@ -66,7 +70,7 @@ export async function POST(req: NextRequest) {
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
       cart.items.map((item) => ({
         price_data: {
-          currency: "AED",
+          currency: 'AED',
           product_data: {
             name: item.name,
             images: item.images,
@@ -90,7 +94,7 @@ export async function POST(req: NextRequest) {
     const intent = await stripe.paymentIntents.create({
       customer: customer.id,
       amount: totalAmountInCents,
-      currency: "aed",
+      currency: 'aed',
     });
 
     const orderUniqueIdentifier = generateOrderHandle();
@@ -99,25 +103,26 @@ export async function POST(req: NextRequest) {
 
     // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      payment_method_types: ['card'],
       line_items: lineItems,
-      mode: "payment",
+      mode: 'payment',
       success_url: successUrl,
       cancel_url: cancelUrl,
       customer: customer.id,
       customer_update: {
-        shipping: "auto",
+        shipping: 'auto',
       },
       metadata: {
         orderId: orderUniqueIdentifier,
+        itemsSizeList: JSON.stringify(cart.items.map((i) => i.size)),
       },
       allow_promotion_codes: true,
       // TODO: Enable Stripe Tax on account
       /* automatic_tax: {
-        enabled: true,
-      }, */
+  enabled: true,
+}, */
       shipping_address_collection: {
-        allowed_countries: ["AE"],
+        allowed_countries: ['AE'],
       },
       phone_number_collection: {
         enabled: true,
@@ -134,11 +139,11 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
     // Return an error response if something goes wrong
     return Response.json({
       status: 500,
-      json: { error: "Failed to create checkout session" },
+      json: { error: 'Failed to create checkout session' },
     });
   }
 }
