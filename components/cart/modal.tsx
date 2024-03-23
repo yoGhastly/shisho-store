@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { Dialog, Transition } from "@headlessui/react";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import Link from "next/link";
-import { Fragment, useEffect, useRef, useState } from "react";
-import CloseCart from "./close-cart";
-import { DeleteItemButton } from "./delete-item-button";
-import { EditItemQuantityButton } from "./edit-item-quantity-button";
-import OpenCart from "./open-cart";
-import Price from "../price";
-import { createUrl } from "@/app/lib/utils";
-import { Cart } from "@/types/cart";
-import Stripe from "stripe";
-import { CreateCheckoutSessionResponse } from "@/app/types";
-import getStripe from "@/app/lib/stripe/client";
+import { Dialog, Transition } from '@headlessui/react';
+import { ShoppingCartIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Fragment, useEffect, useRef, useState } from 'react';
+import CloseCart from './close-cart';
+import { DeleteItemButton } from './delete-item-button';
+import { EditItemQuantityButton } from './edit-item-quantity-button';
+import OpenCart from './open-cart';
+import Price from '../price';
+import { createUrl } from '@/app/lib/utils';
+import { Cart } from '@/types/cart';
+import Stripe from 'stripe';
+import { CreateCheckoutSessionResponse } from '@/app/types';
+import getStripe from '@/app/lib/stripe/client';
 
 type MerchandiseSearchParams = {
   [key: string]: string;
@@ -54,26 +54,27 @@ export default function CartModal({
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/create-checkout-session`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ cart, taxRate, total }),
         },
       );
 
       if (response.ok) {
-        const data: CreateCheckoutSessionResponse = await response.json();
+        const data: CreateCheckoutSessionResponse =
+          await response.json();
         const stripe = await getStripe();
         if (!stripe) return;
         await stripe.redirectToCheckout({
           sessionId: data.json.sessionId,
         });
       } else {
-        console.error("Failed to create checkout session");
+        console.error('Failed to create checkout session');
       }
     } catch (error) {
-      console.error("Error creating checkout session:", error);
+      console.error('Error creating checkout session:', error);
     } finally {
       setIsCheckingOut(false);
     }
@@ -95,7 +96,10 @@ export default function CartModal({
             leaveFrom="opacity-100 backdrop-blur-[.5px]"
             leaveTo="opacity-0 backdrop-blur-none"
           >
-            <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+            <div
+              className="fixed inset-0 bg-black/30"
+              aria-hidden="true"
+            />
           </Transition.Child>
           <Transition.Child
             as={Fragment}
@@ -110,7 +114,10 @@ export default function CartModal({
               <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold">My Cart</p>
 
-                <button aria-label="Close cart" onClick={closeCart}>
+                <button
+                  aria-label="Close cart"
+                  onClick={closeCart}
+                >
                   <CloseCart />
                 </button>
               </div>
@@ -131,7 +138,9 @@ export default function CartModal({
 
                       const merchandiseUrl = createUrl(
                         `/product/${item.id}`,
-                        new URLSearchParams(merchandiseSearchParams),
+                        new URLSearchParams(
+                          merchandiseSearchParams,
+                        ),
                       );
 
                       return (
@@ -141,10 +150,14 @@ export default function CartModal({
                         >
                           <div className="relative flex w-full flex-row justify-between px-1 py-4">
                             <div className="absolute z-40 -mt-2 ml-[55px]">
-                              <DeleteItemButton item={item} />
+                              <DeleteItemButton
+                                item={item}
+                              />
                             </div>
                             <Link
-                              href={merchandiseUrl}
+                              href={
+                                merchandiseUrl
+                              }
                               onClick={closeCart}
                               className="z-30 flex flex-row space-x-4"
                             >
@@ -153,8 +166,13 @@ export default function CartModal({
                                   className="h-full w-full object-cover"
                                   width={64}
                                   height={64}
-                                  alt={item.name}
-                                  src={item.images[0]}
+                                  alt={
+                                    item.name
+                                  }
+                                  src={
+                                    item
+                                      .images[0]
+                                  }
                                 />
                               </div>
 
@@ -167,7 +185,9 @@ export default function CartModal({
                             <div className="flex h-16 flex-col justify-between">
                               <Price
                                 className="flex justify-end space-y-2 text-right text-sm"
-                                amount={item.amount}
+                                amount={
+                                  item.amount
+                                }
                                 currencyCode={`AED`}
                               />
                               <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200">
@@ -177,7 +197,9 @@ export default function CartModal({
                                 />
                                 <p className="w-6 text-center">
                                   <span className="w-full text-sm">
-                                    {item.quantity}
+                                    {
+                                      item.quantity
+                                    }
                                   </span>
                                 </p>
                                 <EditItemQuantityButton
@@ -200,14 +222,16 @@ export default function CartModal({
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
                       <p>Shipping</p>
-                      <p className="text-right">Calculated at checkout</p>
+                      <p className="text-right">
+                        Calculated at checkout
+                      </p>
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
                       <p>Total</p>
                       <Price
                         className="text-right text-base text-black"
                         amount={total}
-                        currencyCode={"AED"}
+                        currencyCode={'AED'}
                       />
                     </div>
                   </div>
@@ -215,11 +239,13 @@ export default function CartModal({
                     onClick={handleCheckout}
                     disabled={isCheckingOut} // Disable the button when checkout is in progress
                     className={`block w-full rounded-full bg-primary p-3 text-center text-sm font-medium text-white ${isCheckingOut
-                        ? "opacity-50 cursor-not-allowed"
-                        : "opacity-90 hover:opacity-100"
+                        ? 'opacity-50 cursor-not-allowed'
+                        : 'opacity-90 hover:opacity-100'
                       }`}
                   >
-                    {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
+                    {isCheckingOut
+                      ? 'Processing...'
+                      : 'Proceed to Checkout'}
                   </button>
                 </div>
               )}
