@@ -1,21 +1,21 @@
-import { stripe } from "@/app/lib/stripe/server";
-import { mapCheckoutSessionToOrder } from "@/app/orders/map-checkout-session-to-order";
-import { SupabaseOrderRepository } from "@/app/orders/order-repository";
-import { Order } from "@/app/types";
-import { EmailTemplate } from "@/components/email-template";
-import { Resend } from "resend";
-import Stripe from "stripe";
+import { stripe } from '@/app/lib/stripe/server';
+import { mapCheckoutSessionToOrder } from '@/app/orders/map-checkout-session-to-order';
+import { SupabaseOrderRepository } from '@/app/orders/order-repository';
+import { Order } from '@/app/types';
+import { EmailTemplate } from '@/components/email-template';
+import { Resend } from 'resend';
+import Stripe from 'stripe';
 
 const repository = new SupabaseOrderRepository();
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const sig = req.headers.get("stripe-signature") as string;
+  const sig = req.headers.get('stripe-signature') as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   if (!sig || !webhookSecret) {
-    return new Response("Webhook secret not found.", { status: 400 });
+    return new Response('Webhook secret not found.', { status: 400 });
   }
 
   let event: Stripe.Event;
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
-  if (event.type !== "checkout.session.completed") {
+  if (event.type !== 'checkout.session.completed') {
     return new Response(`Unsupported event type: ${event.type}`, {
       status: 400,
     });
@@ -37,7 +37,10 @@ export async function POST(req: Request) {
   try {
     const checkoutSession = event.data.object as Stripe.Checkout.Session;
     const lineItems = await fetchLineItems(checkoutSession);
-    const mappedOrder = mapCheckoutSessionToOrder(checkoutSession, lineItems);
+    const mappedOrder = mapCheckoutSessionToOrder(
+      checkoutSession,
+      lineItems,
+    );
 
     const orderWithLineItems = {
       ...mappedOrder,
@@ -45,18 +48,18 @@ export async function POST(req: Request) {
     };
 
     const order = await repository.create(orderWithLineItems);
-    console.log("order created ✅", order?.id);
+    console.log('order created ✅', order?.id);
 
     await sendEmailConfirmation(resend, order as Order);
 
-    console.log("email sent for order ✅", order?.id);
-    console.log("checkout completed ✅", mappedOrder);
+    console.log('email sent for order ✅', order?.id);
+    console.log('checkout completed ✅', mappedOrder);
 
     return new Response(JSON.stringify({ received: true }));
   } catch (error) {
-    console.error("Webhook handler failed:", error);
+    console.error('Webhook handler failed:', error);
     return new Response(
-      "Webhook handler failed. View your Next.js function logs.",
+      'Webhook handler failed. View your Next.js function logs.',
       { status: 400 },
     );
   }
@@ -71,14 +74,18 @@ async function fetchLineItems(checkoutSession: Stripe.Checkout.Session) {
       const product = await stripe.products.retrieve(
         item.price?.product as string,
       );
-      return { ...item, url: product.images[0] };
+      return {
+        ...item,
+        url: product.images[0],
+        size: product.metadata.itemsSizeList,
+      };
     }),
   );
 }
 
 async function sendEmailConfirmation(resend: Resend, order: Order) {
   const { data, error } = await resend.emails.send({
-    from: "Shisho Baby Clothes <info@xervsware.com>",
+    from: 'Shisho Baby Clothes <info@xervsware.com>',
     to: [order.customerEmail],
     subject: `Order Confirmation.`,
     react: EmailTemplate({ order }),
@@ -89,5 +96,5 @@ async function sendEmailConfirmation(resend: Resend, order: Order) {
     console.error(`Resend error: ${error.name}`);
   }
 
-  console.log("Email sent successfully 📩", data?.id);
+  console.log('Email sent successfully 📩', data?.id);
 }
