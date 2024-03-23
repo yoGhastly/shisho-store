@@ -1,7 +1,7 @@
 import { stripe } from '@/app/lib/stripe/server';
 import { mapCheckoutSessionToOrder } from '@/app/orders/map-checkout-session-to-order';
 import { SupabaseOrderRepository } from '@/app/orders/order-repository';
-import { Order } from '@/app/types';
+import { LineItem, Order } from '@/app/types';
 import { EmailTemplate } from '@/components/email-template';
 import { Resend } from 'resend';
 import Stripe from 'stripe';
@@ -65,20 +65,29 @@ export async function POST(req: Request) {
   }
 }
 
-async function fetchLineItems(checkoutSession: Stripe.Checkout.Session) {
+async function fetchLineItems(
+  checkoutSession: Stripe.Checkout.Session,
+): Promise<LineItem[]> {
   const checkoutItems = await stripe.checkout.sessions.listLineItems(
     checkoutSession.id,
   );
+  const itemsSizeList = JSON.parse(
+    checkoutSession?.metadata?.itemsSizeList || '{}',
+  );
+
   return Promise.all(
     checkoutItems.data.map(async (item) => {
       const product = await stripe.products.retrieve(
         item.price?.product as string,
       );
+
+      const size = itemsSizeList[item.price?.product as string] || '';
+
       return {
         ...item,
         url: product.images[0],
-        size: product.metadata.itemsSizeList,
-      };
+        size: size,
+      } as LineItem;
     }),
   );
 }
