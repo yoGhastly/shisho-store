@@ -99,11 +99,11 @@ export async function POST(req: NextRequest) {
 
     const orderUniqueIdentifier = generateOrderHandle();
 
-    const successUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/sign-in`;
+    const successUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/orders/${orderUniqueIdentifier}`;
 
     // return product ID and its size
-    const selectedSizes = cart.items.map(({ id, size }) => ({
-      id,
+    const selectedSizes = cart.items.map(({ name, size }) => ({
+      name,
       size,
     }));
 
@@ -122,6 +122,7 @@ export async function POST(req: NextRequest) {
         shipping: 'auto',
       },
       metadata: {
+        cartId: cart.cartId,
         orderId: orderUniqueIdentifier,
         selectedSizes: selectedSizesString,
       },
