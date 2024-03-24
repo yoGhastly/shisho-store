@@ -1,4 +1,4 @@
-import { LineItem, Order, SelectedSize } from '@/app/types';
+import { Order } from '@/app/types';
 import React, { Suspense } from 'react';
 import { BreadCrumb } from '../breadcrumb';
 import { StatusChip } from '../chip-status';
@@ -11,16 +11,6 @@ import Image from 'next/image';
 import { Timeline } from '@/components/timeline';
 
 const repository = new SupabaseOrderRepository();
-
-function getSizeForItem(
-  item: LineItem,
-  selectedSizes: SelectedSize[] | undefined,
-): string {
-  const selectedItem = selectedSizes?.find(
-    (s) => s.name === item.description,
-  );
-  return selectedItem ? selectedItem.size : 'N/A';
-}
 
 export default async function Order({
   params,
@@ -184,41 +174,51 @@ export default async function Order({
                 </span>
               </div>
               <div className="flex flex-col gap-8 overflow-x-auto md:overflow-auto">
-                {order?.lineItems.map((item) => (
-                  <section
-                    className="flex items-center"
-                    key={item.id}
-                  >
-                    <div className="flex gap-3">
-                      <figure className="relative w-24 h-24">
-                        <Image
-                          src={`${item.url}`}
-                          alt={`${item.description}`}
-                          aria-label={`${item.description}`}
-                          fill
-                          className="object-cover"
-                        />
-                      </figure>
-                      <div className="flex flex-col gap-1.5">
-                        <p>{item.description}</p>
-                        <p className="text-xs">
-                          {getSizeForItem(
-                            item,
-                            order?.selectedSizes,
-                          )}
-                        </p>
-                        <p>
-                          {(
-                            item.amount_total / 100
-                          ).toFixed(2)}{' '}
-                          <span className="uppercase">
-                            {item.price?.currency}
-                          </span>
-                        </p>
+                {order?.lineItems.map((item) => {
+                  // Find the corresponding size for the current product
+                  const sizeItem = order?.selectedSizes.find(
+                    (sizeItem) =>
+                      sizeItem.name === item.description,
+                  );
+                  return (
+                    <section
+                      className="flex items-center"
+                      key={item.id}
+                    >
+                      <div className="flex gap-3">
+                        <figure className="relative w-24 h-24">
+                          <Image
+                            src={`${item.url}`}
+                            alt={`${item.description}`}
+                            aria-label={`${item.description}`}
+                            fill
+                            className="object-cover"
+                          />
+                        </figure>
+                        <div className="flex flex-col gap-1.5">
+                          <p>{item.description}</p>
+                          <p className="text-xs">
+                            {sizeItem
+                              ? sizeItem.size
+                              : 'Size not available'}
+                          </p>
+                          <p>
+                            {(
+                              item.amount_total /
+                              100
+                            ).toFixed(2)}{' '}
+                            <span className="uppercase">
+                              {
+                                item.price
+                                  ?.currency
+                              }
+                            </span>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </section>
-                ))}
+                    </section>
+                  );
+                })}
               </div>
             </div>
           </div>

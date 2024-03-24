@@ -1,4 +1,4 @@
-import { Order } from "@/app/types";
+import { Order } from '@/app/types';
 import {
   block,
   container,
@@ -34,8 +34,8 @@ import {
   walletLink,
   walletLinkText,
   walletWrapper,
-} from "@/styles/order-email-styles";
-import { ShoppingBagIcon, WalletIcon } from "@heroicons/react/16/solid";
+} from '@/styles/order-email-styles';
+import { ShoppingBagIcon, WalletIcon } from '@heroicons/react/16/solid';
 import {
   Tailwind,
   Text,
@@ -51,8 +51,8 @@ import {
   Hr,
   Link,
   Button,
-} from "@react-email/components";
-import * as React from "react";
+} from '@react-email/components';
+import * as React from 'react';
 
 interface EmailTemplateProps {
   order: Order;
@@ -61,13 +61,13 @@ interface EmailTemplateProps {
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   order,
 }) => {
-  let formattedDate = "Unknown";
+  let formattedDate = 'Unknown';
   if (order && order.created_at) {
     const dateTime = new Date(order.created_at);
-    formattedDate = dateTime.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+    formattedDate = dateTime.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
   }
   return (
@@ -99,13 +99,22 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                 <Column colSpan={2}>
                   <Section>
                     <Row>
-                      <Column style={informationTableColumn}>
-                        <Text style={informationTableLabel}>Email</Text>
+                      <Column
+                        style={informationTableColumn}
+                      >
+                        <Text
+                          style={
+                            informationTableLabel
+                          }
+                        >
+                          Email
+                        </Text>
                         <Link
                           style={{
                             ...informationTableValue,
-                            color: "#17c",
-                            textDecoration: "underline",
+                            color: '#17c',
+                            textDecoration:
+                              'underline',
                           }}
                         >
                           {order.customerEmail}
@@ -114,37 +123,61 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                     </Row>
 
                     <Row>
-                      <Column style={informationTableColumn}>
-                        <Text style={informationTableLabel}>INVOICE DATE</Text>
-                        <Text style={informationTableValue}>
+                      <Column
+                        style={informationTableColumn}
+                      >
+                        <Text
+                          style={
+                            informationTableLabel
+                          }
+                        >
+                          INVOICE DATE
+                        </Text>
+                        <Text
+                          style={
+                            informationTableValue
+                          }
+                        >
                           {formattedDate}
                         </Text>
                       </Column>
                     </Row>
 
                     <Row>
-                      <Column style={informationTableColumn}>
-                        <Text style={informationTableLabel}>ORDER ID</Text>
+                      <Column
+                        style={informationTableColumn}
+                      >
+                        <Text
+                          style={
+                            informationTableLabel
+                          }
+                        >
+                          ORDER ID
+                        </Text>
                         <Link
                           style={{
                             ...informationTableValue,
-                            color: "#15c",
-                            textDecoration: "underline",
+                            color: '#15c',
+                            textDecoration:
+                              'underline',
                           }}
                         >
                           {order.id}
                         </Link>
                       </Column>
-                      <Column style={informationTableColumn}>
-                        <Text style={informationTableLabel}>DOCUMENT NO.</Text>
-                        <Text style={informationTableValue}>186623754793</Text>
-                      </Column>
                     </Row>
                   </Section>
                 </Column>
-                <Column style={informationTableColumn} colSpan={2}>
-                  <Text style={informationTableLabel}>BILLED TO</Text>
-                  <Text style={informationTableValue}>Visa .... 4242</Text>
+                <Column
+                  style={informationTableColumn}
+                  colSpan={2}
+                >
+                  <Text style={informationTableLabel}>
+                    BILLED TO
+                  </Text>
+                  <Text style={informationTableValue}>
+                    Visa .... 4242
+                  </Text>
                   <Text style={informationTableValue}>
                     {order.customerName}
                   </Text>
@@ -152,11 +185,11 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                     {order.shippingAddress.line1}
                   </Text>
                   <Text style={informationTableValue}>
-                    {order.shippingAddress.line2}{" "}
+                    {order.shippingAddress.line2}{' '}
                     {order.shippingAddress.postalCode}
                   </Text>
                   <Text style={informationTableValue}>
-                    {order.shippingAddress.state}{" "}
+                    {order.shippingAddress.state}{' '}
                     {order.shippingAddress.country}
                   </Text>
                 </Column>
@@ -166,56 +199,77 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               <Text style={productsTitle}>Products</Text>
             </Section>
             <Section>
-              {order.lineItems.map((item, idx) => (
-                <Row key={`${item.id}-${idx}`}>
-                  <Column style={{ width: "64px" }}>
-                    <Img
-                      src={`${item.url}`}
-                      alt={`Product ${item.description}`}
-                      aria-label={`${item.description}`}
-                      width="64"
-                      height="64"
-                      style={productIcon}
-                    />
-                  </Column>
-                  <Column style={{ paddingLeft: "22px" }}>
-                    <Text style={productTitle}>{item.description}</Text>
-                    <Text style={productDescription}>{item.description}</Text>
-                    <Link
-                      href={`${process.env.NEXT_PUBLIC_SITE_URL}`}
-                      style={productLink}
-                      data-saferedirecturl={`${process.env.NEXT_PUBLIC_SITE_URL}`}
-                    >
-                      Write a Review
-                    </Link>
-                    <span style={divisor}>|</span>
-                    <Link
-                      href={`${process.env.NEXT_PUBLIC_SITE_URL}`}
-                      style={productLink}
-                      data-saferedirecturl={`${process.env.NEXT_PUBLIC_SITE_URL}`}
-                    >
-                      Report a Problem
-                    </Link>
-                  </Column>
+              {order.lineItems.map((item, idx) => {
+                const sizeItem = order.selectedSizes.find(
+                  (sizeItem) =>
+                    sizeItem.name === item.description,
+                );
+                return (
+                  <Row key={`${item.id}-${idx}`}>
+                    <Column style={{ width: '64px' }}>
+                      <Img
+                        src={`${item.url}`}
+                        alt={`Product ${item.description}`}
+                        aria-label={`${item.description}`}
+                        width="64"
+                        height="64"
+                        style={productIcon}
+                      />
+                    </Column>
+                    <Column style={{ paddingLeft: '22px' }}>
+                      <Text style={productTitle}>
+                        {item.description}
+                      </Text>
+                      <Text style={productDescription}>
+                        {sizeItem
+                          ? sizeItem.size
+                          : 'Size not available'}
+                      </Text>
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_SITE_URL}`}
+                        style={productLink}
+                        data-saferedirecturl={`${process.env.NEXT_PUBLIC_SITE_URL}`}
+                      >
+                        Write a Review
+                      </Link>
+                      <span style={divisor}>|</span>
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_SITE_URL}`}
+                        style={productLink}
+                        data-saferedirecturl={`${process.env.NEXT_PUBLIC_SITE_URL}`}
+                      >
+                        Report a Problem
+                      </Link>
+                    </Column>
 
-                  <Column style={productPriceWrapper} align="right">
-                    <Text style={productPrice}>
-                      $
-                      {(
-                        parseInt(item.price?.unit_amount_decimal as string) /
-                        100
-                      ).toFixed(2)}
-                    </Text>
-                  </Column>
-                </Row>
-              ))}
+                    <Column
+                      style={productPriceWrapper}
+                      align="right"
+                    >
+                      <Text style={productPrice}>
+                        $
+                        {(
+                          parseInt(
+                            item.price
+                              ?.unit_amount_decimal as string,
+                          ) / 100
+                        ).toFixed(2)}
+                      </Text>
+                    </Column>
+                  </Row>
+                );
+              })}
             </Section>
             <Section align="right">
               <Row>
-                <Column style={productPriceWrapper} align="right">
+                <Column
+                  style={productPriceWrapper}
+                  align="right"
+                >
                   <Text style={productPrice}>
                     {(
-                      (order.shippingCost?.amount_total as number) / 100
+                      (order.shippingCost
+                        ?.amount_total as number) / 100
                     ).toFixed(2)}
                   </Text>
                 </Column>
@@ -227,7 +281,9 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                 <Column style={tableCell} align="right">
                   <Text style={productPriceTotal}>TOTAL</Text>
                 </Column>
-                <Column style={productPriceVerticalLine}></Column>
+                <Column
+                  style={productPriceVerticalLine}
+                ></Column>
                 <Column style={productPriceLargeWrapper}>
                   <Text style={productPriceLarge}>
                     ${(order.amountTotal / 100).toFixed(2)}
@@ -242,12 +298,12 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                   <Button
                     href={`${process.env.NEXT_PUBLIC_SITE_URL}/orders/${order.id}`}
                     style={{
-                      fontSize: "14px",
-                      backgroundColor: "#16c",
-                      color: "#fff",
+                      fontSize: '14px',
+                      backgroundColor: '#16c',
+                      color: '#fff',
                       lineHeight: 1.5,
-                      borderRadius: "0.5em",
-                      padding: "12px 24px",
+                      borderRadius: '0.5em',
+                      padding: '12px 24px',
                     }}
                   >
                     See order
@@ -271,7 +327,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                 </Column>
               </Row>
             </Section>
-            <Section style={{ marginTop: "20px" }}>
+            <Section style={{ marginTop: '20px' }}>
               <Row>
                 <Column align="center" style={walletWrapper}>
                   <Link
@@ -279,31 +335,37 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                     style={walletLink}
                   >
                     <WalletIcon className="h-6" />
-                    <span style={walletLinkText}>Apply and use in minutes</span>
+                    <span style={walletLinkText}>
+                      Apply and use in minutes
+                    </span>
                   </Link>
                 </Column>
               </Row>
             </Section>
             <Hr style={walletBottomLine} />
             <Text style={footerText}>
-              We offer FREE delivery on orders from AED 250 and above. Orders
-              under AED 250 will include a delivery charge during checkout,
-              based on the following areas: Dubai 40 aed Sharjah 50 aed Abu
-              Dhabi, Ajman, Al Ain, Umm Al Quwain, Ras Al Khaima, Fujairah 60
+              We offer FREE delivery on orders from AED 250 and
+              above. Orders under AED 250 will include a delivery
+              charge during checkout, based on the following
+              areas: Dubai 40 aed Sharjah 50 aed Abu Dhabi, Ajman,
+              Al Ain, Umm Al Quwain, Ras Al Khaima, Fujairah 60
               aed
             </Text>
             <Text style={footerText}>2. Shipment Tracking.</Text>
             <Text style={footerText}>
-              Once your order has been shipped, you will receive a confirmation
-              email with tracking information. You can track your shipment using
-              the provided tracking number.
+              Once your order has been shipped, you will receive a
+              confirmation email with tracking information. You
+              can track your shipment using the provided tracking
+              number.
             </Text>
             <Text style={footerText}>
-              We currently only ship to addresses within United Arab Emirates.
+              We currently only ship to addresses within United
+              Arab Emirates.
             </Text>
             <Text style={footerText}>
-              We are not responsible for lost or stolen packages. Please ensure
-              that the shipping address provided is secure and accurate.
+              We are not responsible for lost or stolen packages.
+              Please ensure that the shipping address provided is
+              secure and accurate.
             </Text>
             <Section>
               <Row>
@@ -322,15 +384,19 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
                 href={`${process.env.NEXT_PUBLIC_SITE_URL}/shipping-policy`}
               >
                 Terms of Sale
-              </Link>{" "}
-              •{" "}
-              <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/privacy-policy`}>
-                Privacy Policy{" "}
+              </Link>{' '}
+              •{' '}
+              <Link
+                href={`${process.env.NEXT_PUBLIC_SITE_URL}/privacy-policy`}
+              >
+                Privacy Policy{' '}
               </Link>
             </Text>
             <Text style={footerCopyright}>
-              Copyright © 2024 Shisho Baby Clothes. <br />{" "}
-              <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/about-us`}>
+              Copyright © 2024 Shisho Baby Clothes. <br />{' '}
+              <Link
+                href={`${process.env.NEXT_PUBLIC_SITE_URL}/about-us`}
+              >
                 All rights reserved
               </Link>
             </Text>
