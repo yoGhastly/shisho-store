@@ -1,7 +1,7 @@
 import { stripe } from '@/app/lib/stripe/server';
 import { mapCheckoutSessionToOrder } from '@/app/orders/map-checkout-session-to-order';
 import { SupabaseOrderRepository } from '@/app/orders/order-repository';
-import { LineItem, Order } from '@/app/types';
+import { LineItem, Order, SelectedSize } from '@/app/types';
 import { EmailTemplate } from '@/components/email-template';
 import { Resend } from 'resend';
 import Stripe from 'stripe';
@@ -37,15 +37,20 @@ export async function POST(req: Request) {
   try {
     const checkoutSession = event.data.object as Stripe.Checkout.Session;
     const lineItems = await fetchLineItems(checkoutSession);
+    const selectedSizesString = checkoutSession.metadata
+      ?.selectedSizes as string;
+
+    const selectedSizes = JSON.parse(selectedSizesString) as SelectedSize[];
     const mappedOrder = mapCheckoutSessionToOrder(
       checkoutSession,
       lineItems,
+      selectedSizes,
     );
 
     const orderWithLineItems = {
       ...mappedOrder,
       lineItems,
-    };
+    } as Order;
 
     const order = await repository.create(orderWithLineItems);
     console.log('order created ✅', order?.id);
@@ -77,16 +82,9 @@ async function fetchLineItems(
       const product = await stripe.products.retrieve(
         item.price?.product as string,
       );
-
-      // Retrieve selectedSizes from the metadata
-      const selectedSizesString = checkoutSession?.metadata
-        ?.selectedSizes as string;
-      const selectedSizes = JSON.parse(selectedSizesString) as string[];
-
       return {
         ...item,
         url: product.images[0],
-        selectedSizes,
       };
     }),
   );

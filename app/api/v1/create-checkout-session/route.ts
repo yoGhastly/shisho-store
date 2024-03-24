@@ -100,7 +100,12 @@ export async function POST(req: NextRequest) {
     const orderUniqueIdentifier = generateOrderHandle();
 
     const successUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/sign-in`;
-    const selectedSizes = cart.items.map((i) => i.size);
+
+    // return product ID and its size
+    const selectedSizes = cart.items.map(({ id, size }) => ({
+      id,
+      size,
+    }));
 
     // Convert the selectedSizes array to a string
     const selectedSizesString = JSON.stringify(selectedSizes);

@@ -27,7 +27,11 @@ export interface CreateCheckoutSessionResponse {
 
 export interface LineItem extends Stripe.LineItem {
   url: string | null;
-  selectedSizes: string[];
+}
+
+export interface SelectedSize {
+  id: string;
+  size: string;
 }
 
 export interface Order {
@@ -36,6 +40,7 @@ export interface Order {
   amountTotal: number;
   status: Status;
   lineItems: LineItem[];
+  selectedSizes: SelectedSize[];
   currency: string;
   customerEmail: string;
   customerName: string;

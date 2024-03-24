@@ -1,9 +1,10 @@
 import Stripe from 'stripe';
-import { Order, LineItem } from '../types';
+import { Order, LineItem, SelectedSize } from '../types';
 
 export function mapCheckoutSessionToOrder(
   session: Stripe.Checkout.Session,
   lineItems: LineItem[],
+  selectedSizes: SelectedSize[],
 ): Order {
   const {
     metadata,
@@ -23,6 +24,7 @@ export function mapCheckoutSessionToOrder(
     customerPhone: customer_details?.phone ?? '',
     shippingCost: shipping_cost ?? null,
     lineItems,
+    selectedSizes,
     status: 'In progress',
     shippingAddress: {
       city: shipping_details?.address?.city ?? '',
