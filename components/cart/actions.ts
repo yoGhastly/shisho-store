@@ -283,6 +283,7 @@ export async function deleteCart(cartId: string): Promise<void> {
     if (error) {
       console.error(`Error calling removing cart`, error.message);
     }
+    cookies().delete('cartId');
   } catch (error: any) {
     throw new Error(`Could not remove cart ${cartId}`, error.message);
   }
