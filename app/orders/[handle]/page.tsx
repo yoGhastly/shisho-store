@@ -1,4 +1,4 @@
-import { Order } from '@/app/types';
+import { LineItem, Order, SelectedSize } from '@/app/types';
 import React, { Suspense } from 'react';
 import { BreadCrumb } from '../breadcrumb';
 import { StatusChip } from '../chip-status';
@@ -11,6 +11,16 @@ import Image from 'next/image';
 import { Timeline } from '@/components/timeline';
 
 const repository = new SupabaseOrderRepository();
+
+function getSizeForItem(
+  item: LineItem,
+  selectedSizes: SelectedSize[] | undefined,
+): string {
+  const selectedItem = selectedSizes?.find(
+    (s) => s.name === item.description,
+  );
+  return selectedItem ? selectedItem.size : 'N/A';
+}
 
 export default async function Order({
   params,
@@ -191,6 +201,12 @@ export default async function Order({
                       </figure>
                       <div className="flex flex-col gap-1.5">
                         <p>{item.description}</p>
+                        <p className="text-xs">
+                          {getSizeForItem(
+                            item,
+                            order?.selectedSizes,
+                          )}
+                        </p>
                         <p>
                           {(
                             item.amount_total / 100
