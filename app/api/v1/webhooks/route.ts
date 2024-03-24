@@ -2,6 +2,7 @@ import { stripe } from '@/app/lib/stripe/server';
 import { mapCheckoutSessionToOrder } from '@/app/orders/map-checkout-session-to-order';
 import { SupabaseOrderRepository } from '@/app/orders/order-repository';
 import { LineItem, Order, SelectedSize } from '@/app/types';
+import { deleteCart } from '@/components/cart/actions';
 import { EmailTemplate } from '@/components/email-template';
 import { Resend } from 'resend';
 import Stripe from 'stripe';
@@ -55,8 +56,10 @@ export async function POST(req: Request) {
     const order = await repository.create(orderWithLineItems);
     console.log('order created ✅', order?.id);
 
-    await sendEmailConfirmation(resend, order as Order);
+    const cartId = checkoutSession.metadata?.cartId;
+    await deleteCart(cartId as string);
 
+    await sendEmailConfirmation(resend, order as Order);
     console.log('email sent for order ✅', order?.id);
     console.log('checkout completed ✅', mappedOrder);
 
