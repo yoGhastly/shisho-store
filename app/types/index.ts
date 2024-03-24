@@ -30,7 +30,7 @@ export interface LineItem extends Stripe.LineItem {
 }
 
 export interface SelectedSize {
-  id: string;
+  name: string;
   size: string;
 }
 
