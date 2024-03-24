@@ -71,9 +71,6 @@ async function fetchLineItems(
   const checkoutItems = await stripe.checkout.sessions.listLineItems(
     checkoutSession.id,
   );
-  const itemsSizeList = JSON.parse(
-    checkoutSession?.metadata?.itemsSizeList || '{}',
-  );
 
   return Promise.all(
     checkoutItems.data.map(async (item) => {
@@ -81,13 +78,16 @@ async function fetchLineItems(
         item.price?.product as string,
       );
 
-      const size = itemsSizeList[item.price?.product as string] || '';
+      // Retrieve selectedSizes from the metadata
+      const selectedSizesString = checkoutSession?.metadata
+        ?.selectedSizes as string;
+      const selectedSizes = JSON.parse(selectedSizesString) as string[];
 
       return {
         ...item,
         url: product.images[0],
-        size: size,
-      } as LineItem;
+        selectedSizes,
+      };
     }),
   );
 }

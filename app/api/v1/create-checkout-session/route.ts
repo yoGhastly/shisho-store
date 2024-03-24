@@ -100,6 +100,10 @@ export async function POST(req: NextRequest) {
     const orderUniqueIdentifier = generateOrderHandle();
 
     const successUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/sign-in`;
+    const selectedSizes = cart.items.map((i) => i.size);
+
+    // Convert the selectedSizes array to a string
+    const selectedSizesString = JSON.stringify(selectedSizes);
 
     // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
@@ -114,12 +118,12 @@ export async function POST(req: NextRequest) {
       },
       metadata: {
         orderId: orderUniqueIdentifier,
-        itemsSizeList: JSON.stringify(cart.items.map((i) => i.size)),
+        selectedSizes: selectedSizesString,
       },
       allow_promotion_codes: true,
       // TODO: Enable Stripe Tax on account
       /* automatic_tax: {
-  enabled: true,
+enabled: true,
 }, */
       shipping_address_collection: {
         allowed_countries: ['AE'],

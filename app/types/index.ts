@@ -27,7 +27,7 @@ export interface CreateCheckoutSessionResponse {
 
 export interface LineItem extends Stripe.LineItem {
   url: string | null;
-  size: string | null;
+  selectedSizes: string[];
 }
 
 export interface Order {
