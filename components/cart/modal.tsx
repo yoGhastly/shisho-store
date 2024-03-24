@@ -37,16 +37,18 @@ export default function CartModal({
 
   useEffect(() => {
     // Open cart modal when quantity changes.
-    if (cart?.items.length !== quantityRef.current) {
-      // But only if it's not already open (quantity also changes when editing items in cart).
-      if (!isOpen) {
-        setIsOpen(true);
-      }
+    if (cart) {
+      if (cart?.items.length !== quantityRef.current) {
+        // But only if it's not already open (quantity also changes when editing items in cart).
+        if (!isOpen) {
+          setIsOpen(true);
+        }
 
-      // Always update the quantity reference
-      quantityRef.current = cart?.items.length;
+        // Always update the quantity reference
+        quantityRef.current = cart?.items.length;
+      }
     }
-  }, [isOpen, cart?.items.length, quantityRef]);
+  }, [isOpen, cart, quantityRef]);
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
