@@ -1,12 +1,12 @@
-"use server";
+'use server';
 
-import { TAGS } from "@/app/lib/constants";
-import { supabase } from "@/app/lib/subapase/client";
-import { TaxRatesResponse } from "@/app/types";
-import { Cart, CartItem } from "@/types/cart";
-import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
-import Stripe from "stripe";
+import { TAGS } from '@/app/lib/constants';
+import { supabase } from '@/app/lib/subapase/client';
+import { TaxRatesResponse } from '@/app/types';
+import { Cart, CartItem } from '@/types/cart';
+import { revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
+import Stripe from 'stripe';
 
 export async function addToCart(
   cartId: string,
@@ -16,47 +16,48 @@ export async function addToCart(
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/add`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ cartId, items }),
       },
     );
 
     if (!response.ok) {
-      throw new Error("Failed to add items to cart");
+      throw new Error('Failed to add items to cart');
     }
 
     const updatedCart: Cart = await response.json();
 
     return updatedCart;
   } catch (error) {
-    console.error("Error adding items to cart:", error);
+    console.error('Error adding items to cart:', error);
     throw error;
   }
 }
 
 export async function addItem(_prevState: any, formData: FormData) {
   try {
-    let cartId = cookies().get("cartId")?.value;
+    let cartId = cookies().get('cartId')?.value;
 
     if (cartId) {
       const cart = await getCart(cartId);
 
       if (cart) {
         const newItem = {
-          id: formData.get("id") as string,
-          name: formData.get("name") as string,
-          size: formData.get("size") as string,
-          amount: formData.get("amount") as string,
-          images: JSON.parse(formData.get("images") as string),
-          quantity: parseInt(formData.get("quantity") as string),
+          id: formData.get('id') as string,
+          name: formData.get('name') as string,
+          size: formData.get('size') as string,
+          amount: formData.get('amount') as string,
+          images: JSON.parse(formData.get('images') as string),
+          quantity: parseInt(formData.get('quantity') as string),
         };
 
         // Check if the item already exists in the cart
         const existingItemIndex = cart.items.findIndex(
-          (item: any) => item.id === newItem.id && item.size === newItem.size,
+          (item: any) =>
+            item.id === newItem.id && item.size === newItem.size,
         );
 
         if (existingItemIndex !== -1) {
@@ -73,7 +74,7 @@ export async function addItem(_prevState: any, formData: FormData) {
         revalidateTag(TAGS.cart);
 
         return `Added ${newItem.quantity} of product ${formData.get(
-          "id",
+          'id',
         )} to the cart with id ${cartId}`;
       }
     }
@@ -81,25 +82,25 @@ export async function addItem(_prevState: any, formData: FormData) {
     // If the cart doesn't exist, create a new cart with the added item
     const items = [
       {
-        id: formData.get("id") as string,
-        name: formData.get("name") as string,
-        size: formData.get("size") as string,
-        amount: formData.get("amount") as string,
-        images: JSON.parse(formData.get("images") as string),
-        quantity: parseInt(formData.get("quantity") as string), // Extract quantity
+        id: formData.get('id') as string,
+        name: formData.get('name') as string,
+        size: formData.get('size') as string,
+        amount: formData.get('amount') as string,
+        images: JSON.parse(formData.get('images') as string),
+        quantity: parseInt(formData.get('quantity') as string), // Extract quantity
       },
     ];
 
     const newCart = await createCart(items);
-    cookies().set("cartId", newCart.cartId);
+    cookies().set('cartId', newCart.cartId);
     revalidateTag(TAGS.cart);
 
     return `Added ${items[0].quantity} of product ${formData.get(
-      "id",
+      'id',
     )} to the new cart with id ${newCart.cartId}`;
   } catch (error) {
-    console.error("Error adding item to cart:", error);
-    return "Error adding item to cart";
+    console.error('Error adding item to cart:', error);
+    return 'Error adding item to cart';
   }
 }
 
@@ -108,9 +109,9 @@ export async function createCart(items: CartItem[]): Promise<Cart> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         // Pass the items as the request body
         body: JSON.stringify({ items }),
@@ -119,7 +120,7 @@ export async function createCart(items: CartItem[]): Promise<Cart> {
 
     // Check if the request was successful
     if (!response.ok) {
-      throw new Error("Failed to create cart");
+      throw new Error('Failed to create cart');
     }
 
     // Extract the cart information from the response
@@ -130,23 +131,23 @@ export async function createCart(items: CartItem[]): Promise<Cart> {
     return cartData;
   } catch (error) {
     // Handle any errors that occur during cart creation
-    console.error("Error creating cart:", error);
+    console.error('Error creating cart:', error);
     throw error;
   }
 }
 
 export async function removeItem(_prevState: any, itemId: string) {
   try {
-    const cartId = cookies().get("cartId")?.value;
+    const cartId = cookies().get('cartId')?.value;
 
     if (!cartId) {
-      return "No cart found";
+      return 'No cart found';
     }
 
     const cart = await getCart(cartId);
 
     if (!cart) {
-      return "Cart not found";
+      return 'Cart not found';
     }
 
     // Filter out the item with the specified itemId
@@ -154,23 +155,23 @@ export async function removeItem(_prevState: any, itemId: string) {
 
     // Update the cart in the database
     const { error } = await supabase
-      .from("carts")
+      .from('carts')
       .update({
         items: cart.items,
       })
-      .eq("cartId", cartId);
+      .eq('cartId', cartId);
 
     if (error) {
-      return "Error removing item from cart";
+      return 'Error removing item from cart';
     }
 
     // Revalidate the cache tag associated with the cart
     revalidateTag(TAGS.cart);
 
-    return "Item removed from cart successfully";
+    return 'Item removed from cart successfully';
   } catch (error) {
-    console.error("Error removing item from cart:", error);
-    return "Error removing item from cart";
+    console.error('Error removing item from cart:', error);
+    return 'Error removing item from cart';
   }
 }
 
@@ -184,23 +185,23 @@ export async function updateItemQuantity(
 ) {
   try {
     const { lineId, quantity } = payload;
-    const cartId = cookies().get("cartId")?.value;
+    const cartId = cookies().get('cartId')?.value;
 
     if (!cartId) {
-      throw new Error("No cart found");
+      throw new Error('No cart found');
     }
 
     const cart = await getCart(cartId);
 
     if (!cart) {
-      throw new Error("Cart not found");
+      throw new Error('Cart not found');
     }
 
     // Find the item in the cart with the specified lineId (item id)
     const itemIndex = cart.items.findIndex((item) => item.id === lineId);
 
     if (itemIndex === -1) {
-      throw new Error("Item not found in cart");
+      throw new Error('Item not found in cart');
     }
 
     // Update the quantity of the item
@@ -208,22 +209,22 @@ export async function updateItemQuantity(
 
     // Update the cart in the database
     const { error } = await supabase
-      .from("carts")
+      .from('carts')
       .update({
         items: cart.items,
       })
-      .eq("cartId", cartId);
+      .eq('cartId', cartId);
 
     if (error) {
-      throw new Error("Error updating item quantity in cart");
+      throw new Error('Error updating item quantity in cart');
     }
 
     // Revalidate the cache tag associated with the cart
     revalidateTag(TAGS.cart);
 
-    return "Item quantity updated successfully";
+    return 'Item quantity updated successfully';
   } catch (error) {
-    console.error("Error updating item quantity:", error);
+    console.error('Error updating item quantity:', error);
     throw error;
   }
 }
@@ -233,20 +234,22 @@ export async function getCart(cartId: string): Promise<Cart> {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/carts/${cartId}`,
       {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({ cartId }),
       },
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch cart details: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch cart details: ${response.statusText}`,
+      );
     }
 
     const cartResponse = await response.json();
     const cart = cartResponse.cart[0];
     return cart as Cart;
   } catch (error) {
-    console.error("Error fetching cart details:", error);
+    console.error('Error fetching cart details:', error);
     throw error; // Throw the error for the caller to handle
   }
 }
@@ -255,18 +258,33 @@ export async function getTaxRates(): Promise<Stripe.TaxRate[] | undefined> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/tax-rates`,
-      { method: "GET" },
+      { method: 'GET' },
     );
     const { taxRates, success, status }: TaxRatesResponse =
       await response.json();
 
     if (!response.ok || !success || !taxRates || status !== 200) {
-      throw new Error("Could not get tax rates");
+      throw new Error('Could not get tax rates');
     }
 
     return taxRates;
   } catch (error) {
-    console.error("Error trying to get `api/v1/tax-rates`", error);
+    console.error('Error trying to get `api/v1/tax-rates`', error);
+  }
+}
+
+export async function deleteCart(cartId: string): Promise<void> {
+  try {
+    const { error } = await supabase
+      .from('carts')
+      .delete()
+      .eq('cartId', cartId);
+
+    if (error) {
+      console.error(`Error calling removing cart`, error.message);
+    }
+  } catch (error: any) {
+    throw new Error(`Could not remove cart ${cartId}`, error.message);
   }
 }
 
