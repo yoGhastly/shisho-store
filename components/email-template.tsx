@@ -262,6 +262,14 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             </Section>
             <Section align="right">
               <Row>
+                <Column style={tableCell} align="right">
+                  <Text style={productPriceTotal}>
+                    Shipping
+                  </Text>
+                </Column>
+                <Column
+                  style={productPriceVerticalLine}
+                ></Column>
                 <Column
                   style={productPriceWrapper}
                   align="right"
