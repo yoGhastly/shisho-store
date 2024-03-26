@@ -3,8 +3,6 @@ import { supabase } from '../lib/subapase/client';
 import { Order } from '../types';
 import { OrderSearchCriteria } from '../infrastructure/criteria/OrderSearchCriteria';
 import { Status } from './chip-status';
-import { revalidatePath } from 'next/cache';
-import { select } from '@nextui-org/react';
 
 export class SupabaseOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order | null> {
