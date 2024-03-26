@@ -1,7 +1,7 @@
 import { Order } from '@/app/types';
 import React, { Suspense } from 'react';
 import { BreadCrumb } from '../breadcrumb';
-import { StatusChip } from '../chip-status';
+import { Status, StatusChip } from '../chip-status';
 import { GlobeEuropeAfricaIcon } from '@heroicons/react/24/outline';
 import { Table } from '@/components/table';
 import { SupabaseOrderRepository } from '../order-repository';
@@ -9,6 +9,10 @@ import { Skeleton } from '@/components/skeleton';
 import Footer from '@/components/layout/footer';
 import Image from 'next/image';
 import { Timeline } from '@/components/timeline';
+import { notFound } from 'next/navigation';
+import { checkAdminStatus } from '@/app/sign-in/actions';
+import { currentUser } from '@clerk/nextjs';
+import ChangeOrderStatus from '@/components/dropdown';
 
 const repository = new SupabaseOrderRepository();
 
@@ -20,6 +24,11 @@ export default async function Order({
   let order: Order | undefined;
   let formattedDate = 'Unknown';
   let formattedTime = 'Unknown';
+
+  const user = await currentUser();
+  const { isAdmin } = await checkAdminStatus({
+    email: user?.emailAddresses[0].emailAddress ?? '',
+  });
 
   if (params.handle) {
     order = await repository.search(params.handle);
@@ -36,6 +45,8 @@ export default async function Order({
       });
     }
   }
+
+  if (!order) return notFound();
 
   return (
     <React.Fragment>
@@ -58,12 +69,21 @@ export default async function Order({
               Order ID: {order?.id}
             </h1>
           </Skeleton>
-          <StatusChip status="In progress" />
+          <div className="flex gap-3 items-center">
+            <Skeleton loaded={order.status ? true : false}>
+              <StatusChip status={order.status} />
+            </Skeleton>
+            {isAdmin && (
+              <ChangeOrderStatus
+                currentStatus={order.status}
+                orderId={params.handle}
+              />
+            )}
+          </div>
 
           <div className="flex flex-col gap-5">
             <div className="w-full h-full rounded-lg flex flex-col gap-5 bg-white p-5 drop-shadow-sm">
               <h2 className="font-bold text-xl">Order Details</h2>
-
               <div className="flex flex-col gap-8 overflow-x-auto md:overflow-auto">
                 <Table
                   labelList={[
