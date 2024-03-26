@@ -2,6 +2,9 @@ import { OrderRepository } from '../infrastructure/OrderRepository';
 import { supabase } from '../lib/subapase/client';
 import { Order } from '../types';
 import { OrderSearchCriteria } from '../infrastructure/criteria/OrderSearchCriteria';
+import { Status } from './chip-status';
+import { revalidatePath } from 'next/cache';
+import { select } from '@nextui-org/react';
 
 export class SupabaseOrderRepository implements OrderRepository {
   async create(order: Order): Promise<Order | null> {
@@ -70,6 +73,7 @@ export class SupabaseOrderRepository implements OrderRepository {
     }
   }
   async searchBy(criteria: OrderSearchCriteria): Promise<Order[]> {
+    'use server';
     try {
       const { data, error } = await supabase
         .from('orders')
@@ -85,6 +89,38 @@ export class SupabaseOrderRepository implements OrderRepository {
     } catch (error) {
       console.error('Error searching orders:', error);
       return [];
+    }
+  }
+  async changeOrderStatus({
+    orderId,
+    status,
+  }: {
+    orderId: string;
+    status: Status;
+  }): Promise<
+    { oldValue: Status; status: Status; message: string } | undefined
+  > {
+    'use server';
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .update({ status })
+        .eq('id', orderId)
+        .select('*')
+        .single();
+
+      if (error) {
+        throw error;
+      }
+      const order = data as Order;
+
+      return {
+        oldValue: status,
+        status: order.status,
+        message: `Order status changed to ${order.status}`,
+      };
+    } catch (error) {
+      console.error('Error changing order status:', error);
     }
   }
 }
