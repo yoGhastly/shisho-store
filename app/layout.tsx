@@ -1,19 +1,16 @@
-import { ReactNode, Suspense } from "react";
-import "./globals.css";
-import Navbar from "@/components/layout/navbar";
-import { Providers } from "./providers";
-
-const { SITE_NAME } = process.env;
-const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-  : "http://localhost:3000";
+import { ReactNode, Suspense } from 'react';
+import './globals.css';
+import Navbar from '@/components/layout/navbar';
+import { Providers } from './providers';
 
 export const metadata = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL('https://shishobabyclothes.ae'),
   title: {
-    default: SITE_NAME!,
-    template: `%s | ${SITE_NAME}`,
+    default: 'Shisho Baby Clothes',
+    template: `%s | Shisho Baby Clothes`,
   },
+  description:
+    'Adorable Fashion for Little Ones! At Shisho Baby clothes, we believe in making every moment with your little one extra special',
   robots: {
     follow: true,
     index: true,
