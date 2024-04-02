@@ -2,6 +2,10 @@ import { supabase } from '../lib/subapase/client';
 
 export const checkAdminStatus = async ({ email }: { email: string }) => {
   'use server';
+  if (!email) {
+    console.warn(`Could not check admin status for an empty email`);
+    return { isAdmin: false };
+  }
   try {
     const { data, error } = await supabase
       .from('admins')

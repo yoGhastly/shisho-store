@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import Link from "next/link";
-import { Gallery } from "@/components/product/gallery";
-import { ProductDescription } from "@/components/product/product-description";
-import Footer from "@/components/layout/footer";
-import { GridTileImage } from "@/components/grid/tile";
-import { getProducts } from "@/app/lib/product";
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { Gallery } from '@/components/product/gallery';
+import { ProductDescription } from '@/components/product/product-description';
+import Footer from '@/components/layout/footer';
+import { GridTileImage } from '@/components/grid/tile';
+import { getProducts } from '@/app/lib/product';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
 /**
  * Returns a  product. The product is returned sorted by id,
@@ -60,23 +60,22 @@ export default async function ProductPage({
   params: { handle: string };
 }) {
   const { foundProduct: product } = await getProduct(params.handle);
-
   if (!product) return notFound();
 
   const productJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
+    '@context': 'https://schema.org',
+    '@type': 'Product',
     name: product.name,
     description: product.description,
     image: product.images[0],
     offers: {
-      "@type": "AggregateOffer",
+      '@type': 'AggregateOffer',
       availability: product.active
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
       priceCurrency: `AED`,
-      highPrice: product.price || "",
-      lowPrice: "10",
+      highPrice: product.price || '',
+      lowPrice: '10',
     },
   };
 

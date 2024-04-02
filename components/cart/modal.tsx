@@ -180,6 +180,7 @@ export default function CartModal({
                                 <span className="leading-tight">
                                   {item.name}
                                 </span>
+                                <span className="text-black/40">{item.size}</span>
                               </div>
                             </Link>
                             <div className="flex h-16 flex-col justify-between">
@@ -239,8 +240,8 @@ export default function CartModal({
                     onClick={handleCheckout}
                     disabled={isCheckingOut} // Disable the button when checkout is in progress
                     className={`block w-full rounded-full bg-primary p-3 text-center text-sm font-medium text-white ${isCheckingOut
-                        ? 'opacity-50 cursor-not-allowed'
-                        : 'opacity-90 hover:opacity-100'
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'opacity-90 hover:opacity-100'
                       }`}
                   >
                     {isCheckingOut
