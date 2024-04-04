@@ -1,6 +1,5 @@
 import { ProductsResponse } from '@/app/types';
 import { stripe } from '../stripe/server';
-import { revalidatePath } from 'next/cache';
 
 export async function getProducts() {
   'use server';
@@ -9,7 +8,7 @@ export async function getProducts() {
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`,
     {
       method: 'GET',
-      cache: 'reload',
+      cache: 'no-store',
     },
   );
 
@@ -32,8 +31,6 @@ export async function getProducts() {
     // Return the product with the price included
     return { ...product, price: formattedPrice };
   });
-
-  revalidatePath('/', 'page');
 
   return productsWithPrices;
 }
