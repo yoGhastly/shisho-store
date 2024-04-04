@@ -10,9 +10,6 @@ export async function GET() {
         const { data: products } = await stripe.products.list({
             limit: 300,
         });
-
-        revalidatePath('/', 'page');
-
         return Response.json({
             products: products,
             success: true,

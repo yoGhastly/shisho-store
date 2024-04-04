@@ -1,24 +1,30 @@
-import { ProductsResponse } from "@/app/types";
-import { stripe } from "../stripe/server";
+import { ProductsResponse } from '@/app/types';
+import { stripe } from '../stripe/server';
+import { revalidatePath } from 'next/cache';
 
 export async function getProducts() {
-  "use server";
+  'use server';
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/products`, {
-    method: "GET",
-    cache: "reload",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/products`,
+    {
+      method: 'GET',
+      cache: 'reload',
+    },
+  );
 
   const { products }: ProductsResponse = await res.json();
 
   const { data: prices } = await stripe.prices.list({ limit: 50 });
 
   const productsWithPrices = products.map((product) => {
-    const matchedPrice = prices.find((price) => price.product === product.id);
+    const matchedPrice = prices.find(
+      (price) => price.product === product.id,
+    );
 
     const price = matchedPrice?.unit_amount;
 
-    if (!price) return { ...product, price: "10.00" };
+    if (!price) return { ...product, price: '10.00' };
 
     // Convert price to dollars and format with two decimal places
     const formattedPrice = (price / 100).toFixed(2);
@@ -26,6 +32,8 @@ export async function getProducts() {
     // Return the product with the price included
     return { ...product, price: formattedPrice };
   });
+
+  revalidatePath('/', 'page');
 
   return productsWithPrices;
 }
