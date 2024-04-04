@@ -38,6 +38,7 @@ export async function addToCart(
 }
 
 export async function addItem(_prevState: any, formData: FormData) {
+  if (!formData.get('size')) return `Please select a size`;
   try {
     let cartId = cookies().get('cartId')?.value;
 
@@ -72,10 +73,7 @@ export async function addItem(_prevState: any, formData: FormData) {
         await addToCart(cartId, cart.items);
 
         revalidateTag(TAGS.cart);
-
-        return `Added ${newItem.quantity} of product ${formData.get(
-          'id',
-        )} to the cart with id ${cartId}`;
+        return ``
       }
     }
 
