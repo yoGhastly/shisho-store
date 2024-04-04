@@ -36,7 +36,7 @@ export default function Search() {
                 placeholder="Search for products..."
                 autoComplete="off"
                 defaultValue={searchParams?.get('q') || ''}
-                className="w-full rounded-lg border bg-white px-4 py-2 text-medium text-black placeholder:text-neutral-500"
+                className="w-full rounded-lg border bg-white px-4 py-2 text-base text-black placeholder:text-neutral-500"
             />
             <div className="absolute right-0 top-0 mr-3 flex h-full items-center">
                 <Image
