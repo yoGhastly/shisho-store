@@ -1,4 +1,3 @@
-import { revalidatePath } from 'next/cache';
 import Stripe from 'stripe';
 
 const STRIPE_SECRET_KEY =
