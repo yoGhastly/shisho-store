@@ -21,24 +21,22 @@ export async function POST(req: NextRequest) {
 
     const totalAmount = parseFloat(total);
 
-    const { data: shippingRates } = await stripe.shippingRates.list();
+    // const { data: shippingRates } = await stripe.shippingRates.list();
 
     const isFreeDelivery =
       parseInt(total) >=
       parseInt(process.env.NEXT_PUBLIC_FREE_DELIVERY_CONSTANT || '250');
 
     const shippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[] =
-      shippingRates.map((rate) => {
-        return {
+      [
+        {
           shipping_rate_data: {
-            type: rate.type,
+            type: 'fixed_amount',
             fixed_amount: {
-              amount: isFreeDelivery
-                ? 0
-                : rate?.fixed_amount?.amount || 0,
-              currency: rate?.fixed_amount?.currency || 'AED',
+              amount: isFreeDelivery ? 0 : 1500, // Dubai
+              currency: 'AED',
             },
-            display_name: rate.display_name || '',
+            display_name: 'Dubai',
             delivery_estimate: {
               minimum: {
                 unit: 'week',
@@ -50,8 +48,48 @@ export async function POST(req: NextRequest) {
               },
             },
           },
-        };
-      });
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: isFreeDelivery ? 0 : 2500, // Sharjah
+              currency: 'AED',
+            },
+            display_name: 'Sharjah',
+            delivery_estimate: {
+              minimum: {
+                unit: 'week',
+                value: 1,
+              },
+              maximum: {
+                unit: 'week',
+                value: 2,
+              },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: {
+              amount: isFreeDelivery ? 0 : 4000, // Abu Dhabi
+              currency: 'AED',
+            },
+            display_name: 'Abu Dhabi',
+            delivery_estimate: {
+              minimum: {
+                unit: 'week',
+                value: 1,
+              },
+              maximum: {
+                unit: 'week',
+                value: 2,
+              },
+            },
+          },
+        },
+      ];
 
     // Calculate the total amount in cents
     const totalAmountInCents = Math.ceil(totalAmount * 100);
