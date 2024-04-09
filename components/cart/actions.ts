@@ -93,9 +93,7 @@ export async function addItem(_prevState: any, formData: FormData) {
     cookies().set('cartId', newCart.cartId);
     revalidateTag(TAGS.cart);
 
-    return `Added ${items[0].quantity} of product ${formData.get(
-      'id',
-    )} to the new cart with id ${newCart.cartId}`;
+    return ``;
   } catch (error) {
     console.error('Error adding item to cart:', error);
     return 'Error adding item to cart';
@@ -297,7 +295,7 @@ export async function calculateTotalWithTax(cartId: string): Promise<string> {
   });
 
   // Add tax rate to subtotal
-  const taxRate = 0.5;
+  const taxRate = 1.05;
   const totalWithTax = subtotal * (1 + taxRate);
 
   return totalWithTax.toFixed(2);
