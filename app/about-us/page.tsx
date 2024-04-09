@@ -42,7 +42,7 @@ export default function Page() {
           >
             About us
           </h1>
-          <Prose className="mb-8" html={htmlWithBold} />
+          <Prose className="mb-8 text-justify" html={htmlWithBold} />
         </div>
       </div>
       <Footer />
