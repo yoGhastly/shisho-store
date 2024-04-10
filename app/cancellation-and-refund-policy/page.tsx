@@ -20,15 +20,15 @@ To be eligible for an exchange, items must be unused, in their original packagin
 
 3. Return Process
 
-If, by any chance, you are dissatisfied with your purchase at Shisho Baby clothes, we offer a range of options to address this issue. To return an item, please follow the instructions provided by our customer service team. 
+If, by any chance, you are dissatisfied with your purchase at Shisho Baby Clothes, we offer a range of options to address this issue. To return an item, please follow the instructions provided by our customer service team. 
 
 Return shipping costs are the responsibility of the customer unless the return is due to a defect or error on our part.
 
-When a replacement or alternative solution is granted, we strive to resolve the matter within one working day. 
+When a replacement or alternative solution is granted, we strive to resolve the matter within one business day. 
 
 4. Refunds
 
-Refunds will be processed once the returned items are received and inspected. Please allow at least 7-10 business days for it to be processed. 
+Refunds will be processed once the returned items are received and inspected. Please allow at least 5 business days for it to be processed. 
 
 Refunds will be issued to the original payment method.
 
