@@ -330,7 +330,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               <Row>
                 <Column align="center" style={ctaTitle}>
                   <Text style={ctaText}>
-                    Free Delivery on orders above 250AED
+                    Free Delivery on orders above {process.env.NEXT_PUBLIC_FREE_DELIVERY_CONSTANT}AED
                   </Text>
                 </Column>
               </Row>
@@ -351,30 +351,6 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               </Row>
             </Section>
             <Hr style={walletBottomLine} />
-            <Text style={footerText}>
-              We offer FREE delivery on orders from AED 250 and
-              above. Orders under AED 250 will include a delivery
-              charge during checkout, based on the following
-              areas: Dubai 40 aed Sharjah 50 aed Abu Dhabi, Ajman,
-              Al Ain, Umm Al Quwain, Ras Al Khaima, Fujairah 60
-              aed
-            </Text>
-            <Text style={footerText}>2. Shipment Tracking.</Text>
-            <Text style={footerText}>
-              Once your order has been shipped, you will receive a
-              confirmation email with tracking information. You
-              can track your shipment using the provided tracking
-              number.
-            </Text>
-            <Text style={footerText}>
-              We currently only ship to addresses within United
-              Arab Emirates.
-            </Text>
-            <Text style={footerText}>
-              We are not responsible for lost or stolen packages.
-              Please ensure that the shipping address provided is
-              secure and accurate.
-            </Text>
             <Section>
               <Row>
                 <Column align="center" style={footerIcon}>
