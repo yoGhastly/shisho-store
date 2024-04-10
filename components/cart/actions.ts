@@ -295,8 +295,10 @@ export async function calculateTotalWithTax(cartId: string): Promise<string> {
   });
 
   // Add tax rate to subtotal
-  const taxRate = 1.05;
-  const totalWithTax = subtotal * (1 + taxRate);
+  const taxRate = 0.05;
+  const taxAmount = subtotal * taxRate;
+  // Add tax amount to subtotal
+  const totalWithTax = subtotal + taxAmount;
 
   return totalWithTax.toFixed(2);
 }

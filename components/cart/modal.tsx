@@ -220,7 +220,7 @@ export default function CartModal({
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1">
                       <p>VAT</p>
                       <p className="text-right text-base text-black">
-                        {1.05}%
+                        {5}%
                       </p>
                     </div>
                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
@@ -242,8 +242,8 @@ export default function CartModal({
                     onClick={handleCheckout}
                     disabled={isCheckingOut} // Disable the button when checkout is in progress
                     className={`block w-full rounded-full bg-primary p-3 text-center text-sm font-medium text-white ${isCheckingOut
-                        ? 'opacity-50 cursor-not-allowed'
-                        : 'opacity-90 hover:opacity-100'
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'opacity-90 hover:opacity-100'
                       }`}
                   >
                     {isCheckingOut
