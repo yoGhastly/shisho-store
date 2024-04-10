@@ -22,7 +22,11 @@ export default async function Navbar() {
   return (
     <nav className="relative flex items-center justify-between p-4 lg:px-6">
       <div className="block flex-none md:hidden">
-        <MobileMenu menu={menu} isLoggedIn={user ? true : false} isAdmin={isAdmin} />
+        <MobileMenu
+          menu={menu}
+          isLoggedIn={user ? true : false}
+          isAdmin={isAdmin}
+        />
       </div>
       <div className="flex w-full items-center">
         <div className="flex w-full md:w-1/3">
@@ -32,7 +36,7 @@ export default async function Navbar() {
           >
             <LogoSquare />
             <div
-              className={`magic ml-2 flex-none text-sm font-bold uppercase md:hidden lg:block`}
+              className={`magic ml-2 flex-none text-lg font-bold uppercase md:hidden lg:block`}
               style={{
                 background:
                   'linear-gradient(270deg, #ffc6ff 1.27%, #a0c4ff 26.44%, #9bf6ff 51.62%, #a0c4ff 77.78%, #ffc6ff 100%)',
