@@ -31,7 +31,7 @@ export default function Error({
         <h2 className="font-bold text-4xl">
           We&apos;ve lost this order
         </h2>
-        <p>
+        <p className="text-center">
           Oops! Looks like your order went on a vacation without
           telling us! 🏖️
         </p>
