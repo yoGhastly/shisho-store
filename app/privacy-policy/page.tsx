@@ -68,7 +68,7 @@ export default function Page() {
           >
             Privacy Policy
           </h1>
-          <Prose className="mb-8" html={formattedHtml} />
+          <Prose className="mb-8 text-justify" html={formattedHtml} />
         </div>
       </div>
       <Footer />
