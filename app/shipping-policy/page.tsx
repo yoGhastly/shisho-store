@@ -13,7 +13,7 @@ Orders are typically processed within 2-5 days. Please note that processing time
 
 We offer FREE delivery on orders from AED 100 and above.
 
-Orders under AED 250 will include a delivery charge during checkout, based on the following areas:
+Orders under AED 100 will include a delivery charge during checkout, based on the following areas:
 
 Dubai 15 aed
 Sharjah 25 aed
@@ -34,7 +34,7 @@ We are not responsible for lost or stolen packages. Please ensure that the shipp
 `;
 
 const formattedHtml = html.replace(
-    /(1. Processing Time|2. Shipping Rates|3. Shipment Tracking|4. Shipment Restrictions|5. Lost or Stolen Packages)/g,
+    /(1. Processing Time|2. Shipping Rates|3. Shipment Tracking|4. Shipping Restrictions|5. Lost or Stolen Packages)/g,
     '<br/><br/><strong>$1</strong><br/>',
 );
 
