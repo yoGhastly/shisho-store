@@ -11,7 +11,7 @@ import { Product } from '@/app/types';
 interface ProductOption {
   id: string;
   name: string;
-  values: string[];
+  sizes: string[];
   quantity: number;
 }
 
@@ -27,7 +27,7 @@ function parseMetadata(metadata: string): ProductOption[] {
     return {
       id: ageRange,
       name: 'Sizes',
-      values: formattedValues,
+      sizes: formattedValues,
       quantity: parseInt(quantity),
     };
   });
