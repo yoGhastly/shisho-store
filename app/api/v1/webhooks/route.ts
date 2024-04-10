@@ -95,7 +95,7 @@ async function fetchLineItems(
 
 async function sendEmailConfirmation(resend: Resend, order: Order) {
   const { data, error } = await resend.emails.send({
-    from: 'Shisho Baby Clothes <info@xervsware.com>',
+    from: 'Shisho Baby Clothes <shishobabyclothes@gmail.com>',
     to: [order.customerEmail],
     subject: `Order Confirmation.`,
     react: EmailTemplate({ order }),

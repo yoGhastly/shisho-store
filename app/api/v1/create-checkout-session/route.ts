@@ -36,15 +36,15 @@ export async function POST(req: NextRequest) {
               amount: isFreeDelivery ? 0 : 1500, // Dubai
               currency: 'AED',
             },
-            display_name: 'Dubai',
+            display_name: 'DUBAI',
             delivery_estimate: {
               minimum: {
-                unit: 'week',
-                value: 1,
+                unit: 'day',
+                value: 2,
               },
               maximum: {
-                unit: 'week',
-                value: 2,
+                unit: 'day',
+                value: 5,
               },
             },
           },
@@ -56,15 +56,15 @@ export async function POST(req: NextRequest) {
               amount: isFreeDelivery ? 0 : 2500, // Sharjah
               currency: 'AED',
             },
-            display_name: 'Sharjah',
+            display_name: 'SHARJAH',
             delivery_estimate: {
               minimum: {
-                unit: 'week',
-                value: 1,
+                unit: 'day',
+                value: 2,
               },
               maximum: {
-                unit: 'week',
-                value: 2,
+                unit: 'day',
+                value: 5,
               },
             },
           },
@@ -76,15 +76,15 @@ export async function POST(req: NextRequest) {
               amount: isFreeDelivery ? 0 : 4000, // Abu Dhabi
               currency: 'AED',
             },
-            display_name: 'Abu Dhabi',
+            display_name: 'ABU DHABI, AJMAN, AL AIN, UMM AL QUWAIN, RAS AL KHAIMAH, FUJAIRAH',
             delivery_estimate: {
               minimum: {
-                unit: 'week',
-                value: 1,
+                unit: 'day',
+                value: 2,
               },
               maximum: {
-                unit: 'week',
-                value: 2,
+                unit: 'day',
+                value: 5,
               },
             },
           },
