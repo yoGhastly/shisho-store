@@ -1,9 +1,8 @@
-import Footer from "@/components/layout/footer";
-import Prose from "@/components/prose";
-import styles from "../../styles/Logo.module.css";
-import clsx from "clsx";
+import Footer from '@/components/layout/footer';
+import Prose from '@/components/prose';
+import clsx from 'clsx';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
 const html = `
 1. Cancellation and Exchanges
@@ -51,7 +50,7 @@ export default function Page() {
     <>
       <div className="flex justify-center items-center px-8">
         <div className="max-w-2xl mx-auto">
-          <h1 className={clsx("text-3xl md:text-5xl font-bold", styles.magic)}>
+          <h1 className={clsx('text-3xl md:text-5xl font-bold')}>
             Cancellation and Refund Policy
           </h1>
           <Prose className="mb-8 text-justify" html={formattedHtml} />

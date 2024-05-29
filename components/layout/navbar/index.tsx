@@ -9,6 +9,7 @@ import Cart from '@/components/cart';
 import '../../../styles/Logo.module.css';
 import { currentUser } from '@clerk/nextjs';
 import { checkAdminStatus } from '@/app/sign-in/actions';
+import { SunnySpellsBasic } from '@/config/fonts';
 
 const { SITE_NAME } = process.env;
 
@@ -36,7 +37,7 @@ export default async function Navbar() {
           >
             <LogoSquare />
             <div
-              className={`magic ml-2 flex-none text-lg font-bold uppercase md:hidden lg:block`}
+              className={`${SunnySpellsBasic.className} magic ml-2 flex-none text-2xl font-bold uppercase md:hidden lg:block`}
               style={{
                 background:
                   'linear-gradient(270deg, #ffc6ff 1.27%, #a0c4ff 26.44%, #9bf6ff 51.62%, #a0c4ff 77.78%, #ffc6ff 100%)',

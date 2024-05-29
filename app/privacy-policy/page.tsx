@@ -1,6 +1,5 @@
 import Footer from '@/components/layout/footer';
 import Prose from '@/components/prose';
-import styles from '../../styles/Logo.module.css';
 import clsx from 'clsx';
 
 export const runtime = 'edge';
@@ -51,27 +50,22 @@ For privacy-related inquiries or concerns, please contact us at shishobabyclothe
 `;
 
 const formattedHtml = html.replace(
-  /(1. Information We Collect|2. How We Use Your Information|3. Consent|4. Data Security|5. Third-Party Sharing|6. User Rights|7. Cookies and Tracking Technologies|8. Updates to the Privacy Policy|9. Compliance with Regulations|10. Contact Information)/g,
-  '<br/><br/><strong>$1</strong><br/>',
+    /(1. Information We Collect|2. How We Use Your Information|3. Consent|4. Data Security|5. Third-Party Sharing|6. User Rights|7. Cookies and Tracking Technologies|8. Updates to the Privacy Policy|9. Compliance with Regulations|10. Contact Information)/g,
+    '<br/><br/><strong>$1</strong><br/>',
 );
 
 export default function Page() {
-  return (
-    <>
-      <div className="flex justify-center items-center px-8 h-auto">
-        <div className="max-w-2xl py-20 mx-auto">
-          <h1
-            className={clsx(
-              'mb-8 text-3xl md:text-5xl font-bold',
-              styles.magic,
-            )}
-          >
-            Privacy Policy
-          </h1>
-          <Prose className="mb-8 text-justify" html={formattedHtml} />
-        </div>
-      </div>
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <div className="flex justify-center items-center px-8 h-auto">
+                <div className="max-w-2xl py-20 mx-auto">
+                    <h1 className={clsx('mb-8 text-3xl md:text-5xl font-bold')}>
+                        Privacy Policy
+                    </h1>
+                    <Prose className="mb-8 text-justify" html={formattedHtml} />
+                </div>
+            </div>
+            <Footer />
+        </>
+    );
 }

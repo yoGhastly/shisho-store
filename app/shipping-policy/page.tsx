@@ -1,6 +1,5 @@
 import Footer from '@/components/layout/footer';
 import Prose from '@/components/prose';
-import styles from '../../styles/Logo.module.css';
 import clsx from 'clsx';
 
 export const runtime = 'edge';
@@ -43,12 +42,7 @@ export default function Page() {
         <>
             <div className="flex justify-center items-center px-8">
                 <div className="max-w-2xl py-20 mx-auto">
-                    <h1
-                        className={clsx(
-                            'mb-8 text-3xl md:text-5xl font-bold',
-                            styles.magic,
-                        )}
-                    >
+                    <h1 className={clsx('mb-8 text-3xl md:text-5xl font-bold')}>
                         Shipping Policy
                     </h1>
                     <Prose className="mb-8 text-justify" html={formattedHtml} />
